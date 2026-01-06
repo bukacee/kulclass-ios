@@ -269,12 +269,10 @@ class GradiantBorderContainer extends StatelessWidget {
         borderRadius: BorderRadius.circular(radius),
       ),
       // Use the alias DB here if you imported it as DB, otherwise remove 'DB.'
-      child: DB.DottedBorder(
-        //color: AppColor.colorScaffold, // If this still errors, change to 'strokeColor' or remove line
-        //radius: Radius.circular(radius),
-        //padding: const EdgeInsets.all(1),
-        strokeWidth: 5,
-        // REMOVED borderType: ... (This is what causes the error)
+      child: Container(
+  decoration: BoxDecoration(
+    border: Border.all(color: AppColor.colorScaffold, width: 5), // Solid border fallback
+  ),
         child: Padding( // <--- ADD THIS WRAPPER
           padding: const EdgeInsets.all(1.3),
           child: Container(

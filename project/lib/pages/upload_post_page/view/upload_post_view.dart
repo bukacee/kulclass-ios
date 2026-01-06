@@ -46,10 +46,10 @@ class UploadPostView extends GetView<UploadPostController> {
 
                       GestureDetector(
                           onTap: () => controller.onSelectNewImage(context),
-                          child: DB.DottedBorder( 
-      //color: AppColor.colorScaffold, // Now this will work
-      //radius: Radius.circular(radius),
-      //padding: const EdgeInsets.all(0.3), 
+                          child: Container(
+  decoration: BoxDecoration(
+    border: Border.all(color: AppColor.colorScaffold, width: 5), // Solid border fallback
+  ), 
                           child: Padding( // <--- ADD THIS WRAPPER
                             padding: const EdgeInsets.all(1.3),
                             child: Container(

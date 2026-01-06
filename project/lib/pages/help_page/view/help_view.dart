@@ -179,10 +179,10 @@ class GradiantBorderContainer extends StatelessWidget {
         gradient: AppColor.primaryLinearGradient,
         borderRadius: BorderRadius.circular(radius),
       ),
-      child: DB.DottedBorder( 
-     //color: AppColor.colorScaffold, // Now this will work
-      //radius: Radius.circular(radius),
-      strokeWidth: 5, 
+      child: Container(
+  decoration: BoxDecoration(
+    border: Border.all(color: AppColor.colorScaffold, width: 5), // Solid border fallback
+  ),
       child: Padding( // <--- ADD THIS WRAPPER
           padding: const EdgeInsets.all(1.3),
         child: Container(
