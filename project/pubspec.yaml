@@ -130,7 +130,7 @@ dependencies:
   audio_waveforms: ^1.3.0
 
   deepar_flutter: ^0.0.5
-  deepar_flutter_plus: ^0.2.0
+  # deepar_flutter_plus: ^0.2.0
   gallery_saver: ^2.3.2
   svgaplayer_flutter: ^2.0.0-nullsafety.0
   video_thumbnail: ^0.5.3
