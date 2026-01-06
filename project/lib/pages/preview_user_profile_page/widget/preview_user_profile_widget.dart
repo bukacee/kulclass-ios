@@ -13,8 +13,7 @@ import 'package:auralive/utils/api.dart';
 import 'package:auralive/utils/asset.dart';
 import 'package:auralive/utils/color.dart';
 import 'package:auralive/utils/enums.dart';
-import 'package:auralive/utils/font_style.dart';
-import 'package:svgaplayer_flutter/svgaplayer_flutter.dart';
+import 'package:auralive/utils/font_style.dart'; 
 import 'package:auralive/widgets/gift_media_widget.dart'; 
 
 class PreviewUserProfileAppBar extends StatelessWidget implements PreferredSizeWidget {
@@ -352,8 +351,7 @@ class CollectionsTabView extends StatelessWidget {
                                   ? Expanded(
                                       child: SizedBox(
                                     child: GiftMediaWidget(
-                                      url: Api.baseUrl +
-                                            resUrl: (Api.baseUrl + (controller.giftCollection[index].giftImage ?? ""))),
+                                      url: Api.baseUrl + (Api.baseUrl + (controller.giftCollection[index].giftImage ?? ""))),
                                       ),
                                     )
                                   : Offstage(),

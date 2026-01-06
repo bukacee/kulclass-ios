@@ -65,12 +65,9 @@ class InAppPurchaseHelper {
   IAPCallback? _iapCallback;
 
   initialize() {
-    if (Platform.isAndroid) {
-      /// ignore: deprecated_member_use
-      InAppPurchaseAndroidPlatformAddition.enablePendingPurchases();
-    } else {
+    
       SKPaymentQueueWrapper().restoreTransactions();
-    }
+    
   }
 
   ProductDetails? getProductDetail(String productID) {

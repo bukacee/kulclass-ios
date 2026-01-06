@@ -8,8 +8,7 @@ class FlutterWaveService {
     final Customer customer = Customer(name: "Flutter wave Developer", email: "customer@customer.com", phoneNumber: '');
 
     Utils.showLog("Flutter Wave Id => ${Utils.flutterWaveId}");
-    final Flutterwave flutterWave = Flutterwave(
-      context: Get.context!,
+    final Flutterwave flutterWave = Flutterwave( 
       publicKey: Utils.flutterWaveId,
       currency: Utils.flutterWaveCurrencyCode,
       redirectUrl: "https://www.google.com/",

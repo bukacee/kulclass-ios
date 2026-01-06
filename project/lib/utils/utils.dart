@@ -98,8 +98,7 @@ abstract class Utils {
   static Future<void> onInitPayment() async {
     if (InternetConnection.isConnect.value) {
       Stripe.publishableKey = Utils.stripeTestPublicKey;
-      await Stripe.instance.applySettings();
-      InAppPurchaseAndroidPlatformAddition.enablePendingPurchases();
+      await Stripe.instance.applySettings(); 
     }
   }
 }

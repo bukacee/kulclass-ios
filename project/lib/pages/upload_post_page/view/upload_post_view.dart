@@ -45,7 +45,7 @@ class UploadPostView extends GetView<UploadPostController> {
                       ? GestureDetector(
                           onTap: () => controller.onSelectNewImage(context),
                           child: DottedBorder(
-                            dashPattern: [4, 3],
+                            strokeWidth: 1,
                             borderType: BorderType.RRect,
                             color: AppColor.colorGreyHasTagText.withOpacity(0.5),
                             radius: Radius.circular(8),

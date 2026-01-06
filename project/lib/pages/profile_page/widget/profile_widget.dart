@@ -16,8 +16,7 @@ import 'package:auralive/utils/api.dart';
 import 'package:auralive/utils/asset.dart';
 import 'package:auralive/utils/color.dart';
 import 'package:auralive/utils/database.dart';
-import 'package:auralive/utils/font_style.dart';
-import 'package:svgaplayer_flutter/svgaplayer_flutter.dart';
+import 'package:auralive/utils/font_style.dart'; 
 import 'package:auralive/widgets/gift_media_widget.dart'; 
 
 class ProfileAppBarUi extends StatelessWidget {

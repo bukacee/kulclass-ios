@@ -1,8 +1,8 @@
 import 'dart:async';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:camera/camera.dart';
-import 'package:deepar_flutter/deepar_flutter.dart';
-import 'package:ffmpeg_kit_flutter/ffmpeg_kit.dart';
+import 'package:deepar_flutter_plus/deepar_flutter_plus.dart';
+import 'package:ffmpeg_kit_flutter_new/ffmpeg_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:path_provider/path_provider.dart';
@@ -124,13 +124,29 @@ class CreateReelsController extends GetxController {
     super.onInit();
   }
 
-  @override
+  @override 
   void onClose() {
+    // 1. SAFETY: Cancel the timer immediately so it stops ticking
+    if (timer != null && timer!.isActive) {
+      timer!.cancel();
+    }
+
+    // 2. SAFETY: Dispose of the Audio Players to free native resources
+    try {
+      audioPlayer.stop(); // Stop playing
+      audioPlayer.dispose(); // Kill the instance
+      _audioPlayer.dispose(); // Kill the second instance used for duration checks
+    } catch (e) {
+      Utils.showLog("Audio Dispose Error: $e");
+    }
+
+    // 3. Existing Logic
     if (isUseEffects) {
       onDisposeEffect();
     } else {
       onDisposeCamera();
     }
+    
     super.onClose();
   }
 
@@ -342,14 +358,15 @@ class CreateReelsController extends GetxController {
     }
   }
 
-  Future<void> onDisposeEffect() async {
+Future<void> onDisposeEffect() async {
     deepArController.destroy();
-    deepArController = DeepArController();
+    // deepArController = DeepArController(); // <--- REMOVE THIS LINE
     isInitializeEffect = false;
     update(["onInitializeEffect"]);
     Utils.showLog("Effect Controller Dispose Success");
   }
 
+  
   Future<void> onSwitchEffectFlash() async {
     if (isFrontCamera == false) {
       if (isFlashOn) {
