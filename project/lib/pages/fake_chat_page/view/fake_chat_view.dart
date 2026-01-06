@@ -1,16 +1,16 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
-import 'package:auralive/custom/custom_format_audio_time.dart';
-import 'package:auralive/main.dart';
-import 'package:auralive/pages/fake_chat_page/controller/fake_chat_controller.dart';
-import 'package:auralive/pages/fake_chat_page/widget/fake_chat_widget.dart';
-import 'package:auralive/utils/asset.dart';
-import 'package:auralive/utils/color.dart';
-import 'package:auralive/utils/database.dart';
-import 'package:auralive/utils/font_style.dart';
-import 'package:auralive/ui/loading_ui.dart';
-import 'package:auralive/ui/no_data_found_ui.dart';
-import 'package:auralive/custom/custom_format_chat_time.dart';
+import 'package:shortie/custom/custom_format_audio_time.dart';
+import 'package:shortie/main.dart';
+import 'package:shortie/pages/fake_chat_page/controller/fake_chat_controller.dart';
+import 'package:shortie/pages/fake_chat_page/widget/fake_chat_widget.dart';
+import 'package:shortie/utils/asset.dart';
+import 'package:shortie/utils/color.dart';
+import 'package:shortie/utils/database.dart';
+import 'package:shortie/utils/font_style.dart';
+import 'package:shortie/ui/loading_ui.dart';
+import 'package:shortie/ui/no_data_found_ui.dart';
+import 'package:shortie/custom/custom_format_chat_time.dart';
 
 class FakeChatView extends GetView<FakeChatController> {
   const FakeChatView({super.key});

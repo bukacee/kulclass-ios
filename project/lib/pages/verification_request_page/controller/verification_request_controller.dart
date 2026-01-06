@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:auralive/custom/custom_image_picker.dart';
-import 'package:auralive/ui/image_picker_bottom_sheet_ui.dart';
-import 'package:auralive/ui/loading_ui.dart';
-import 'package:auralive/pages/verification_request_page/api/create_verification_request_api.dart';
-import 'package:auralive/pages/verification_request_page/model/create_verification_request_model.dart';
-import 'package:auralive/utils/database.dart';
-import 'package:auralive/utils/enums.dart';
-import 'package:auralive/utils/utils.dart';
+import 'package:shortie/custom/custom_image_picker.dart';
+import 'package:shortie/ui/image_picker_bottom_sheet_ui.dart';
+import 'package:shortie/ui/loading_ui.dart';
+import 'package:shortie/pages/verification_request_page/api/create_verification_request_api.dart';
+import 'package:shortie/pages/verification_request_page/model/create_verification_request_model.dart';
+import 'package:shortie/utils/database.dart';
+import 'package:shortie/utils/enums.dart';
+import 'package:shortie/utils/utils.dart';
 
 class VerificationRequestController extends GetxController {
   CreateVerificationRequestModel? createVerificationRequestModel;

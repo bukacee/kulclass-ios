@@ -1,16 +1,16 @@
 import 'package:get/get.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
-import 'package:auralive/pages/payment_page/payment/flutter_wave/flutter_wave_services.dart';
-import 'package:auralive/ui/loading_ui.dart';
-import 'package:auralive/pages/payment_page/api/create_coin_plan_history_api.dart';
-import 'package:auralive/pages/payment_page/payment/in_app_purchase/iap_callback.dart';
-import 'package:auralive/pages/payment_page/payment/in_app_purchase/in_app_purchase_helper.dart';
-import 'package:auralive/pages/payment_page/payment/razor_pay/razor_pay_view.dart';
-import 'package:auralive/pages/payment_page/payment/stripe/stripe_service.dart';
-import 'package:auralive/utils/asset.dart';
-import 'package:auralive/utils/database.dart';
-import 'package:auralive/utils/enums.dart';
-import 'package:auralive/utils/utils.dart';
+import 'package:shortie/pages/payment_page/payment/flutter_wave/flutter_wave_services.dart';
+import 'package:shortie/ui/loading_ui.dart';
+import 'package:shortie/pages/payment_page/api/create_coin_plan_history_api.dart';
+import 'package:shortie/pages/payment_page/payment/in_app_purchase/iap_callback.dart';
+import 'package:shortie/pages/payment_page/payment/in_app_purchase/in_app_purchase_helper.dart';
+import 'package:shortie/pages/payment_page/payment/razor_pay/razor_pay_view.dart';
+import 'package:shortie/pages/payment_page/payment/stripe/stripe_service.dart';
+import 'package:shortie/utils/asset.dart';
+import 'package:shortie/utils/database.dart';
+import 'package:shortie/utils/enums.dart';
+import 'package:shortie/utils/utils.dart';
 
 class PaymentController extends GetxController implements IAPCallback {
   String coinPlanId = "";

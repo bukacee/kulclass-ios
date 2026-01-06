@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:auralive/localization/localizations_delegate.dart';
-import 'package:auralive/pages/language_page/controller/language_controller.dart';
-import 'package:auralive/ui/simple_app_bar_ui.dart';
-import 'package:auralive/utils/color.dart';
-import 'package:auralive/pages/language_page/widget/language_widget.dart';
-import 'package:auralive/utils/enums.dart';
+import 'package:shortie/localization/localizations_delegate.dart';
+import 'package:shortie/pages/language_page/controller/language_controller.dart';
+import 'package:shortie/ui/simple_app_bar_ui.dart';
+import 'package:shortie/utils/color.dart';
+import 'package:shortie/pages/language_page/widget/language_widget.dart';
+import 'package:shortie/utils/enums.dart';
 
 class LanguageView extends StatelessWidget {
   const LanguageView({super.key});

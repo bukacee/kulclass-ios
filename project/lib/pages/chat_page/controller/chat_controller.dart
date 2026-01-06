@@ -8,16 +8,16 @@ import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:record/record.dart';
-import 'package:auralive/custom/custom_image_picker.dart';
-import 'package:auralive/pages/chat_page/api/fetch_user_chat_api.dart';
-import 'package:auralive/pages/chat_page/api/send_file_api.dart';
-import 'package:auralive/pages/chat_page/model/fetch_user_chat_model.dart';
-import 'package:auralive/pages/chat_page/model/send_file_model.dart';
-import 'package:auralive/ui/image_picker_bottom_sheet_ui.dart';
-import 'package:auralive/utils/database.dart';
-import 'package:auralive/utils/enums.dart';
-import 'package:auralive/utils/socket_services.dart';
-import 'package:auralive/utils/utils.dart';
+import 'package:shortie/custom/custom_image_picker.dart';
+import 'package:shortie/pages/chat_page/api/fetch_user_chat_api.dart';
+import 'package:shortie/pages/chat_page/api/send_file_api.dart';
+import 'package:shortie/pages/chat_page/model/fetch_user_chat_model.dart';
+import 'package:shortie/pages/chat_page/model/send_file_model.dart';
+import 'package:shortie/ui/image_picker_bottom_sheet_ui.dart';
+import 'package:shortie/utils/database.dart';
+import 'package:shortie/utils/enums.dart';
+import 'package:shortie/utils/socket_services.dart';
+import 'package:shortie/utils/utils.dart';
 
 class ChatController extends GetxController {
   TextEditingController messageController = TextEditingController();

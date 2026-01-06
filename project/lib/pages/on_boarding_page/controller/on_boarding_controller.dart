@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
-import 'package:auralive/pages/on_boarding_page/widget/on_boarding_widget.dart';
-import 'package:auralive/routes/app_routes.dart';
-import 'package:auralive/utils/enums.dart';
+import 'package:shortie/pages/on_boarding_page/widget/on_boarding_widget.dart';
+import 'package:shortie/routes/app_routes.dart';
+import 'package:shortie/utils/enums.dart';
 
 class OnBoardingController extends GetxController {
   PageController pageController = PageController();

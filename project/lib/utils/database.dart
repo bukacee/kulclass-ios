@@ -1,10 +1,10 @@
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:auralive/pages/splash_screen_page/model/fetch_login_user_profile_model.dart';
-import 'package:auralive/routes/app_routes.dart';
-import 'package:auralive/pages/splash_screen_page/api/fetch_login_user_profile_api.dart';
-import 'package:auralive/utils/utils.dart';
+import 'package:shortie/pages/splash_screen_page/model/fetch_login_user_profile_model.dart';
+import 'package:shortie/routes/app_routes.dart';
+import 'package:shortie/pages/splash_screen_page/api/fetch_login_user_profile_api.dart';
+import 'package:shortie/utils/utils.dart';
 
 import 'constant.dart';
 

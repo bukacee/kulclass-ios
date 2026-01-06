@@ -1,6 +1,6 @@
 import 'package:get/get.dart';
-import 'package:auralive/utils/color.dart';
-import 'package:auralive/utils/utils.dart';
+import 'package:shortie/utils/color.dart';
+import 'package:shortie/utils/utils.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 class TermsOfUseController extends GetxController {

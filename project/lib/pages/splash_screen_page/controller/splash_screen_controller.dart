@@ -1,14 +1,14 @@
 import 'dart:async';
 
 import 'package:get/get.dart';
-import 'package:auralive/pages/splash_screen_page/api/admin_setting_api.dart';
-import 'package:auralive/routes/app_routes.dart';
-import 'package:auralive/utils/branch_io_services.dart';
-import 'package:auralive/utils/database.dart';
-import 'package:auralive/utils/enums.dart';
-import 'package:auralive/utils/internet_connection.dart';
-import 'package:auralive/utils/request.dart';
-import 'package:auralive/utils/utils.dart';
+import 'package:shortie/pages/splash_screen_page/api/admin_setting_api.dart';
+import 'package:shortie/routes/app_routes.dart';
+import 'package:shortie/utils/branch_io_services.dart';
+import 'package:shortie/utils/database.dart';
+import 'package:shortie/utils/enums.dart';
+import 'package:shortie/utils/internet_connection.dart';
+import 'package:shortie/utils/request.dart';
+import 'package:shortie/utils/utils.dart';
 
 class SplashScreenController extends GetxController {
   @override

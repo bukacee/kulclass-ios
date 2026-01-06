@@ -1,6 +1,6 @@
 import 'package:http/http.dart' as http;
-import 'package:auralive/utils/api.dart';
-import 'package:auralive/utils/utils.dart';
+import 'package:shortie/utils/api.dart';
+import 'package:shortie/utils/utils.dart';
 
 class ReelsLikeDislikeApi {
   static Future<void> callApi({required String loginUserId, required String videoId}) async {

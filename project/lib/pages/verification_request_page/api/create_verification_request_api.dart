@@ -1,8 +1,8 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:auralive/pages/verification_request_page/model/create_verification_request_model.dart';
-import 'package:auralive/utils/api.dart';
-import 'package:auralive/utils/utils.dart';
+import 'package:shortie/pages/verification_request_page/model/create_verification_request_model.dart';
+import 'package:shortie/utils/api.dart';
+import 'package:shortie/utils/utils.dart';
 
 class CreateVerificationRequestApi {
   static Future<CreateVerificationRequestModel?> callApi({

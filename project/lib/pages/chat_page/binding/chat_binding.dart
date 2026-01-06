@@ -1,5 +1,5 @@
 import 'package:get/get.dart';
-import 'package:auralive/pages/chat_page/controller/chat_controller.dart';
+import 'package:shortie/pages/chat_page/controller/chat_controller.dart';
 
 class ChatBinding extends Bindings {
   @override

@@ -1,6 +1,6 @@
 import 'package:get/get_rx/src/rx_typedefs/rx_typedefs.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:auralive/utils/utils.dart';
+import 'package:shortie/utils/utils.dart';
 
 class AppRequest {
   static Future<void> notificationPermission({Callback? callback}) async {

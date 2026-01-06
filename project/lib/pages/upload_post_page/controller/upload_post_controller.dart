@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:auralive/custom/custom_image_picker.dart';
-import 'package:auralive/custom/custom_multi_image_picker.dart';
-import 'package:auralive/pages/preview_hash_tag_page/api/create_hash_tag_api.dart';
-import 'package:auralive/pages/preview_hash_tag_page/api/fetch_hash_tag_api.dart';
-import 'package:auralive/pages/preview_hash_tag_page/model/create_hash_tag_model.dart';
-import 'package:auralive/pages/preview_hash_tag_page/model/fetch_hash_tag_model.dart';
-import 'package:auralive/pages/upload_post_page/api/upload_post_api.dart';
-import 'package:auralive/pages/upload_post_page/model/upload_post_model.dart';
-import 'package:auralive/ui/image_picker_bottom_sheet_ui.dart';
-import 'package:auralive/ui/loading_ui.dart';
-import 'package:auralive/utils/database.dart';
-import 'package:auralive/utils/enums.dart';
-import 'package:auralive/utils/internet_connection.dart';
-import 'package:auralive/utils/utils.dart';
+import 'package:shortie/custom/custom_image_picker.dart';
+import 'package:shortie/custom/custom_multi_image_picker.dart';
+import 'package:shortie/pages/preview_hash_tag_page/api/create_hash_tag_api.dart';
+import 'package:shortie/pages/preview_hash_tag_page/api/fetch_hash_tag_api.dart';
+import 'package:shortie/pages/preview_hash_tag_page/model/create_hash_tag_model.dart';
+import 'package:shortie/pages/preview_hash_tag_page/model/fetch_hash_tag_model.dart';
+import 'package:shortie/pages/upload_post_page/api/upload_post_api.dart';
+import 'package:shortie/pages/upload_post_page/model/upload_post_model.dart';
+import 'package:shortie/ui/image_picker_bottom_sheet_ui.dart';
+import 'package:shortie/ui/loading_ui.dart';
+import 'package:shortie/utils/database.dart';
+import 'package:shortie/utils/enums.dart';
+import 'package:shortie/utils/internet_connection.dart';
+import 'package:shortie/utils/utils.dart';
 
 class UploadPostController extends GetxController {
   List<String> selectedImages = [];

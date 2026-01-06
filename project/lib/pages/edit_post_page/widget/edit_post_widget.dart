@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_rx/src/rx_typedefs/rx_typedefs.dart';
-import 'package:auralive/custom/custom_format_number.dart';
-import 'package:auralive/pages/edit_post_page/controller/edit_post_controller.dart';
-import 'package:auralive/shimmer/hash_tag_bottom_sheet_shimmer_ui.dart';
-import 'package:auralive/ui/no_data_found_ui.dart';
-import 'package:auralive/main.dart';
-import 'package:auralive/utils/asset.dart';
-import 'package:auralive/utils/color.dart';
-import 'package:auralive/utils/enums.dart';
-import 'package:auralive/utils/font_style.dart';
+import 'package:shortie/custom/custom_format_number.dart';
+import 'package:shortie/pages/edit_post_page/controller/edit_post_controller.dart';
+import 'package:shortie/shimmer/hash_tag_bottom_sheet_shimmer_ui.dart';
+import 'package:shortie/ui/no_data_found_ui.dart';
+import 'package:shortie/main.dart';
+import 'package:shortie/utils/asset.dart';
+import 'package:shortie/utils/color.dart';
+import 'package:shortie/utils/enums.dart';
+import 'package:shortie/utils/font_style.dart';
 
 class PreviewPostCaptionUi extends StatefulWidget {
   const PreviewPostCaptionUi({super.key});

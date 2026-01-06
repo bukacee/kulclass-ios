@@ -1,10 +1,10 @@
 import 'dart:async';
 import 'package:get/get.dart';
-import 'package:auralive/pages/bottom_bar_page/controller/bottom_bar_controller.dart';
-import 'package:auralive/pages/feed_page/controller/feed_controller.dart';
-import 'package:auralive/pages/message_page/controller/message_controller.dart';
-import 'package:auralive/pages/profile_page/controller/profile_controller.dart';
-import 'package:auralive/pages/reels_page/controller/reels_controller.dart';
+import 'package:shortie/pages/bottom_bar_page/controller/bottom_bar_controller.dart';
+import 'package:shortie/pages/feed_page/controller/feed_controller.dart';
+import 'package:shortie/pages/message_page/controller/message_controller.dart';
+import 'package:shortie/pages/profile_page/controller/profile_controller.dart';
+import 'package:shortie/pages/reels_page/controller/reels_controller.dart';
 
 class BottomBarBinding extends Bindings {
   @override

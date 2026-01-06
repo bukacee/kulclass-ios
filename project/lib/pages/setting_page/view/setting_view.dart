@@ -1,19 +1,19 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:auralive/ui/app_button_ui.dart';
-import 'package:auralive/ui/delete_user_dialog_ui.dart';
-import 'package:auralive/ui/logout_user_dialog_ui.dart';
-import 'package:auralive/main.dart';
-import 'package:auralive/pages/setting_page/controller/setting_controller.dart';
-import 'package:auralive/routes/app_routes.dart';
-import 'package:auralive/ui/simple_app_bar_ui.dart';
-import 'package:auralive/utils/asset.dart';
-import 'package:auralive/utils/color.dart';
-import 'package:auralive/utils/database.dart';
-import 'package:auralive/utils/enums.dart';
-import 'package:auralive/utils/font_style.dart';
-import 'package:auralive/pages/setting_page/widget/setting_widget.dart';
+import 'package:shortie/ui/app_button_ui.dart';
+import 'package:shortie/ui/delete_user_dialog_ui.dart';
+import 'package:shortie/ui/logout_user_dialog_ui.dart';
+import 'package:shortie/main.dart';
+import 'package:shortie/pages/setting_page/controller/setting_controller.dart';
+import 'package:shortie/routes/app_routes.dart';
+import 'package:shortie/ui/simple_app_bar_ui.dart';
+import 'package:shortie/utils/asset.dart';
+import 'package:shortie/utils/color.dart';
+import 'package:shortie/utils/database.dart';
+import 'package:shortie/utils/enums.dart';
+import 'package:shortie/utils/font_style.dart';
+import 'package:shortie/pages/setting_page/widget/setting_widget.dart';
 
 class SettingView extends GetView<SettingController> {
   const SettingView({super.key});

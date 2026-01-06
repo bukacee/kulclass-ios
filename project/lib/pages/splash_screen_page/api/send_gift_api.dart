@@ -1,9 +1,9 @@
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
-import 'package:auralive/pages/splash_screen_page/model/send_gift_model.dart';
-import 'package:auralive/utils/api.dart';
-import 'package:auralive/utils/utils.dart';
+import 'package:shortie/pages/splash_screen_page/model/send_gift_model.dart';
+import 'package:shortie/utils/api.dart';
+import 'package:shortie/utils/utils.dart';
 
 class SendGiftApi {
   static Future<SendGiftModel?> callApi(

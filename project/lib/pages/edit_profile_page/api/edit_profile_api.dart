@@ -1,8 +1,8 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:auralive/pages/edit_profile_page/model/edit_profile_model.dart';
-import 'package:auralive/utils/api.dart';
-import 'package:auralive/utils/utils.dart';
+import 'package:shortie/pages/edit_profile_page/model/edit_profile_model.dart';
+import 'package:shortie/utils/api.dart';
+import 'package:shortie/utils/utils.dart';
 
 class EditProfileApi {
   static Future<EditProfileModel?> callApi({

@@ -1,4 +1,4 @@
-import 'package:auralive/utils/enums.dart';
+import 'package:shortie/utils/enums.dart';
 
 final Map<String, String> taIN = {
   EnumLocal.txtAppName.name: "ஷார்ட்டி",

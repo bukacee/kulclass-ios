@@ -3,17 +3,17 @@ import 'dart:math';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:auralive/pages/login_page/api/check_user_exist_api.dart';
-import 'package:auralive/ui/loading_ui.dart';
-import 'package:auralive/pages/splash_screen_page/api/fetch_login_user_profile_api.dart';
-import 'package:auralive/pages/splash_screen_page/model/fetch_login_user_profile_model.dart';
-import 'package:auralive/routes/app_routes.dart';
-import 'package:auralive/pages/login_page/api/login_api.dart';
-import 'package:auralive/pages/login_page/model/login_model.dart';
-import 'package:auralive/utils/database.dart';
-import 'package:auralive/utils/enums.dart';
-import 'package:auralive/utils/internet_connection.dart';
-import 'package:auralive/utils/utils.dart';
+import 'package:shortie/pages/login_page/api/check_user_exist_api.dart';
+import 'package:shortie/ui/loading_ui.dart';
+import 'package:shortie/pages/splash_screen_page/api/fetch_login_user_profile_api.dart';
+import 'package:shortie/pages/splash_screen_page/model/fetch_login_user_profile_model.dart';
+import 'package:shortie/routes/app_routes.dart';
+import 'package:shortie/pages/login_page/api/login_api.dart';
+import 'package:shortie/pages/login_page/model/login_model.dart';
+import 'package:shortie/utils/database.dart';
+import 'package:shortie/utils/enums.dart';
+import 'package:shortie/utils/internet_connection.dart';
+import 'package:shortie/utils/utils.dart';
 
 class LoginController extends GetxController {
   LoginModel? loginModel;

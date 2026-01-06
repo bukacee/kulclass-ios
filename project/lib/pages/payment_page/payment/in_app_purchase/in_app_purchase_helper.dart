@@ -14,7 +14,7 @@ import 'package:in_app_purchase_android/src/billing_client_wrappers/billing_clie
 
 /// ignore: depend_on_referenced_packages
 import 'package:in_app_purchase_storekit/store_kit_wrappers.dart';
-import 'package:auralive/main.dart';
+import 'package:shortie/main.dart';
 
 import 'iap_callback.dart';
 

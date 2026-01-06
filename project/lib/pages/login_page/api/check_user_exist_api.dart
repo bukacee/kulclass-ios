@@ -1,10 +1,10 @@
 import 'dart:convert';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
-import 'package:auralive/utils/api.dart';
-import 'package:auralive/utils/enums.dart';
-import 'package:auralive/utils/internet_connection.dart';
-import 'package:auralive/utils/utils.dart';
+import 'package:shortie/utils/api.dart';
+import 'package:shortie/utils/enums.dart';
+import 'package:shortie/utils/internet_connection.dart';
+import 'package:shortie/utils/utils.dart';
 
 class CheckUserExistApi {
   static Future<bool?> callApi({required String identity}) async {

@@ -1,8 +1,8 @@
 import 'dart:convert';
-import 'package:auralive/pages/my_wallet_page/model/fetch_coin_history_model.dart';
-import 'package:auralive/utils/api.dart';
+import 'package:shortie/pages/my_wallet_page/model/fetch_coin_history_model.dart';
+import 'package:shortie/utils/api.dart';
 import 'package:http/http.dart' as http;
-import 'package:auralive/utils/utils.dart';
+import 'package:shortie/utils/utils.dart';
 
 class FetchCoinHistoryApi {
   static Future<FetchCoinHistoryModel?> callApi({

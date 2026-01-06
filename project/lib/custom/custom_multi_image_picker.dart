@@ -1,7 +1,7 @@
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:auralive/ui/loading_ui.dart';
-import 'package:auralive/utils/utils.dart';
+import 'package:shortie/ui/loading_ui.dart';
+import 'package:shortie/utils/utils.dart';
 
 class CustomMultiImagePicker {
   static Future<List<String>> pickImage() async {

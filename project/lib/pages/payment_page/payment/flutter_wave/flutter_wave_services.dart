@@ -1,7 +1,7 @@
 import 'package:flutterwave_standard/flutterwave.dart';
 import 'package:get/get.dart';
 import 'package:get/get_rx/src/rx_typedefs/rx_typedefs.dart';
-import 'package:auralive/utils/utils.dart';
+import 'package:shortie/utils/utils.dart';
 
 class FlutterWaveService {
   static Future<void> init({required String amount, required Callback onPaymentComplete}) async {

@@ -3,13 +3,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
-import 'package:auralive/pages/audio_wise_videos_page/api/fetch_audio_wise_videos_api.dart';
-import 'package:auralive/pages/audio_wise_videos_page/model/fetch_audio_wise_videos_model.dart';
-import 'package:auralive/pages/preview_shorts_video_page/model/preview_shorts_video_model.dart';
-import 'package:auralive/routes/app_routes.dart';
-import 'package:auralive/utils/api.dart';
-import 'package:auralive/utils/database.dart';
-import 'package:auralive/utils/utils.dart';
+import 'package:shortie/pages/audio_wise_videos_page/api/fetch_audio_wise_videos_api.dart';
+import 'package:shortie/pages/audio_wise_videos_page/model/fetch_audio_wise_videos_model.dart';
+import 'package:shortie/pages/preview_shorts_video_page/model/preview_shorts_video_model.dart';
+import 'package:shortie/routes/app_routes.dart';
+import 'package:shortie/utils/api.dart';
+import 'package:shortie/utils/database.dart';
+import 'package:shortie/utils/utils.dart';
 
 class AudioWiseVideosController extends GetxController {
   ScrollController scrollController = ScrollController();
