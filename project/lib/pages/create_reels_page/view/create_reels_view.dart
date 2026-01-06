@@ -1,5 +1,3 @@
-// FILE: lib/pages/create_reels_page/view/create_reels_view.dart
-
 import 'package:camera/camera.dart';
 import 'package:deepar_flutter_plus/deepar_flutter_plus.dart';
 import 'package:flutter/material.dart';
@@ -7,66 +5,42 @@ import 'package:get/get.dart';
 
 // Your Controller
 import 'package:auralive/pages/create_reels_page/controller/create_reels_controller.dart';
-
-// Your Widgets (The music sheet you provided)
+// Your Widgets
 import 'package:auralive/pages/create_reels_page/widget/create_reels_widget.dart';
 
-import 'package:auralive/ui/loading_ui.dart'; 
-import 'package:auralive/utils/asset.dart'; 
-import 'package:auralive/utils/color.dart'; 
-import 'package:auralive/utils/enums.dart'; 
+import 'package:auralive/ui/loading_ui.dart';
+import 'package:auralive/utils/asset.dart';
+import 'package:auralive/utils/color.dart';
+import 'package:auralive/utils/enums.dart';
 
-
-import 'dart:developer';
- 
-import 'package:flutter/services.dart';
-import 'package:auralive/ui/circle_icon_button_ui.dart';
-import 'package:auralive/ui/preview_network_image_ui.dart'; 
-import 'package:auralive/main.dart'; 
-import 'package:auralive/utils/font_style.dart';
-
-
-class CreateReelsPage extends GetView<CreateReelsController> {
-  const CreateReelsPage({super.key});
+// 1. RENAMED Class to match your Routes
+class CreateReelsView extends GetView<CreateReelsController> {
+  const CreateReelsView({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.black,
       body: SafeArea(
-        padding: EdgeInsets.zero,
+        // 2. REMOVED 'padding' property (SafeArea doesn't support it)
         child: GetBuilder<CreateReelsController>(
           id: "onInitializeCamera",
           builder: (logic) {
             return Stack(
               children: [
-                // Layer 1: The Camera Preview (DeepAR or Standard)
                 _buildCameraPreview(logic),
-
-                // Layer 2: Top Bar (Close, Music, Flash)
                 Positioned(
-                  top: 10,
-                  left: 15,
-                  right: 15,
+                  top: 10, left: 15, right: 15,
                   child: _buildTopBar(context, logic),
                 ),
-
-                // Layer 3: Right Side Tools (Flip, Duration, etc.)
                 Positioned(
-                  top: 100,
-                  right: 15,
+                  top: 100, right: 15,
                   child: _buildRightSideTools(logic),
                 ),
-
-                // Layer 4: Bottom Controls (Effects, Record, Timer)
                 Positioned(
-                  bottom: 20,
-                  left: 0,
-                  right: 0,
+                  bottom: 20, left: 0, right: 0,
                   child: _buildBottomControls(context, logic),
                 ),
-
-                // Layer 5: Loading Indicator
                 if (logic.cameraController == null && !logic.isInitializeEffect)
                   const Center(child: LoadingUi()),
               ],
@@ -77,14 +51,13 @@ class CreateReelsPage extends GetView<CreateReelsController> {
     );
   }
 
-  /// 1. Camera Preview Logic
   Widget _buildCameraPreview(CreateReelsController logic) {
     if (logic.isUseEffects) {
-      // DeepAR Preview
       return GetBuilder<CreateReelsController>(
         id: "onInitializeEffect",
         builder: (logic) {
           if (logic.isInitializeEffect) {
+            // Ensure deepar_flutter_plus is imported at the top
             return DeepArPreview(logic.deepArController);
           } else {
             return Container(color: Colors.black);
@@ -92,24 +65,18 @@ class CreateReelsPage extends GetView<CreateReelsController> {
         },
       );
     } else {
-      // Standard Camera Preview
-      if (logic.cameraController != null &&
-          logic.cameraController!.value.isInitialized) {
-        return SizedBox.expand(
-          child: CameraPreview(logic.cameraController!),
-        );
+      if (logic.cameraController != null && logic.cameraController!.value.isInitialized) {
+        return SizedBox.expand(child: CameraPreview(logic.cameraController!));
       } else {
         return Container(color: Colors.black);
       }
     }
   }
 
-  /// 2. Top Bar (Close, Music, Flash)
   Widget _buildTopBar(BuildContext context, CreateReelsController logic) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        // Close Button
         GestureDetector(
           onTap: () => Get.back(),
           child: Container(
@@ -118,13 +85,8 @@ class CreateReelsPage extends GetView<CreateReelsController> {
             child: const Icon(Icons.close, color: Colors.white, size: 24),
           ),
         ),
-
-        // Music Selector
         GestureDetector(
-          onTap: () {
-            // This calls the widget from create_reels_widget.dart
-            AddMusicBottomSheet.show(context: context);
-          },
+          onTap: () => AddMusicBottomSheet.show(context: context),
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 8),
             decoration: BoxDecoration(
@@ -141,15 +103,9 @@ class CreateReelsPage extends GetView<CreateReelsController> {
                     return ConstrainedBox(
                       constraints: const BoxConstraints(maxWidth: 120),
                       child: Text(
-                        logic.selectedSound != null
-                            ? logic.selectedSound!['name']
-                            : EnumLocal.txtAddMusic.name.tr,
+                        logic.selectedSound != null ? logic.selectedSound!['name'] : EnumLocal.txtAddMusic.name.tr,
                         overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 14,
-                          fontWeight: FontWeight.w600,
-                        ),
+                        style: const TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.w600),
                       ),
                     );
                   },
@@ -158,23 +114,20 @@ class CreateReelsPage extends GetView<CreateReelsController> {
             ),
           ),
         ),
-
-        // Flash Toggle
+        
+        // 3. FIXED Duplicate ID: Just listen to 'onSwitchFlash'. 
+        // NOTE: You must update your controller (see step 2 below)
         GetBuilder<CreateReelsController>(
-          id: "onSwitchFlash",
-          id: "onSwitchEffectFlash",
+          id: "onSwitchFlash", 
           builder: (logic) {
             return GestureDetector(
-              onTap: logic.isUseEffects
-                  ? logic.onSwitchEffectFlash
-                  : logic.onSwitchFlash,
+              onTap: logic.isUseEffects ? logic.onSwitchEffectFlash : logic.onSwitchFlash,
               child: Container(
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.black.withOpacity(0.3)),
                 child: Icon(
                   logic.isFlashOn ? Icons.flash_on : Icons.flash_off,
-                  color: Colors.white,
-                  size: 24,
+                  color: Colors.white, size: 24,
                 ),
               ),
             );
@@ -184,31 +137,21 @@ class CreateReelsPage extends GetView<CreateReelsController> {
     );
   }
 
-  /// 3. Right Side Tools (Flip, Speed, Duration)
   Widget _buildRightSideTools(CreateReelsController logic) {
     return Column(
       children: [
-        // Flip Camera
         _buildSideToolItem(
-          icon: Icons.flip_camera_ios_outlined,
-          label: "Flip",
-          onTap: logic.isUseEffects
-              ? logic.onSwitchEffectCamera
-              : logic.onSwitchCamera,
+          icon: Icons.flip_camera_ios_outlined, label: "Flip",
+          onTap: logic.isUseEffects ? logic.onSwitchEffectCamera : logic.onSwitchCamera,
         ),
         const SizedBox(height: 20),
-
-        // Effect Toggle (Only visible if using DeepAR)
         if (logic.isUseEffects) ...[
           _buildSideToolItem(
-            icon: Icons.face,
-            label: "Effects",
+            icon: Icons.face, label: "Effects",
             onTap: logic.onToggleEffect,
           ),
           const SizedBox(height: 20),
         ],
-
-        // Duration Selector
         GetBuilder<CreateReelsController>(
           id: "onChangeRecordingDuration",
           builder: (logic) {
@@ -221,25 +164,18 @@ class CreateReelsPage extends GetView<CreateReelsController> {
               child: Column(
                 children: [
                   Container(
-                    height: 35,
-                    width: 35,
+                    height: 35, width: 35,
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       border: Border.all(color: Colors.white, width: 1.5),
                       color: Colors.black.withOpacity(0.3),
                     ),
                     child: Center(
-                      child: Text(
-                        "${logic.selectedDuration}s",
-                        style: const TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.bold),
-                      ),
+                      child: Text("${logic.selectedDuration}s", style: const TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.bold)),
                     ),
                   ),
                   const SizedBox(height: 5),
-                  const Text(
-                    "Timer",
-                    style: TextStyle(color: Colors.white, fontSize: 10),
-                  )
+                  const Text("Timer", style: TextStyle(color: Colors.white, fontSize: 10))
                 ],
               ),
             );
@@ -262,12 +198,10 @@ class CreateReelsPage extends GetView<CreateReelsController> {
     );
   }
 
-  /// 4. Bottom Controls (Effects List, Record Button)
   Widget _buildBottomControls(BuildContext context, CreateReelsController logic) {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        // Timer Display (00:05)
         GetBuilder<CreateReelsController>(
           id: "onChangeTimer",
           builder: (logic) {
@@ -275,27 +209,18 @@ class CreateReelsPage extends GetView<CreateReelsController> {
                return Container(
                  margin: const EdgeInsets.only(bottom: 10),
                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                 decoration: BoxDecoration(
-                   color: Colors.red,
-                   borderRadius: BorderRadius.circular(5)
-                 ),
-                 child: Text(
-                   "00:${logic.countTime.toString().padLeft(2, '0')}",
-                   style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-                 ),
+                 decoration: BoxDecoration(color: Colors.red, borderRadius: BorderRadius.circular(5)),
+                 child: Text("00:${logic.countTime.toString().padLeft(2, '0')}", style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
                );
              }
              return const SizedBox.shrink();
           },
         ),
-
-        // Effect List (Horizontal Scroll)
         GetBuilder<CreateReelsController>(
+          // 4. FIXED Duplicate ID: Removed redundant ID.
           id: "onToggleEffect",
-          id: "onChangeEffect",
           builder: (logic) {
             if (!logic.isShowEffects || !logic.isUseEffects) return const SizedBox.shrink();
-            
             return Container(
               height: 100,
               margin: const EdgeInsets.only(bottom: 15),
@@ -306,46 +231,22 @@ class CreateReelsPage extends GetView<CreateReelsController> {
                 itemBuilder: (context, index) {
                   bool isSelected = logic.selectedEffectIndex == index;
                   return GestureDetector(
-                    onTap: () {
-                      if (index == 0) {
-                        logic.onClearEffect(index);
-                      } else {
-                        logic.onChangeEffect(index);
-                      }
-                    },
+                    onTap: () => index == 0 ? logic.onClearEffect(index) : logic.onChangeEffect(index),
                     child: Container(
-                      width: 70,
-                      margin: const EdgeInsets.only(right: 10),
+                      width: 70, margin: const EdgeInsets.only(right: 10),
                       child: Column(
                         children: [
                           Container(
-                            height: 60,
-                            width: 60,
+                            height: 60, width: 60,
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
                               border: isSelected ? Border.all(color: AppColor.primary, width: 2) : null,
-                              image: index == 0 
-                                ? null 
-                                : DecorationImage(
-                                    // Ensure effectImages are valid paths in your AppAsset
-                                    image: AssetImage(logic.effectImages[index]),
-                                    fit: BoxFit.cover,
-                                  ),
+                              image: index == 0 ? null : DecorationImage(image: AssetImage(logic.effectImages[index]), fit: BoxFit.cover),
                             ),
-                            child: index == 0 
-                              ? const Center(child: Icon(Icons.block, color: Colors.white))
-                              : null,
+                            child: index == 0 ? const Center(child: Icon(Icons.block, color: Colors.white)) : null,
                           ),
                           const SizedBox(height: 5),
-                          Text(
-                            logic.effectNames[index], 
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(
-                              color: isSelected ? AppColor.primary : Colors.white, 
-                              fontSize: 10
-                            ),
-                          )
+                          Text(logic.effectNames[index], maxLines: 1, overflow: TextOverflow.ellipsis, style: TextStyle(color: isSelected ? AppColor.primary : Colors.white, fontSize: 10))
                         ],
                       ),
                     ),
@@ -355,18 +256,13 @@ class CreateReelsPage extends GetView<CreateReelsController> {
             );
           },
         ),
-
-        // Recording Button Area
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 30),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              // Gallery Button (Placeholder)
               const SizedBox(width: 40, child: Icon(Icons.photo_library, color: Colors.white)),
-
-              // Shutter Button
               GestureDetector(
                 onTap: logic.onClickRecordingButton,
                 onLongPressStart: logic.isUseEffects ? logic.onLongPressStart : null,
@@ -377,48 +273,28 @@ class CreateReelsPage extends GetView<CreateReelsController> {
                     bool isRecording = logic.isRecording == "start";
                     return AnimatedContainer(
                       duration: const Duration(milliseconds: 300),
-                      height: isRecording ? 85 : 70,
-                      width: isRecording ? 85 : 70,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        border: Border.all(color: Colors.white, width: 4),
-                        color: Colors.transparent,
-                      ),
+                      height: isRecording ? 85 : 70, width: isRecording ? 85 : 70,
+                      decoration: BoxDecoration(shape: BoxShape.circle, border: Border.all(color: Colors.white, width: 4), color: Colors.transparent),
                       child: Center(
                         child: AnimatedContainer(
                           duration: const Duration(milliseconds: 300),
-                          height: isRecording ? 30 : 55,
-                          width: isRecording ? 30 : 55,
-                          decoration: BoxDecoration(
-                            color: AppColor.primary, 
-                            borderRadius: BorderRadius.circular(isRecording ? 5 : 100),
-                          ),
+                          height: isRecording ? 30 : 55, width: isRecording ? 30 : 55,
+                          decoration: BoxDecoration(color: AppColor.primary, borderRadius: BorderRadius.circular(isRecording ? 5 : 100)),
                         ),
                       ),
                     );
                   },
                 ),
               ),
-
-              // Done / Preview Button (Only visible if recorded something)
               GestureDetector(
-                onTap: () {
-                   logic.onClickPreviewButton();
-                },
+                onTap: logic.onClickPreviewButton,
                 child: SizedBox(
                   width: 40, 
                   child: GetBuilder<CreateReelsController>(
                     id: "onChangeRecordingEvent",
                     builder: (logic) {
                        if (logic.isRecording == "pause" || (logic.isRecording == "stop" && logic.countTime > 0)) {
-                         return Container(
-                           height: 35, width: 35,
-                           decoration: const BoxDecoration(
-                             color: Colors.white,
-                             shape: BoxShape.circle
-                           ),
-                           child: const Icon(Icons.check, color: Colors.black, size: 20),
-                         );
+                         return Container(height: 35, width: 35, decoration: const BoxDecoration(color: Colors.white, shape: BoxShape.circle), child: const Icon(Icons.check, color: Colors.black, size: 20));
                        }
                        return const SizedBox.shrink();
                     },

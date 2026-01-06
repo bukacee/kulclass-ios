@@ -1,3 +1,4 @@
+import 'package:deepar_flutter_plus/deepar_flutter_plus.dart';
 import 'dart:async';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:camera/camera.dart';
@@ -366,7 +367,7 @@ Future<void> onDisposeEffect() async {
     Utils.showLog("Effect Controller Dispose Success");
   }
 
-  
+
   Future<void> onSwitchEffectFlash() async {
     if (isFrontCamera == false) {
       if (isFlashOn) {
@@ -376,7 +377,8 @@ Future<void> onDisposeEffect() async {
         isFlashOn = true;
         await deepArController.toggleFlash();
       }
-      update(["onSwitchEffectFlash"]);
+      // UPDATE THIS LINE to include "onSwitchFlash"
+      update(["onSwitchEffectFlash", "onSwitchFlash"]); 
     }
   }
 

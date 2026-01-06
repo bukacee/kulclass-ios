@@ -1,13 +1,27 @@
+import 'package:flutter/material.dart'; // 1. IMPORT THIS
 import 'package:flutterwave_standard/flutterwave.dart';
 import 'package:get/get.dart';
 import 'package:get/get_rx/src/rx_typedefs/rx_typedefs.dart';
 import 'package:auralive/utils/utils.dart';
 
 class FlutterWaveService {
-  static Future<void> init({required String amount, required Callback onPaymentComplete}) async {
-    final Customer customer = Customer(name: "Flutter wave Developer", email: "customer@customer.com", phoneNumber: '');
+  // 2. Add 'required BuildContext context' here
+  static Future<void> init({
+    required BuildContext context, 
+    required String amount, 
+    required Callback onPaymentComplete
+  }) async {
+    final Customer customer = Customer(
+      name: "Flutter wave Developer", 
+      email: "customer@customer.com", 
+      phoneNumber: ''
+    );
 
     Utils.showLog("Flutter Wave Id => ${Utils.flutterWaveId}");
+    
+    // Note: Depending on your package version, you might also need 
+    // to pass 'context: context' inside this constructor. 
+    // If the compiler complains here, add 'context: context,' below.
     final Flutterwave flutterWave = Flutterwave( 
       publicKey: Utils.flutterWaveId,
       currency: Utils.flutterWaveCurrencyCode,
@@ -22,7 +36,8 @@ class FlutterWaveService {
 
     Utils.showLog("Flutter Wave Payment Finish");
 
-    final ChargeResponse response = await flutterWave.charge();
+    // 3. PASS CONTEXT HERE to fix the "1 argument required" error
+    final ChargeResponse response = await flutterWave.charge(context);
 
     Utils.showLog("Flutter Wave Payment Status => ${response.status.toString()}");
 

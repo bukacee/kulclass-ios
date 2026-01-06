@@ -14,7 +14,7 @@ class BranchIoServices {
   // This is Use to Splash Screen...
   static void onListenBranchIoLinks() async {
     StreamController<String> streamController = StreamController<String>();
-    StreamSubscription<Map>? streamSubscription = FlutterBranchSdk.initSession().listen(
+    StreamSubscription<Map>? streamSubscription = FlutterBranchSdk.listSession().listen(
       (data) {
         log('Click To Branch Io Link => $data');
         streamController.sink.add((data.toString()));

@@ -160,6 +160,7 @@ class PaymentController extends GetxController implements IAPCallback {
       try {
         Get.dialog(const LoadingUi(), barrierDismissible: false); // Start Loading...
         FlutterWaveService.init(
+          context: context,
           amount: coinAmount.toString(),
           onPaymentComplete: () async {
             Utils.showLog("Flutter Wave Payment Successfully");
