@@ -2,17 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:preload_page_view/preload_page_view.dart';
-import 'package:shortie/main.dart';
-import 'package:shortie/pages/reels_page/controller/reels_controller.dart';
-import 'package:shortie/pages/reels_page/widget/reels_widget.dart';
-import 'package:shortie/routes/app_routes.dart';
-import 'package:shortie/shimmer/reels_shimmer_ui.dart';
-import 'package:shortie/ui/no_data_found_ui.dart';
-import 'package:shortie/ui/video_picker_bottom_sheet_ui.dart';
-import 'package:shortie/utils/color.dart';
-import 'package:shortie/utils/constant.dart';
-import 'package:shortie/utils/enums.dart';
-import 'package:shortie/utils/font_style.dart';
+import 'package:auralive/main.dart';
+import 'package:auralive/pages/reels_page/controller/reels_controller.dart';
+import 'package:auralive/pages/reels_page/widget/reels_widget.dart';
+import 'package:auralive/routes/app_routes.dart';
+import 'package:auralive/shimmer/reels_shimmer_ui.dart';
+import 'package:auralive/ui/no_data_found_ui.dart';
+import 'package:auralive/ui/video_picker_bottom_sheet_ui.dart';
+import 'package:auralive/utils/color.dart';
+import 'package:auralive/utils/constant.dart';
+import 'package:auralive/utils/enums.dart';
+import 'package:auralive/utils/font_style.dart';
 
 class ReelsView extends GetView<ReelsController> {
   const ReelsView({super.key});

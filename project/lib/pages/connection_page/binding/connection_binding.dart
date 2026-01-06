@@ -1,5 +1,5 @@
 import 'package:get/get.dart';
-import 'package:shortie/pages/connection_page/controller/connection_controller.dart';
+import 'package:auralive/pages/connection_page/controller/connection_controller.dart';
 
 class ConnectionBinding extends Bindings {
   @override

@@ -1,12 +1,12 @@
 import 'dart:io';
 
 import 'package:get/get.dart';
-import 'package:shortie/custom/custom_thumbnail.dart';
-import 'package:shortie/custom/custom_video_time.dart';
-import 'package:shortie/routes/app_routes.dart';
-import 'package:shortie/ui/loading_ui.dart';
-import 'package:shortie/utils/enums.dart';
-import 'package:shortie/utils/utils.dart';
+import 'package:auralive/custom/custom_thumbnail.dart';
+import 'package:auralive/custom/custom_video_time.dart';
+import 'package:auralive/routes/app_routes.dart';
+import 'package:auralive/ui/loading_ui.dart';
+import 'package:auralive/utils/enums.dart';
+import 'package:auralive/utils/utils.dart';
 import 'package:video_trimmer/video_trimmer.dart';
 
 class TrimVideoController extends GetxController {

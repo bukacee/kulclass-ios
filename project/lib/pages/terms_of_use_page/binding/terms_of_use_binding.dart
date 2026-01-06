@@ -1,5 +1,5 @@
 import 'package:get/get.dart';
-import 'package:shortie/pages/terms_of_use_page/controller/terms_of_use_controller.dart';
+import 'package:auralive/pages/terms_of_use_page/controller/terms_of_use_controller.dart';
 
 class TermsOfUseBinding extends Bindings {
   @override

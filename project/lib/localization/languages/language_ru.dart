@@ -1,4 +1,4 @@
-import 'package:shortie/utils/enums.dart';
+import 'package:auralive/utils/enums.dart';
 
 final Map<String, String> ruRU = {
   EnumLocal.txtAppName.name: "Коротышка",

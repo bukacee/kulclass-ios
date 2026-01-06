@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:shortie/pages/stream_page/api/fetch_live_user_api.dart';
-import 'package:shortie/pages/stream_page/model/fetch_live_user_model.dart';
-import 'package:shortie/utils/database.dart';
-import 'package:shortie/utils/utils.dart';
+import 'package:auralive/pages/stream_page/api/fetch_live_user_api.dart';
+import 'package:auralive/pages/stream_page/model/fetch_live_user_model.dart';
+import 'package:auralive/utils/database.dart';
+import 'package:auralive/utils/utils.dart';
 
 class StreamController extends GetxController {
   ScrollController scrollController = ScrollController();

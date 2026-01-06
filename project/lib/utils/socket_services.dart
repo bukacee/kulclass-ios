@@ -1,11 +1,11 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:shortie/ui/live_user_send_gift_bottom_sheet_ui.dart';
-import 'package:shortie/pages/chat_page/model/fetch_user_chat_model.dart';
-import 'package:shortie/utils/api.dart';
-import 'package:shortie/utils/database.dart';
-import 'package:shortie/utils/utils.dart';
+import 'package:auralive/ui/live_user_send_gift_bottom_sheet_ui.dart';
+import 'package:auralive/pages/chat_page/model/fetch_user_chat_model.dart';
+import 'package:auralive/utils/api.dart';
+import 'package:auralive/utils/database.dart';
+import 'package:auralive/utils/utils.dart';
 import 'package:socket_io_client/socket_io_client.dart' as io;
 
 io.Socket? socket;

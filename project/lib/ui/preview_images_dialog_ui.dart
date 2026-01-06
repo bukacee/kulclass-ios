@@ -1,8 +1,8 @@
 // import 'package:flutter/material.dart';
 // import 'package:get/get.dart';
-// import 'package:shortie/ui/preview_network_image_ui.dart';
-// import 'package:shortie/utils/asset.dart';
-// import 'package:shortie/utils/color.dart';
+// import 'package:auralive/ui/preview_network_image_ui.dart';
+// import 'package:auralive/utils/asset.dart';
+// import 'package:auralive/utils/color.dart';
 //
 // class PreviewImagesDialogUi {
 //   static RxInt currentIndex = 0.obs;

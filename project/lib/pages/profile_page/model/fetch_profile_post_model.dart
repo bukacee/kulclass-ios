@@ -1,4 +1,4 @@
-import 'package:shortie/pages/feed_page/model/post_image_model.dart';
+import 'package:auralive/pages/feed_page/model/post_image_model.dart';
 
 class FetchProfilePostModel {
   bool? status;

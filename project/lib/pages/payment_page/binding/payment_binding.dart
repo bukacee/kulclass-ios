@@ -1,5 +1,5 @@
 import 'package:get/get.dart';
-import 'package:shortie/pages/payment_page/controller/payment_controller.dart';
+import 'package:auralive/pages/payment_page/controller/payment_controller.dart';
 
 class PaymentBinding extends Bindings {
   @override

@@ -1,8 +1,8 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:shortie/pages/profile_page/model/delete_post_model.dart';
-import 'package:shortie/utils/api.dart';
-import 'package:shortie/utils/utils.dart';
+import 'package:auralive/pages/profile_page/model/delete_post_model.dart';
+import 'package:auralive/utils/api.dart';
+import 'package:auralive/utils/utils.dart';
 
 class DeletePostApi {
   static Future<DeletePostModel?> callApi({required String postId}) async {

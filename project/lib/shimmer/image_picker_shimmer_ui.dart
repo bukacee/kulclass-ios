@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
-import 'package:shortie/utils/color.dart';
+import 'package:auralive/utils/color.dart';
 import 'package:flutter/widgets.dart';
 
 class ImagePickerShimmerUi extends StatelessWidget {

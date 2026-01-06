@@ -1,21 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_rx/src/rx_typedefs/rx_typedefs.dart';
-import 'package:shortie/custom/custom_format_number.dart';
-import 'package:shortie/ui/app_button_ui.dart';
-import 'package:shortie/ui/gradient_text_ui.dart';
-import 'package:shortie/ui/loading_ui.dart';
-import 'package:shortie/ui/no_data_found_ui.dart';
-import 'package:shortie/main.dart';
-import 'package:shortie/pages/recharge_page/controller/recharge_controller.dart';
-import 'package:shortie/routes/app_routes.dart';
-import 'package:shortie/shimmer/recharge_shimmer_ui.dart';
-import 'package:shortie/ui/preview_network_image_ui.dart';
-import 'package:shortie/ui/simple_app_bar_ui.dart';
-import 'package:shortie/utils/asset.dart';
-import 'package:shortie/utils/color.dart';
-import 'package:shortie/utils/enums.dart';
-import 'package:shortie/utils/font_style.dart';
+import 'package:auralive/custom/custom_format_number.dart';
+import 'package:auralive/ui/app_button_ui.dart';
+import 'package:auralive/ui/gradient_text_ui.dart';
+import 'package:auralive/ui/loading_ui.dart';
+import 'package:auralive/ui/no_data_found_ui.dart';
+import 'package:auralive/main.dart';
+import 'package:auralive/pages/recharge_page/controller/recharge_controller.dart';
+import 'package:auralive/routes/app_routes.dart';
+import 'package:auralive/shimmer/recharge_shimmer_ui.dart';
+import 'package:auralive/ui/preview_network_image_ui.dart';
+import 'package:auralive/ui/simple_app_bar_ui.dart';
+import 'package:auralive/utils/asset.dart';
+import 'package:auralive/utils/color.dart';
+import 'package:auralive/utils/enums.dart';
+import 'package:auralive/utils/font_style.dart';
 
 class RechargeView extends StatelessWidget {
   const RechargeView({super.key});

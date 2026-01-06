@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import 'package:shortie/pages/search_page/controller/search_controller.dart' as controller;
-import 'package:shortie/pages/search_page/widget/search_widget.dart';
-import 'package:shortie/utils/color.dart';
-import 'package:shortie/utils/enums.dart';
+import 'package:auralive/pages/search_page/controller/search_controller.dart' as controller;
+import 'package:auralive/pages/search_page/widget/search_widget.dart';
+import 'package:auralive/utils/color.dart';
+import 'package:auralive/utils/enums.dart';
 
 class SearchView extends StatelessWidget {
   const SearchView({super.key});

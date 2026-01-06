@@ -5,20 +5,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
-import 'package:shortie/custom/custom_format_audio_time.dart';
-import 'package:shortie/custom/custom_format_chat_time.dart';
+import 'package:auralive/custom/custom_format_audio_time.dart';
+import 'package:auralive/custom/custom_format_chat_time.dart';
 
 
-import 'package:shortie/main.dart';
-import 'package:shortie/pages/fake_chat_page/controller/fake_chat_controller.dart';
-import 'package:shortie/ui/loading_ui.dart';
-import 'package:shortie/ui/preview_network_image_ui.dart';
-import 'package:shortie/ui/preview_profile_bottom_sheet_ui.dart';
-import 'package:shortie/utils/asset.dart';
-import 'package:shortie/utils/color.dart';
-import 'package:shortie/utils/enums.dart';
-import 'package:shortie/utils/font_style.dart';
-import 'package:shortie/utils/utils.dart';
+import 'package:auralive/main.dart';
+import 'package:auralive/pages/fake_chat_page/controller/fake_chat_controller.dart';
+import 'package:auralive/ui/loading_ui.dart';
+import 'package:auralive/ui/preview_network_image_ui.dart';
+import 'package:auralive/ui/preview_profile_bottom_sheet_ui.dart';
+import 'package:auralive/utils/asset.dart';
+import 'package:auralive/utils/color.dart';
+import 'package:auralive/utils/enums.dart';
+import 'package:auralive/utils/font_style.dart';
+import 'package:auralive/utils/utils.dart';
 import 'package:vibration/vibration.dart';
 
 class ChatAppBarUi extends GetView<FakeChatController> {

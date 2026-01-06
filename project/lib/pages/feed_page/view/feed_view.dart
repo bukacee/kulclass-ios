@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import 'package:shortie/pages/bottom_bar_page/controller/bottom_bar_controller.dart';
-import 'package:shortie/pages/feed_page/controller/feed_controller.dart';
-import 'package:shortie/pages/feed_page/widget/feed_widget.dart';
-import 'package:shortie/shimmer/feed_shimmer_ui.dart';
-import 'package:shortie/ui/no_data_found_ui.dart';
-import 'package:shortie/utils/color.dart';
-import 'package:shortie/utils/constant.dart';
+import 'package:auralive/pages/bottom_bar_page/controller/bottom_bar_controller.dart';
+import 'package:auralive/pages/feed_page/controller/feed_controller.dart';
+import 'package:auralive/pages/feed_page/widget/feed_widget.dart';
+import 'package:auralive/shimmer/feed_shimmer_ui.dart';
+import 'package:auralive/ui/no_data_found_ui.dart';
+import 'package:auralive/utils/color.dart';
+import 'package:auralive/utils/constant.dart';
 
 class FeedView extends GetView<FeedController> {
   const FeedView({super.key});

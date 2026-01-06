@@ -1,16 +1,16 @@
 import 'package:blurrycontainer/blurrycontainer.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:shortie/pages/message_page/widget/message_widget.dart';
-import 'package:shortie/pages/message_request_page/controller/message_request_controller.dart';
-import 'package:shortie/routes/app_routes.dart';
-import 'package:shortie/shimmer/user_list_shimmer_ui.dart';
-import 'package:shortie/ui/no_data_found_ui.dart';
-import 'package:shortie/ui/simple_app_bar_ui.dart';
-import 'package:shortie/utils/color.dart';
-import 'package:shortie/utils/constant.dart';
-import 'package:shortie/utils/enums.dart';
-import 'package:shortie/utils/font_style.dart';
+import 'package:auralive/pages/message_page/widget/message_widget.dart';
+import 'package:auralive/pages/message_request_page/controller/message_request_controller.dart';
+import 'package:auralive/routes/app_routes.dart';
+import 'package:auralive/shimmer/user_list_shimmer_ui.dart';
+import 'package:auralive/ui/no_data_found_ui.dart';
+import 'package:auralive/ui/simple_app_bar_ui.dart';
+import 'package:auralive/utils/color.dart';
+import 'package:auralive/utils/constant.dart';
+import 'package:auralive/utils/enums.dart';
+import 'package:auralive/utils/font_style.dart';
 
 class MessageRequestView extends GetView<MessageRequestController> {
   const MessageRequestView({super.key});

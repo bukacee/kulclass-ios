@@ -1,9 +1,9 @@
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
-import 'package:shortie/pages/preview_message_request_page/model/message_request_action_model.dart';
-import 'package:shortie/utils/api.dart';
-import 'package:shortie/utils/utils.dart';
+import 'package:auralive/pages/preview_message_request_page/model/message_request_action_model.dart';
+import 'package:auralive/utils/api.dart';
+import 'package:auralive/utils/utils.dart';
 
 class MessageRequestActionApi {
   static Future<MessageRequestActionModel?> callApi({required String topicId, required bool isAccept}) async {

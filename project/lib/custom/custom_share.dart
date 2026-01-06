@@ -2,8 +2,8 @@ import 'dart:async';
 
 import 'package:get/get.dart';
 import 'package:share_plus/share_plus.dart';
-import 'package:shortie/ui/loading_ui.dart';
-import 'package:shortie/utils/utils.dart';
+import 'package:auralive/ui/loading_ui.dart';
+import 'package:auralive/utils/utils.dart';
 
 class CustomShare {
   static Future onShare({required String title, required String filePath}) async {

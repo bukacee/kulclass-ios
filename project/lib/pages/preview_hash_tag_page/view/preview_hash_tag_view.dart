@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:shortie/pages/preview_hash_tag_page/controller/preview_hash_tag_controller.dart';
-import 'package:shortie/pages/preview_hash_tag_page/widget/preview_hash_tag_widget.dart';
+import 'package:auralive/pages/preview_hash_tag_page/controller/preview_hash_tag_controller.dart';
+import 'package:auralive/pages/preview_hash_tag_page/widget/preview_hash_tag_widget.dart';
 
-import 'package:shortie/utils/color.dart';
+import 'package:auralive/utils/color.dart';
 
 class PreviewHashTagView extends StatelessWidget {
   const PreviewHashTagView({super.key});

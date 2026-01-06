@@ -1,7 +1,7 @@
 import 'package:date_picker_plus/date_picker_plus.dart';
 import 'package:flutter/material.dart';
-import 'package:shortie/utils/color.dart';
-import 'package:shortie/utils/font_style.dart';
+import 'package:auralive/utils/color.dart';
+import 'package:auralive/utils/font_style.dart';
 
 class CustomRangePicker {
   static Future<DateTimeRange?> onShow(BuildContext context) async {

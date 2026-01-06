@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:shortie/pages/bottom_bar_page/controller/bottom_bar_controller.dart';
-import 'package:shortie/pages/bottom_bar_page/widget/bottom_bar_widget.dart';
+import 'package:auralive/pages/bottom_bar_page/controller/bottom_bar_controller.dart';
+import 'package:auralive/pages/bottom_bar_page/widget/bottom_bar_widget.dart';
 
 class BottomBarView extends StatelessWidget {
   const BottomBarView({super.key});

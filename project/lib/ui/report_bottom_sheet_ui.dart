@@ -1,17 +1,17 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:shortie/main.dart';
-import 'package:shortie/pages/splash_screen_page/api/create_report_api.dart';
-import 'package:shortie/pages/splash_screen_page/api/fetch_report_api.dart';
-import 'package:shortie/pages/splash_screen_page/model/fetch_report_model.dart';
-import 'package:shortie/shimmer/report_bottom_sheet_shimmer_ui.dart';
-import 'package:shortie/utils/asset.dart';
-import 'package:shortie/utils/color.dart';
-import 'package:shortie/utils/database.dart';
-import 'package:shortie/utils/enums.dart';
-import 'package:shortie/utils/font_style.dart';
-import 'package:shortie/utils/utils.dart';
+import 'package:auralive/main.dart';
+import 'package:auralive/pages/splash_screen_page/api/create_report_api.dart';
+import 'package:auralive/pages/splash_screen_page/api/fetch_report_api.dart';
+import 'package:auralive/pages/splash_screen_page/model/fetch_report_model.dart';
+import 'package:auralive/shimmer/report_bottom_sheet_shimmer_ui.dart';
+import 'package:auralive/utils/asset.dart';
+import 'package:auralive/utils/color.dart';
+import 'package:auralive/utils/database.dart';
+import 'package:auralive/utils/enums.dart';
+import 'package:auralive/utils/font_style.dart';
+import 'package:auralive/utils/utils.dart';
 
 class ReportBottomSheetUi {
   static RxInt selectedReportType = 0.obs;

@@ -1,8 +1,8 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:shortie/pages/splash_screen_page/model/comment_model.dart';
-import 'package:shortie/utils/api.dart';
-import 'package:shortie/utils/utils.dart';
+import 'package:auralive/pages/splash_screen_page/model/comment_model.dart';
+import 'package:auralive/utils/api.dart';
+import 'package:auralive/utils/utils.dart';
 
 class FetchCommentApi {
   static Future<CommentModel?> callApi({required String loginUserId, required int commentType, required String commentTypeId}) async {

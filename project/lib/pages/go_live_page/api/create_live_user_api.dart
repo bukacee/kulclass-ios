@@ -1,9 +1,9 @@
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
-import 'package:shortie/pages/go_live_page/model/create_live_user_model.dart';
-import 'package:shortie/utils/api.dart';
-import 'package:shortie/utils/utils.dart';
+import 'package:auralive/pages/go_live_page/model/create_live_user_model.dart';
+import 'package:auralive/utils/api.dart';
+import 'package:auralive/utils/utils.dart';
 
 class CreateLiveUserApi {
   static Future<CreateLiveUserModel?> callApi({required String loginUserId}) async {

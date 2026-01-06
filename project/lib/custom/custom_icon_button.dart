@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get_rx/src/rx_typedefs/rx_typedefs.dart';
-import 'package:shortie/utils/color.dart';
+import 'package:auralive/utils/color.dart';
 
 class CustomIconButton extends StatelessWidget {
   const CustomIconButton({

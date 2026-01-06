@@ -1,5 +1,5 @@
 import 'package:get/get.dart';
-import 'package:shortie/pages/live_page/controller/live_controller.dart';
+import 'package:auralive/pages/live_page/controller/live_controller.dart';
 
 class LiveBinding extends Bindings {
   @override

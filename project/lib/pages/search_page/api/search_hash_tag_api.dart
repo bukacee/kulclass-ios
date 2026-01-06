@@ -1,9 +1,9 @@
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
-import 'package:shortie/pages/search_page/model/search_hash_tag_model.dart';
-import 'package:shortie/utils/api.dart';
-import 'package:shortie/utils/utils.dart';
+import 'package:auralive/pages/search_page/model/search_hash_tag_model.dart';
+import 'package:auralive/utils/api.dart';
+import 'package:auralive/utils/utils.dart';
 
 class SearchHashTagApi {
   static Future<SearchHashTagModel?> callApi({required String loginUserId, required String searchText}) async {

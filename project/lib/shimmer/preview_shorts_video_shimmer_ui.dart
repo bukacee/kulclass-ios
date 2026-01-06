@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'package:shimmer/shimmer.dart';
-import 'package:shortie/utils/color.dart';
+import 'package:auralive/utils/color.dart';
 
 class PreviewShortsVideoShimmerUi extends StatelessWidget {
   const PreviewShortsVideoShimmerUi({super.key});
