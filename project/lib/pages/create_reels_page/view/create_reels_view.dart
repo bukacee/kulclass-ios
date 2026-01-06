@@ -2,7 +2,7 @@ import 'package:camera/camera.dart';
 import 'package:deepar_flutter_plus/deepar_flutter_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
+import 'package:deepar_flutter_plus/deepar_flutter_plus.dart';
 // Your Controller
 import 'package:auralive/pages/create_reels_page/controller/create_reels_controller.dart';
 // Your Widgets

@@ -1,4 +1,3 @@
-import 'package:deepar_flutter_plus/deepar_flutter_plus.dart';
 import 'dart:async';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:camera/camera.dart';
@@ -23,6 +22,7 @@ import 'package:auralive/utils/asset.dart';
 import 'package:auralive/utils/database.dart';
 import 'package:auralive/utils/enums.dart';
 import 'package:auralive/utils/utils.dart';
+import 'package:deepar_flutter_plus/deepar_flutter_plus.dart';
 
 class CreateReelsController extends GetxController {
   // >>>>> >>>>> >>>>> Main Variable <<<<< <<<<< <<<<<

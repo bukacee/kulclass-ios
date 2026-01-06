@@ -309,7 +309,7 @@ class InAppPurchaseHelper {
           changeSubscriptionParam: (oldSubscription != null)
               ? ChangeSubscriptionParam(
                   oldPurchaseDetails: oldSubscription,
-                  prorationMode: ProrationMode.immediateWithTimeProration,
+                  //prorationMode: ProrationMode.immediateWithTimeProration,
                 )
               : null);
     } else {

@@ -775,6 +775,7 @@ String historyTitle(int type, bool isIncome, int status) {
       {
         value = EnumLocal.txtWelcomeBonusCoin.name.tr;
       }
+      break;
   }
 
   return value;

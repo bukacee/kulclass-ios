@@ -270,7 +270,7 @@ class GradiantBorderContainer extends StatelessWidget {
       ),
       child: DottedBorder(
         //strokeWidth: 1,
-        borderType: BorderType.RRect,
+        //borderType: BorderType.RRect,
         color: AppColor.colorScaffold,
         radius: Radius.circular(radius),
         padding: const EdgeInsets.all(1),
