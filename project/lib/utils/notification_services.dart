@@ -4,11 +4,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get.dart';
 import 'package:get/get_rx/src/rx_typedefs/rx_typedefs.dart';
-import 'package:shortie/pages/bottom_bar_page/controller/bottom_bar_controller.dart';
-import 'package:shortie/pages/profile_page/controller/profile_controller.dart';
-import 'package:shortie/routes/app_routes.dart';
-import 'package:shortie/utils/database.dart';
-import 'package:shortie/utils/utils.dart';
+import 'package:auralive/pages/bottom_bar_page/controller/bottom_bar_controller.dart';
+import 'package:auralive/pages/profile_page/controller/profile_controller.dart';
+import 'package:auralive/routes/app_routes.dart';
+import 'package:auralive/utils/database.dart';
+import 'package:auralive/utils/utils.dart';
 
 class NotificationServices {
   static Callback callback = () {};

@@ -7,21 +7,21 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:shortie/custom/custom_thumbnail.dart';
-import 'package:shortie/custom/custom_video_time.dart';
-import 'package:shortie/ui/loading_ui.dart';
-import 'package:shortie/pages/create_reels_page/api/fetch_all_sound_api.dart';
-import 'package:shortie/pages/create_reels_page/api/fetch_favorite_sound_api.dart';
-import 'package:shortie/pages/create_reels_page/api/search_sound_api.dart';
-import 'package:shortie/pages/create_reels_page/model/fetch_all_sound_model.dart';
-import 'package:shortie/pages/create_reels_page/model/fetch_favorite_sound_model.dart';
-import 'package:shortie/pages/create_reels_page/model/search_sound_model.dart';
-import 'package:shortie/pages/create_reels_page/widget/create_reels_widget.dart';
-import 'package:shortie/routes/app_routes.dart';
-import 'package:shortie/utils/asset.dart';
-import 'package:shortie/utils/database.dart';
-import 'package:shortie/utils/enums.dart';
-import 'package:shortie/utils/utils.dart';
+import 'package:auralive/custom/custom_thumbnail.dart';
+import 'package:auralive/custom/custom_video_time.dart';
+import 'package:auralive/ui/loading_ui.dart';
+import 'package:auralive/pages/create_reels_page/api/fetch_all_sound_api.dart';
+import 'package:auralive/pages/create_reels_page/api/fetch_favorite_sound_api.dart';
+import 'package:auralive/pages/create_reels_page/api/search_sound_api.dart';
+import 'package:auralive/pages/create_reels_page/model/fetch_all_sound_model.dart';
+import 'package:auralive/pages/create_reels_page/model/fetch_favorite_sound_model.dart';
+import 'package:auralive/pages/create_reels_page/model/search_sound_model.dart';
+import 'package:auralive/pages/create_reels_page/widget/create_reels_widget.dart';
+import 'package:auralive/routes/app_routes.dart';
+import 'package:auralive/utils/asset.dart';
+import 'package:auralive/utils/database.dart';
+import 'package:auralive/utils/enums.dart';
+import 'package:auralive/utils/utils.dart';
 
 class CreateReelsController extends GetxController {
   // >>>>> >>>>> >>>>> Main Variable <<<<< <<<<< <<<<<

@@ -3,12 +3,12 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import 'package:shortie/pages/message_page/api/fetch_message_user_api.dart';
-import 'package:shortie/pages/message_page/api/search_message_user_api.dart';
-import 'package:shortie/pages/message_page/model/fetch_message_user_model.dart';
-import 'package:shortie/pages/message_page/model/search_message_user_model.dart';
-import 'package:shortie/utils/database.dart';
-import 'package:shortie/utils/utils.dart';
+import 'package:auralive/pages/message_page/api/fetch_message_user_api.dart';
+import 'package:auralive/pages/message_page/api/search_message_user_api.dart';
+import 'package:auralive/pages/message_page/model/fetch_message_user_model.dart';
+import 'package:auralive/pages/message_page/model/search_message_user_model.dart';
+import 'package:auralive/utils/database.dart';
+import 'package:auralive/utils/utils.dart';
 
 class MessageController extends GetxController {
   bool isLoading = false;

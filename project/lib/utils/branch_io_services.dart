@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'dart:developer';
-import 'package:shortie/utils/api.dart';
+import 'package:auralive/utils/api.dart';
 import 'package:flutter_branch_sdk/flutter_branch_sdk.dart';
 
 class BranchIoServices {

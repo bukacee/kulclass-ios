@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:shortie/utils/constant.dart';
-import 'package:shortie/utils/database.dart';
-import 'package:shortie/utils/utils.dart';
+import 'package:auralive/utils/constant.dart';
+import 'package:auralive/utils/database.dart';
+import 'package:auralive/utils/utils.dart';
 
 Future<Locale> getLocale() async {
   String languageCode = Database.selectedLanguage;

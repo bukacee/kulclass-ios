@@ -3,21 +3,22 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
-import 'package:shortie/custom/custom_format_number.dart';
-import 'package:shortie/main.dart';
-import 'package:shortie/pages/profile_page/controller/profile_controller.dart';
-import 'package:shortie/routes/app_routes.dart';
-import 'package:shortie/shimmer/grid_view_shimmer_ui.dart';
-import 'package:shortie/shimmer/post_list_shimmer_ui.dart';
-import 'package:shortie/ui/no_data_found_ui.dart';
-import 'package:shortie/ui/preview_image_ui.dart';
-import 'package:shortie/ui/preview_network_image_ui.dart';
-import 'package:shortie/utils/api.dart';
-import 'package:shortie/utils/asset.dart';
-import 'package:shortie/utils/color.dart';
-import 'package:shortie/utils/database.dart';
-import 'package:shortie/utils/font_style.dart';
+import 'package:auralive/custom/custom_format_number.dart';
+import 'package:auralive/main.dart';
+import 'package:auralive/pages/profile_page/controller/profile_controller.dart';
+import 'package:auralive/routes/app_routes.dart';
+import 'package:auralive/shimmer/grid_view_shimmer_ui.dart';
+import 'package:auralive/shimmer/post_list_shimmer_ui.dart';
+import 'package:auralive/ui/no_data_found_ui.dart';
+import 'package:auralive/ui/preview_image_ui.dart';
+import 'package:auralive/ui/preview_network_image_ui.dart';
+import 'package:auralive/utils/api.dart';
+import 'package:auralive/utils/asset.dart';
+import 'package:auralive/utils/color.dart';
+import 'package:auralive/utils/database.dart';
+import 'package:auralive/utils/font_style.dart';
 import 'package:svgaplayer_flutter/svgaplayer_flutter.dart';
+import 'package:auralive/widgets/gift_media_widget.dart'; 
 
 class ProfileAppBarUi extends StatelessWidget {
   const ProfileAppBarUi({super.key});
@@ -367,8 +368,8 @@ class CollectionsTabView extends StatelessWidget {
                                   ? Expanded(
                                       child: SizedBox(
                                           width: Get.width,
-                                          child: SVGASimpleImage(
-                                              resUrl:
+                                          child: GiftMediaWidget(
+                                              url: Api.baseUrl +
                                                   (Api.baseUrl + (controller.giftCollection[index].giftImage ?? "")))))
                                   : Offstage(),
                           5.height,

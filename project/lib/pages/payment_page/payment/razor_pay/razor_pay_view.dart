@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:shortie/utils/color.dart';
-import 'package:shortie/utils/database.dart';
-import 'package:shortie/utils/enums.dart';
-import 'package:shortie/utils/utils.dart';
+import 'package:auralive/utils/color.dart';
+import 'package:auralive/utils/database.dart';
+import 'package:auralive/utils/enums.dart';
+import 'package:auralive/utils/utils.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
 import 'package:get/get_rx/src/rx_typedefs/rx_typedefs.dart';
 

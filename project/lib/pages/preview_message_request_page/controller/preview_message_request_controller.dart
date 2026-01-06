@@ -1,12 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
-import 'package:shortie/pages/preview_message_request_page/api/fetch_request_user_chat_api.dart';
-import 'package:shortie/pages/preview_message_request_page/api/message_request_action_api.dart';
-import 'package:shortie/pages/preview_message_request_page/model/fetch_request_user_chat_model.dart';
-import 'package:shortie/pages/preview_message_request_page/model/message_request_action_model.dart';
-import 'package:shortie/ui/loading_ui.dart';
-import 'package:shortie/utils/socket_services.dart';
-import 'package:shortie/utils/utils.dart';
+import 'package:auralive/pages/preview_message_request_page/api/fetch_request_user_chat_api.dart';
+import 'package:auralive/pages/preview_message_request_page/api/message_request_action_api.dart';
+import 'package:auralive/pages/preview_message_request_page/model/fetch_request_user_chat_model.dart';
+import 'package:auralive/pages/preview_message_request_page/model/message_request_action_model.dart';
+import 'package:auralive/ui/loading_ui.dart';
+import 'package:auralive/utils/socket_services.dart';
+import 'package:auralive/utils/utils.dart';
 
 class PreviewMessageRequestController extends GetxController {
   ScrollController scrollController = ScrollController();

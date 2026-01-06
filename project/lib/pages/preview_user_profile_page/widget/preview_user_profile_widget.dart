@@ -1,20 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:shortie/custom/custom_format_number.dart';
-import 'package:shortie/main.dart';
-import 'package:shortie/pages/preview_user_profile_page/controller/preview_user_profile_controller.dart';
-import 'package:shortie/shimmer/grid_view_shimmer_ui.dart';
-import 'package:shortie/shimmer/post_list_shimmer_ui.dart';
-import 'package:shortie/ui/no_data_found_ui.dart';
-import 'package:shortie/ui/preview_image_ui.dart';
-import 'package:shortie/ui/preview_network_image_ui.dart';
-import 'package:shortie/ui/report_bottom_sheet_ui.dart';
-import 'package:shortie/utils/api.dart';
-import 'package:shortie/utils/asset.dart';
-import 'package:shortie/utils/color.dart';
-import 'package:shortie/utils/enums.dart';
-import 'package:shortie/utils/font_style.dart';
+import 'package:auralive/custom/custom_format_number.dart';
+import 'package:auralive/main.dart';
+import 'package:auralive/pages/preview_user_profile_page/controller/preview_user_profile_controller.dart';
+import 'package:auralive/shimmer/grid_view_shimmer_ui.dart';
+import 'package:auralive/shimmer/post_list_shimmer_ui.dart';
+import 'package:auralive/ui/no_data_found_ui.dart';
+import 'package:auralive/ui/preview_image_ui.dart';
+import 'package:auralive/ui/preview_network_image_ui.dart';
+import 'package:auralive/ui/report_bottom_sheet_ui.dart';
+import 'package:auralive/utils/api.dart';
+import 'package:auralive/utils/asset.dart';
+import 'package:auralive/utils/color.dart';
+import 'package:auralive/utils/enums.dart';
+import 'package:auralive/utils/font_style.dart';
 import 'package:svgaplayer_flutter/svgaplayer_flutter.dart';
+import 'package:auralive/widgets/gift_media_widget.dart'; 
 
 class PreviewUserProfileAppBar extends StatelessWidget implements PreferredSizeWidget {
   const PreviewUserProfileAppBar({super.key});
@@ -350,8 +351,8 @@ class CollectionsTabView extends StatelessWidget {
                               : controller.giftCollection[index].giftType == 3
                                   ? Expanded(
                                       child: SizedBox(
-                                        width: Get.width,
-                                        child: SVGASimpleImage(
+                                    child: GiftMediaWidget(
+                                      url: Api.baseUrl +
                                             resUrl: (Api.baseUrl + (controller.giftCollection[index].giftImage ?? ""))),
                                       ),
                                     )

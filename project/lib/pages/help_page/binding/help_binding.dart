@@ -1,5 +1,5 @@
 import 'package:get/get.dart';
-import 'package:shortie/pages/help_page/controller/help_controller.dart';
+import 'package:auralive/pages/help_page/controller/help_controller.dart';
 
 class HelpBinding extends Bindings {
   @override

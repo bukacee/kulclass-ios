@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:shortie/pages/connection_page/api/follow_unfollow_api.dart';
-import 'package:shortie/pages/preview_shorts_video_page/model/preview_shorts_video_model.dart';
-import 'package:shortie/pages/profile_page/api/fetch_profile_api.dart';
-import 'package:shortie/pages/profile_page/api/fetch_profile_collection_api.dart';
-import 'package:shortie/pages/profile_page/api/fetch_profile_post_api.dart';
-import 'package:shortie/pages/profile_page/api/fetch_profile_video_api.dart';
-import 'package:shortie/pages/profile_page/model/fetch_profile_collection_model.dart';
-import 'package:shortie/pages/profile_page/model/fetch_profile_model.dart';
-import 'package:shortie/pages/profile_page/model/fetch_profile_post_model.dart';
-import 'package:shortie/pages/profile_page/model/fetch_profile_video_model.dart';
-import 'package:shortie/routes/app_routes.dart';
-import 'package:shortie/utils/database.dart';
-import 'package:shortie/utils/enums.dart';
-import 'package:shortie/utils/utils.dart';
+import 'package:auralive/pages/connection_page/api/follow_unfollow_api.dart';
+import 'package:auralive/pages/preview_shorts_video_page/model/preview_shorts_video_model.dart';
+import 'package:auralive/pages/profile_page/api/fetch_profile_api.dart';
+import 'package:auralive/pages/profile_page/api/fetch_profile_collection_api.dart';
+import 'package:auralive/pages/profile_page/api/fetch_profile_post_api.dart';
+import 'package:auralive/pages/profile_page/api/fetch_profile_video_api.dart';
+import 'package:auralive/pages/profile_page/model/fetch_profile_collection_model.dart';
+import 'package:auralive/pages/profile_page/model/fetch_profile_model.dart';
+import 'package:auralive/pages/profile_page/model/fetch_profile_post_model.dart';
+import 'package:auralive/pages/profile_page/model/fetch_profile_video_model.dart';
+import 'package:auralive/routes/app_routes.dart';
+import 'package:auralive/utils/database.dart';
+import 'package:auralive/utils/enums.dart';
+import 'package:auralive/utils/utils.dart';
 
 class PreviewUserProfileController extends GetxController with GetTickerProviderStateMixin {
   TabController? tabController;

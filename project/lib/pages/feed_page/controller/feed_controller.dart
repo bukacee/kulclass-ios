@@ -1,15 +1,15 @@
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:shortie/custom/custom_image_picker.dart';
-import 'package:shortie/custom/custom_multi_image_picker.dart';
+import 'package:auralive/custom/custom_image_picker.dart';
+import 'package:auralive/custom/custom_multi_image_picker.dart';
 
-import 'package:shortie/pages/feed_page/api/fetch_post_api.dart';
-import 'package:shortie/pages/feed_page/model/fetch_post_model.dart';
-import 'package:shortie/routes/app_routes.dart';
-import 'package:shortie/ui/image_picker_bottom_sheet_ui.dart';
-import 'package:shortie/utils/branch_io_services.dart';
-import 'package:shortie/utils/database.dart';
+import 'package:auralive/pages/feed_page/api/fetch_post_api.dart';
+import 'package:auralive/pages/feed_page/model/fetch_post_model.dart';
+import 'package:auralive/routes/app_routes.dart';
+import 'package:auralive/ui/image_picker_bottom_sheet_ui.dart';
+import 'package:auralive/utils/branch_io_services.dart';
+import 'package:auralive/utils/database.dart';
 
 class FeedController extends GetxController {
   ScrollController scrollController = ScrollController();

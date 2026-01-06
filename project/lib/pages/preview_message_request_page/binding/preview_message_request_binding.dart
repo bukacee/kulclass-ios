@@ -1,5 +1,5 @@
 import 'package:get/get.dart';
-import 'package:shortie/pages/preview_message_request_page/controller/preview_message_request_controller.dart';
+import 'package:auralive/pages/preview_message_request_page/controller/preview_message_request_controller.dart';
 
 class PreviewMessageRequestBinding extends Bindings {
   @override

@@ -3,13 +3,13 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:shortie/custom/custom_icon_button.dart';
-import 'package:shortie/main.dart';
-import 'package:shortie/pages/trim_video_page/controller/trim_video_controller.dart';
-import 'package:shortie/ui/loading_ui.dart';
-import 'package:shortie/utils/asset.dart';
-import 'package:shortie/utils/color.dart';
-import 'package:shortie/utils/font_style.dart';
+import 'package:auralive/custom/custom_icon_button.dart';
+import 'package:auralive/main.dart';
+import 'package:auralive/pages/trim_video_page/controller/trim_video_controller.dart';
+import 'package:auralive/ui/loading_ui.dart';
+import 'package:auralive/utils/asset.dart';
+import 'package:auralive/utils/color.dart';
+import 'package:auralive/utils/font_style.dart';
 import 'package:video_trimmer/video_trimmer.dart';
 
 class TrimVideoView extends GetView<TrimVideoController> {

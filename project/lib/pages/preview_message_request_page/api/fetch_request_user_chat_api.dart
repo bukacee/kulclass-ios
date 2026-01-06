@@ -1,8 +1,8 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:shortie/pages/preview_message_request_page/model/fetch_request_user_chat_model.dart';
-import 'package:shortie/utils/api.dart';
-import 'package:shortie/utils/utils.dart';
+import 'package:auralive/pages/preview_message_request_page/model/fetch_request_user_chat_model.dart';
+import 'package:auralive/utils/api.dart';
+import 'package:auralive/utils/utils.dart';
 
 class FetchRequestUserChatApi {
   static Future<FetchRequestUserChatModel?> callApi({required String chatTopicId}) async {

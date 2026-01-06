@@ -1,8 +1,8 @@
 import 'dart:convert';
-import 'package:shortie/utils/api.dart';
+import 'package:auralive/utils/api.dart';
 import 'package:http/http.dart' as http;
-import 'package:shortie/utils/utils.dart';
-import 'package:shortie/pages/withdraw_page/model/fetch_withdraw_method_model.dart';
+import 'package:auralive/utils/utils.dart';
+import 'package:auralive/pages/withdraw_page/model/fetch_withdraw_method_model.dart';
 
 class FetchWithdrawMethodApi {
   static Future<FetchWithdrawMethodModel?> callApi() async {

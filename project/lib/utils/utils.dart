@@ -4,10 +4,10 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:get/get.dart';
 import 'package:in_app_purchase_android/in_app_purchase_android.dart';
-import 'package:shortie/utils/color.dart';
+import 'package:auralive/utils/color.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:shortie/pages/splash_screen_page/api/admin_setting_api.dart';
-import 'package:shortie/utils/internet_connection.dart';
+import 'package:auralive/pages/splash_screen_page/api/admin_setting_api.dart';
+import 'package:auralive/utils/internet_connection.dart';
 import 'package:zego_express_engine/zego_express_engine.dart';
 
 abstract class Utils {

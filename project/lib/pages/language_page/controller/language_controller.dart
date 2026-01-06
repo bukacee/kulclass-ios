@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:shortie/localization/localizations_delegate.dart';
-import 'package:shortie/utils/asset.dart';
-import 'package:shortie/utils/database.dart';
+import 'package:auralive/localization/localizations_delegate.dart';
+import 'package:auralive/utils/asset.dart';
+import 'package:auralive/utils/database.dart';
 
 class LanguageController extends GetxController {
   LanguageModel? languageModel;

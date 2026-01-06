@@ -1,22 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:shortie/custom/custom_fetch_user_coin.dart';
-import 'package:shortie/custom/custom_format_number.dart';
-import 'package:shortie/pages/splash_screen_page/api/send_gift_to_live_api.dart';
-import 'package:shortie/routes/app_routes.dart';
-import 'package:shortie/ui/loading_ui.dart';
-import 'package:shortie/main.dart';
-import 'package:shortie/pages/splash_screen_page/api/fetch_gift_api.dart';
-import 'package:shortie/pages/splash_screen_page/model/fetch_gift_model.dart';
-import 'package:shortie/ui/preview_network_image_ui.dart';
-import 'package:shortie/utils/api.dart';
-import 'package:shortie/utils/asset.dart';
-import 'package:shortie/utils/color.dart';
-import 'package:shortie/utils/database.dart';
-import 'package:shortie/utils/enums.dart';
-import 'package:shortie/utils/font_style.dart';
-import 'package:shortie/utils/utils.dart';
+import 'package:auralive/custom/custom_fetch_user_coin.dart';
+import 'package:auralive/custom/custom_format_number.dart';
+import 'package:auralive/pages/splash_screen_page/api/send_gift_to_live_api.dart';
+import 'package:auralive/routes/app_routes.dart';
+import 'package:auralive/ui/loading_ui.dart';
+import 'package:auralive/main.dart';
+import 'package:auralive/pages/splash_screen_page/api/fetch_gift_api.dart';
+import 'package:auralive/pages/splash_screen_page/model/fetch_gift_model.dart';
+import 'package:auralive/ui/preview_network_image_ui.dart';
+import 'package:auralive/utils/api.dart';
+import 'package:auralive/utils/asset.dart';
+import 'package:auralive/utils/color.dart';
+import 'package:auralive/utils/database.dart';
+import 'package:auralive/utils/enums.dart';
+import 'package:auralive/utils/font_style.dart';
+import 'package:auralive/utils/utils.dart';
 import 'package:svgaplayer_flutter/svgaplayer_flutter.dart';
+import 'package:auralive/widgets/gift_media_widget.dart'; 
 
 class SendGiftOnLiveBottomSheetUi {
   static RxBool isLoading = false.obs;
@@ -73,8 +74,8 @@ class SendGiftOnLiveBottomSheetUi {
                   child: SizedBox.expand(
                     child: FittedBox(
                       fit: BoxFit.cover,
-                      child: SVGASimpleImage(
-                        resUrl: (Api.baseUrl + (giftCollection[sendGiftIndex.value].image ?? "")),
+                      child: GiftMediaWidget(
+                          url: Api.baseUrl + (giftCollection[sendGiftIndex.value].image ?? ""),
                       ),
                     ),
                   ),
@@ -205,8 +206,8 @@ class SendGiftOnLiveBottomSheetUi {
                               giftCollection[index].type == 1 || giftCollection[index].type == 2
                                   ? Expanded(child: PreviewNetworkImageUi(image: giftCollection[index].image ?? ""))
                                   : Expanded(
-                                      child: SVGASimpleImage(
-                                          resUrl: (giftCollection[index].image) != null
+                                      child: GiftMediaWidget(
+                                          url: Api.baseUrl + (giftCollection[index].image) != null
                                               ? (Api.baseUrl + (giftCollection[index].image ?? ""))
                                               : "")),
                               5.height,

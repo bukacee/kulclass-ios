@@ -1,6 +1,6 @@
 import 'package:get/get.dart';
 import 'package:preload_page_view/preload_page_view.dart';
-import 'package:shortie/pages/preview_shorts_video_page/model/preview_shorts_video_model.dart';
+import 'package:auralive/pages/preview_shorts_video_page/model/preview_shorts_video_model.dart';
 
 class PreviewShortsVideoController extends GetxController {
   bool isLoading = false;

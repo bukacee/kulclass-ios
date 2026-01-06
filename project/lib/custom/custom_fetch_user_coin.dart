@@ -1,7 +1,7 @@
 import 'package:get/get.dart';
-import 'package:shortie/pages/splash_screen_page/api/fetch_user_coin_api.dart';
-import 'package:shortie/pages/splash_screen_page/model/fetch_user_coin_model.dart';
-import 'package:shortie/utils/database.dart';
+import 'package:auralive/pages/splash_screen_page/api/fetch_user_coin_api.dart';
+import 'package:auralive/pages/splash_screen_page/model/fetch_user_coin_model.dart';
+import 'package:auralive/utils/database.dart';
 
 class CustomFetchUserCoin {
   static RxInt coin = 0.obs;

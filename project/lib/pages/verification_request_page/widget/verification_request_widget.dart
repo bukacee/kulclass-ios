@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/get_navigation.dart';
-import 'package:shortie/main.dart';
-import 'package:shortie/utils/color.dart';
-import 'package:shortie/utils/font_style.dart';
+import 'package:auralive/main.dart';
+import 'package:auralive/utils/color.dart';
+import 'package:auralive/utils/font_style.dart';
 
 class ProfileField extends StatelessWidget {
   const ProfileField({

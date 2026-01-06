@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shimmer/shimmer.dart';
-import 'package:shortie/main.dart';
-import 'package:shortie/utils/color.dart';
+import 'package:auralive/main.dart';
+import 'package:auralive/utils/color.dart';
 
 class FeedShimmerUi extends StatelessWidget {
   const FeedShimmerUi({super.key});

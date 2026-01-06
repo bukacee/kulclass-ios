@@ -1,5 +1,5 @@
 import 'package:path_provider/path_provider.dart';
-import 'package:shortie/utils/utils.dart';
+import 'package:auralive/utils/utils.dart';
 import 'package:video_thumbnail/video_thumbnail.dart';
 
 class CustomThumbnail {
