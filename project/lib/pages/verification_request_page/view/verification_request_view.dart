@@ -268,13 +268,13 @@ class GradiantBorderContainer extends StatelessWidget {
         gradient: AppColor.primaryLinearGradient,
         borderRadius: BorderRadius.circular(radius),
       ),
-      child: DottedBorder(
-        child: DB.DottedBorder( 
-      color: AppColor.colorScaffold, // Now this will work
-      radius: Radius.circular(radius),
-      padding: const EdgeInsets.all(1),
-      strokeWidth: 1,
-      borderType: DB.BorderType.RRect, // Use DB.BorderType
+      // Use the alias DB here if you imported it as DB, otherwise remove 'DB.'
+      child: DB.DottedBorder(
+        color: AppColor.colorScaffold, // If this still errors, change to 'strokeColor' or remove line
+        radius: Radius.circular(radius),
+        padding: const EdgeInsets.all(1),
+        strokeWidth: 5,
+        // REMOVED borderType: ... (This is what causes the error)
         child: Container(
           height: height,
           width: width,

@@ -49,9 +49,7 @@ class UploadPostView extends GetView<UploadPostController> {
                           child: DB.DottedBorder( 
       color: AppColor.colorScaffold, // Now this will work
       radius: Radius.circular(radius),
-      padding: const EdgeInsets.all(0.3),
-      strokeWidth: 1,
-      borderType: DB.BorderType.RRect, // Use DB.BorderType 
+      padding: const EdgeInsets.all(0.3), 
                             child: Container(
                               width: 135,
                               decoration: BoxDecoration(

@@ -113,8 +113,7 @@ class GradiantBorderContainer extends StatelessWidget {
       color: AppColor.colorScaffold, // Now this will work
       radius: Radius.circular(radius),
       padding: const EdgeInsets.all(1.5),
-      strokeWidth: 1,
-      borderType: DB.BorderType.RRect, // Use DB.BorderType
+      strokeWidth: 5, 
         child: Container(
           height: height,
           width: width,
