@@ -48,7 +48,7 @@ class CreateReelsController extends GetxController {
 
   // >>>>> >>>>> >>>>> Camera Controller <<<<< <<<<< <<<<<
 
-  DeepArController deepArController = DeepArController();
+  DeepArControllerPlus deepArController = DeepArControllerPlus();
 
   final List effectsCollection = [
     "None",
@@ -339,21 +339,27 @@ class CreateReelsController extends GetxController {
   }
 
   // >>>>> >>>>> >>>>> Effect Controller Method <<<<< <<<<< <<<<<
-
-  Future<void> onInitializeEffect() async {
+Future<void> onInitializeEffect() async {
     try {
       Utils.showLog("Effect Controller Initializing...");
 
-      isInitializeEffect = await deepArController.initialize(
+      // 1. Capture the result object (it's no longer just a boolean)
+      var result = await deepArController.initialize(
         androidLicenseKey: Utils.effectAndroidLicenseKey,
         iosLicenseKey: Utils.effectIosLicenseKey,
         resolution: Resolution.medium,
       );
 
-      isFrontCamera = true;
-      update(["onInitializeEffect"]);
+      // 2. check 'result.success' to get the true/false value
+      isInitializeEffect = result.success ?? false;
 
-      Utils.showLog("Effect Controller Initialize => $isInitializeEffect");
+      if (isInitializeEffect) {
+        isFrontCamera = true;
+        update(["onInitializeEffect"]);
+        Utils.showLog("Effect Controller Initialize Success");
+      } else {
+        Utils.showLog("Effect Controller Initialize Failed: ${result.message}");
+      }
     } catch (e) {
       Utils.showLog("Effect Controller Initialize Failed => $e");
     }

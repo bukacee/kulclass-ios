@@ -1,4 +1,4 @@
-import 'package:dotted_border/dotted_border.dart';
+import 'package:dotted_border/dotted_border.dart' as DB;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
@@ -109,13 +109,12 @@ class GradiantBorderContainer extends StatelessWidget {
         gradient: AppColor.primaryLinearGradient,
         borderRadius: BorderRadius.circular(radius),
       ),
-      child: DottedBorder(
-        //strokeWidth: 1,
-        //borderType: BorderType.RRect,
-        color: AppColor.colorScaffold,
-        radius: Radius.circular(radius),
-        padding: const EdgeInsets.all(1.5),
-        strokeWidth: 5,
+      child: DB.DottedBorder( 
+      color: AppColor.colorScaffold, // Now this will work
+      radius: Radius.circular(radius),
+      padding: const EdgeInsets.all(1.5),
+      strokeWidth: 1,
+      borderType: DB.BorderType.RRect, // Use DB.BorderType
         child: Container(
           height: height,
           width: width,
@@ -128,4 +127,7 @@ class GradiantBorderContainer extends StatelessWidget {
       ),
     );
   }
+
+
+
 }

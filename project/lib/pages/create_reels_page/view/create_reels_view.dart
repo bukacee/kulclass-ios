@@ -1,8 +1,10 @@
+// FILE: lib/pages/create_reels_page/view/create_reels_view.dart
+
 import 'package:camera/camera.dart';
 import 'package:deepar_flutter_plus/deepar_flutter_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:deepar_flutter_plus/deepar_flutter_plus.dart';
+
 // Your Controller
 import 'package:auralive/pages/create_reels_page/controller/create_reels_controller.dart';
 // Your Widgets
@@ -13,7 +15,6 @@ import 'package:auralive/utils/asset.dart';
 import 'package:auralive/utils/color.dart';
 import 'package:auralive/utils/enums.dart';
 
-// 1. RENAMED Class to match your Routes
 class CreateReelsView extends GetView<CreateReelsController> {
   const CreateReelsView({super.key});
 
@@ -22,7 +23,6 @@ class CreateReelsView extends GetView<CreateReelsController> {
     return Scaffold(
       backgroundColor: Colors.black,
       body: SafeArea(
-        // 2. REMOVED 'padding' property (SafeArea doesn't support it)
         child: GetBuilder<CreateReelsController>(
           id: "onInitializeCamera",
           builder: (logic) {
@@ -57,8 +57,8 @@ class CreateReelsView extends GetView<CreateReelsController> {
         id: "onInitializeEffect",
         builder: (logic) {
           if (logic.isInitializeEffect) {
-            // Ensure deepar_flutter_plus is imported at the top
-            return DeepArPreview(logic.deepArController);
+            // *** FIX 1: Use DeepArPreviewPlus ***
+            return DeepArPreviewPlus(logic.deepArController);
           } else {
             return Container(color: Colors.black);
           }
@@ -114,9 +114,6 @@ class CreateReelsView extends GetView<CreateReelsController> {
             ),
           ),
         ),
-        
-        // 3. FIXED Duplicate ID: Just listen to 'onSwitchFlash'. 
-        // NOTE: You must update your controller (see step 2 below)
         GetBuilder<CreateReelsController>(
           id: "onSwitchFlash", 
           builder: (logic) {
@@ -217,7 +214,6 @@ class CreateReelsView extends GetView<CreateReelsController> {
           },
         ),
         GetBuilder<CreateReelsController>(
-          // 4. FIXED Duplicate ID: Removed redundant ID.
           id: "onToggleEffect",
           builder: (logic) {
             if (!logic.isShowEffects || !logic.isUseEffects) return const SizedBox.shrink();

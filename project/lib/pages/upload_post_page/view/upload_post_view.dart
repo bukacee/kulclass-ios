@@ -1,5 +1,5 @@
 import 'dart:io';
-import 'package:dotted_border/dotted_border.dart';
+import 'package:dotted_border/dotted_border.dart' as DB;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:auralive/pages/upload_post_page/widget/upload_post_widget.dart';
@@ -42,15 +42,16 @@ class UploadPostView extends GetView<UploadPostController> {
                 itemBuilder: (context, index) => Padding(
                   padding: EdgeInsets.only(right: 15),
                   child: (index == (logic.selectedImages.length) && logic.selectedImages.length < 5)
-                      ? GestureDetector(
+                      ? 
+
+                      GestureDetector(
                           onTap: () => controller.onSelectNewImage(context),
-                          child: DottedBorder(
-                            //strokeWidth: 1,
-                            //borderType: BorderType.RRect,
-                            color: AppColor.colorGreyHasTagText.withOpacity(0.5),
-                            radius: Radius.circular(8),
-                            //strokeWidth: 1,
-                            padding: EdgeInsets.all(0.3),
+                          child: DB.DottedBorder( 
+      color: AppColor.colorScaffold, // Now this will work
+      radius: Radius.circular(radius),
+      padding: const EdgeInsets.all(0.3),
+      strokeWidth: 1,
+      borderType: DB.BorderType.RRect, // Use DB.BorderType 
                             child: Container(
                               width: 135,
                               decoration: BoxDecoration(
@@ -61,6 +62,8 @@ class UploadPostView extends GetView<UploadPostController> {
                             ),
                           ),
                         )
+
+
                       : SizedBox(
                           width: 135,
                           child: Stack(

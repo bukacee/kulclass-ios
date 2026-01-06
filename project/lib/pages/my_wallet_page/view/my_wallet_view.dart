@@ -753,30 +753,36 @@ String historyTitle(int type, bool isIncome, int status) {
   String value = "";
 
   switch (type) {
-    case 1:
-      {
-        value = isIncome ? EnumLocal.txtReceiveGiftCoin.name.tr : EnumLocal.txtSendGiftCoin.name.tr;
-      }
-    case 2:
-      {
-        value = EnumLocal.txtRechargeCoin.name.tr;
-      }
-    case 3:
-      {
-        value = status == 1
-            ? EnumLocal.txtPendingWithdrawal.name.tr
-            : status == 2
-                ? EnumLocal.txtWithdrawal.name.tr
-                : status == 3
-                    ? EnumLocal.txtCancelWithdrawal.name.tr
-                    : "";
-      }
-    case 4:
-      {
-        value = EnumLocal.txtWelcomeBonusCoin.name.tr;
-      }
-      break;
-  }
+  case 1:
+    {
+      value = isIncome ? EnumLocal.txtReceiveGiftCoin.name.tr : EnumLocal.txtSendGiftCoin.name.tr;
+    }
+    break; // <--- ADD THIS
+
+  case 2:
+    {
+      value = EnumLocal.txtRechargeCoin.name.tr;
+    }
+    break; // <--- ADD THIS
+
+  case 3:
+    {
+      value = status == 1
+          ? EnumLocal.txtPendingWithdrawal.name.tr
+          : status == 2
+              ? EnumLocal.txtWithdrawal.name.tr
+              : status == 3
+                  ? EnumLocal.txtCancelWithdrawal.name.tr
+                  : "";
+    }
+    break; // <--- ADD THIS
+
+  case 4:
+    {
+      value = EnumLocal.txtWelcomeBonusCoin.name.tr;
+    }
+    break; // <--- ADD THIS
+}
 
   return value;
 }

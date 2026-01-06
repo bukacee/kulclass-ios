@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:dotted_border/dotted_border.dart';
+import 'package:dotted_border/dotted_border.dart' as DB;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:auralive/ui/app_button_ui.dart';
@@ -269,12 +269,12 @@ class GradiantBorderContainer extends StatelessWidget {
         borderRadius: BorderRadius.circular(radius),
       ),
       child: DottedBorder(
-        //strokeWidth: 1,
-        //borderType: BorderType.RRect,
-        color: AppColor.colorScaffold,
-        radius: Radius.circular(radius),
-        padding: const EdgeInsets.all(1),
-        strokeWidth: 5,
+        child: DB.DottedBorder( 
+      color: AppColor.colorScaffold, // Now this will work
+      radius: Radius.circular(radius),
+      padding: const EdgeInsets.all(1),
+      strokeWidth: 1,
+      borderType: DB.BorderType.RRect, // Use DB.BorderType
         child: Container(
           height: height,
           width: width,
@@ -287,4 +287,6 @@ class GradiantBorderContainer extends StatelessWidget {
       ),
     );
   }
+
+
 }
