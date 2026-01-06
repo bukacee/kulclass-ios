@@ -111,7 +111,7 @@ class GradiantBorderContainer extends StatelessWidget {
       ),
       child: DB.DottedBorder( 
       //color: AppColor.colorScaffold, // Now this will work
-      radius: Radius.circular(radius),
+      //radius: Radius.circular(radius),
       padding: const EdgeInsets.all(1.5),
       strokeWidth: 5, 
         child: Container(
