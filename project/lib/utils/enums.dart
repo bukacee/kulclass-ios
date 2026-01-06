@@ -287,7 +287,7 @@ enum EnumLocal {
   txtWithdrawal,
   txtPendingWithdrawal,
   txtCancelWithdrawal,
-  txtSubscriptionFee,
+
   txtTypeYourHashtag,
   txtYouCantSendGiftOwnVideo,
   txtWelcomeBonusCoin,

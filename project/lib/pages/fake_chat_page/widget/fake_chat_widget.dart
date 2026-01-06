@@ -1,23 +1,24 @@
 import 'dart:io';
 
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
-import 'package:auralive/custom/custom_format_audio_time.dart';
-import 'package:auralive/custom/custom_format_chat_time.dart';
-import 'package:auralive/pages/fake_chat_page/controller/fake_chat_controller.dart';
-import 'package:auralive/ui/loading_ui.dart';
-import 'package:auralive/ui/preview_network_image_ui.dart';
-import 'package:auralive/main.dart';
-import 'package:auralive/ui/preview_profile_bottom_sheet_ui.dart';
-import 'package:auralive/utils/asset.dart';
-import 'package:auralive/utils/color.dart';
-import 'package:auralive/size_extension.dart';
-import 'package:auralive/utils/enums.dart';
-import 'package:auralive/utils/font_style.dart';
-import 'package:audioplayers/audioplayers.dart';
-import 'package:auralive/utils/utils.dart';
+import 'package:shortie/custom/custom_format_audio_time.dart';
+import 'package:shortie/custom/custom_format_chat_time.dart';
+
+
+import 'package:shortie/main.dart';
+import 'package:shortie/pages/fake_chat_page/controller/fake_chat_controller.dart';
+import 'package:shortie/ui/loading_ui.dart';
+import 'package:shortie/ui/preview_network_image_ui.dart';
+import 'package:shortie/ui/preview_profile_bottom_sheet_ui.dart';
+import 'package:shortie/utils/asset.dart';
+import 'package:shortie/utils/color.dart';
+import 'package:shortie/utils/enums.dart';
+import 'package:shortie/utils/font_style.dart';
+import 'package:shortie/utils/utils.dart';
 import 'package:vibration/vibration.dart';
 
 class ChatAppBarUi extends GetView<FakeChatController> {
@@ -164,7 +165,8 @@ class MessageTextFieldUi extends GetView<FakeChatController> {
                         decoration: InputDecoration(
                           border: InputBorder.none,
                           contentPadding: const EdgeInsets.only(bottom: 2),
-                          hintText: controller.isRecordingAudio ? CustomFormatAudioTime.convert(controller.countTime) : EnumLocal.txtTypeSomething.name.tr,
+                          hintText:
+                              controller.isRecordingAudio ? CustomFormatAudioTime.convert(controller.countTime) : EnumLocal.txtTypeSomething.name.tr,
                           // hintText: controller.isRecordingAudio ? EnumLocal.txtAudioRecording.name.tr : EnumLocal.txtTypeSomething.name.tr,
                           hintStyle: AppFontStyle.styleW400(controller.isRecordingAudio ? AppColor.primary : AppColor.coloGreyText, 16),
                         ),
@@ -381,7 +383,10 @@ class SenderImageUi extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.end,
       children: [
         GestureDetector(
-          onTap: () => Get.to(PreviewChatImageUi(image: image, time: time)),
+          onTap: () {
+            print('IMAGE :: ${image}');
+            Get.to(PreviewChatImageUi(image: image, time: time));
+          },
           child: Container(
             height: 250,
             width: Get.width / 2,
@@ -939,6 +944,7 @@ class PreviewChatImageUi extends GetView<FakeChatController> {
         );
       },
     );
+    print('IMAGE1 :: ${image}');
     return Scaffold(
       backgroundColor: AppColor.black,
       appBar: PreferredSize(
@@ -1026,7 +1032,19 @@ class PreviewChatImageUi extends GetView<FakeChatController> {
           alignment: Alignment.center,
           children: [
             Image.asset(AppAsset.icImagePlaceHolder, height: Get.width / 2),
-            PreviewNetworkImageUi(image: image),
+            Container(
+              clipBehavior: Clip.antiAlias,
+              height: Get.height,
+              width: Get.width,
+              decoration: BoxDecoration(
+                  // borderRadius: BorderRadius.circular(10),
+                  ),
+              child: Image.file(
+                File(image),
+                fit: BoxFit.cover,
+              ),
+            ),
+            // PreviewNetworkImageUi(image: image),
           ],
         ),
       ),

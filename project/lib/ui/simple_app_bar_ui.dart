@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:auralive/main.dart';
-import 'package:auralive/utils/asset.dart';
-import 'package:auralive/utils/color.dart';
-import 'package:auralive/size_extension.dart';
-import 'package:auralive/utils/font_style.dart';
+import 'package:shortie/main.dart';
+import 'package:shortie/utils/asset.dart';
+import 'package:shortie/utils/color.dart';
+import 'package:shortie/utils/font_style.dart';
 
 class SimpleAppBarUi extends StatelessWidget {
   const SimpleAppBarUi({super.key, required this.title});

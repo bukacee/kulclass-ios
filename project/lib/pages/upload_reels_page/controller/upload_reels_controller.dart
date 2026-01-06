@@ -4,32 +4,25 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:auralive/custom/custom_image_picker.dart';
-import 'package:auralive/pages/preview_hash_tag_page/api/create_hash_tag_api.dart';
-import 'package:auralive/pages/preview_hash_tag_page/api/fetch_hash_tag_api.dart';
-import 'package:auralive/pages/preview_hash_tag_page/model/create_hash_tag_model.dart';
-import 'package:auralive/pages/preview_hash_tag_page/model/fetch_hash_tag_model.dart';
-import 'package:auralive/pages/profile_page/api/delete_content_api.dart';
-import 'package:auralive/pages/splash_screen_page/api/upload_file_api.dart';
-import 'package:auralive/pages/upload_reels_page/api/fetch_ai_caption_api.dart';
-import 'package:auralive/pages/upload_reels_page/api/upload_reels_api.dart';
-import 'package:auralive/pages/upload_reels_page/model/upload_reels_model.dart';
-import 'package:auralive/ui/image_picker_bottom_sheet_ui.dart';
-import 'package:auralive/ui/loading_ui.dart';
-import 'package:auralive/utils/database.dart';
-import 'package:auralive/utils/enums.dart';
-import 'package:auralive/utils/internet_connection.dart';
-import 'package:auralive/utils/utils.dart';
-
-import '../model/fetch_ai_caption_model.dart';
+import 'package:shortie/custom/custom_image_picker.dart';
+import 'package:shortie/pages/preview_hash_tag_page/api/create_hash_tag_api.dart';
+import 'package:shortie/pages/preview_hash_tag_page/api/fetch_hash_tag_api.dart';
+import 'package:shortie/pages/preview_hash_tag_page/model/create_hash_tag_model.dart';
+import 'package:shortie/pages/preview_hash_tag_page/model/fetch_hash_tag_model.dart';
+import 'package:shortie/pages/upload_reels_page/api/upload_reels_api.dart';
+import 'package:shortie/pages/upload_reels_page/model/upload_reels_model.dart';
+import 'package:shortie/ui/image_picker_bottom_sheet_ui.dart';
+import 'package:shortie/ui/loading_ui.dart';
+import 'package:shortie/utils/database.dart';
+import 'package:shortie/utils/enums.dart';
+import 'package:shortie/utils/internet_connection.dart';
+import 'package:shortie/utils/utils.dart';
 
 class UploadReelsController extends GetxController {
   UploadReelsModel? uploadReelsModel;
-  String? videoThumbnailUrl;
 
-// Parameter
   int videoTime = 0;
-  String videoPath = "";
+  String videoUrl = "";
   String videoThumbnail = "";
   String songId = "";
 
@@ -45,13 +38,6 @@ class UploadReelsController extends GetxController {
   RxBool isShowHashTag = false.obs;
   List<String> userInputHashtag = [];
 
-  FetchAiCaptionModel? fetchAiCaptionModel;
-  bool isLoadingAiCaption = false;
-
-  bool isAiCaptionSwitchOn = false;
-
-  bool isVideoUploadSuccess = false;
-
   @override
   void onInit() {
     init();
@@ -59,71 +45,18 @@ class UploadReelsController extends GetxController {
     super.onInit();
   }
 
-  @override
-  void onClose() {
-    onCancelVideoContent();
-
-    super.onClose();
-  }
-
   Future<void> init() async {
     final arguments = Get.arguments;
 
     Utils.showLog("Selected Video => $arguments");
 
-    videoPath = arguments["video"] ?? "";
+    videoUrl = arguments["video"] ?? "";
     videoThumbnail = arguments["image"] ?? "";
     videoTime = arguments["time"] ?? "";
     songId = arguments["songId"] ?? "";
     onGetHashTag();
 
     Utils.showLog("Selected Song Id => $songId");
-
-    onConvertVideoThumbnail();
-  }
-
-  Future<void> onConvertVideoThumbnail() async {
-    videoThumbnailUrl = await UploadFileApi.callApi(
-      filePath: videoThumbnail,
-      fileType: 2,
-      keyName: "${DateTime.now().millisecondsSinceEpoch}.jpg",
-    );
-
-    if (isAiCaptionSwitchOn) onFetchAiCaption();
-  }
-
-  void onChangeAiSwitch({bool? value}) async {
-    isAiCaptionSwitchOn = value ?? !isAiCaptionSwitchOn;
-    update(["onChangeAiSwitch"]);
-
-    if (isAiCaptionSwitchOn) {
-      onFetchAiCaption();
-    } else {
-      captionController.clear();
-      update(["onGenerateAiCaption"]);
-    }
-  }
-
-  void onFetchAiCaption() async {
-    if (videoThumbnailUrl?.trim().isNotEmpty == true) {
-      isLoadingAiCaption = true;
-      update(["onGenerateAiCaption"]);
-
-      fetchAiCaptionModel = await FetchAiCaptionApi.callApi(contentUrl: videoThumbnailUrl ?? "");
-
-      captionController.clear();
-
-      captionController.text = ((fetchAiCaptionModel?.caption ?? "") + (fetchAiCaptionModel?.hashtags?.join(" ") ?? ""));
-
-      isLoadingAiCaption = false;
-      update(["onGenerateAiCaption"]);
-    }
-  }
-
-  void onCancelVideoContent() {
-    if (isVideoUploadSuccess == false && videoThumbnailUrl?.trim().isNotEmpty == true) {
-      DeleteContentApi.callApi(fileUrl: videoThumbnailUrl ?? "");
-    }
   }
 
   Future<void> onGetHashTag() async {
@@ -206,9 +139,6 @@ class UploadReelsController extends GetxController {
         if (imagePath != null) {
           videoThumbnail = imagePath;
           update(["onChangeThumbnail"]);
-
-          onCancelVideoContent();
-          onConvertVideoThumbnail();
         }
       },
       onClickGallery: () async {
@@ -217,9 +147,6 @@ class UploadReelsController extends GetxController {
         if (imagePath != null) {
           videoThumbnail = imagePath;
           update(["onChangeThumbnail"]);
-
-          onCancelVideoContent();
-          onConvertVideoThumbnail();
         }
       },
     );
@@ -261,28 +188,17 @@ class UploadReelsController extends GetxController {
 
       Utils.showLog("Hast Tag Id => $hashTagIds");
 
-      final videoUrl = await UploadFileApi.callApi(
-        filePath: videoPath,
-        fileType: 3,
-        keyName: "${DateTime.now().millisecondsSinceEpoch}.mp4",
+      uploadReelsModel = await UploadReelsApi.callApi(
+        loginUserId: Database.loginUserId,
+        videoImage: videoThumbnail,
+        videoUrl: videoUrl,
+        videoTime: videoTime.toString(),
+        hashTag: hashTagIds.map((e) => "$e").join(',').toString(),
+        caption: captionController.text.trim(),
+        songId: songId,
       );
 
-      if (videoThumbnailUrl != null && videoUrl != null) {
-        uploadReelsModel = await UploadReelsApi.callApi(
-          loginUserId: Database.loginUserId,
-          videoImage: videoThumbnailUrl ?? "",
-          videoUrl: videoUrl,
-          videoTime: videoTime.toString(),
-          hashTag: hashTagIds.map((e) => "$e").join(',').toString(),
-          caption: captionController.text.trim(),
-          songId: songId,
-        );
-      } else {
-        Utils.showToast(EnumLocal.txtSomeThingWentWrong.name.tr);
-      }
-
       if (uploadReelsModel?.status == true && uploadReelsModel?.data?.id != null) {
-        isVideoUploadSuccess = true;
         Utils.showToast(EnumLocal.txtReelsUploadSuccessfully.name.tr);
         Get.close(2);
       } else if (uploadReelsModel?.status == false && uploadReelsModel?.message == "your duration of Video greater than decided by the admin.") {

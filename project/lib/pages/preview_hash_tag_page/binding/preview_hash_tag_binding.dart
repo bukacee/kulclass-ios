@@ -1,5 +1,5 @@
 import 'package:get/get.dart';
-import 'package:auralive/pages/preview_hash_tag_page/controller/preview_hash_tag_controller.dart';
+import 'package:shortie/pages/preview_hash_tag_page/controller/preview_hash_tag_controller.dart';
 
 class PreviewHashTagBinding extends Bindings {
   @override

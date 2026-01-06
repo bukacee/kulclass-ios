@@ -1,4 +1,3 @@
-
 class FetchLoginUserProfileModel {
   bool? status;
   String? message;
@@ -9,11 +8,11 @@ class FetchLoginUserProfileModel {
   FetchLoginUserProfileModel.fromJson(Map<String, dynamic> json) {
     status = json['status'];
     message = json['message'];
-    user = json['user'] != null ? User.fromJson(json['user']) : null;
+    user = json['user'] != null ? new User.fromJson(json['user']) : null;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = Map<String, dynamic>();
+    final Map<String, dynamic> data = new Map<String, dynamic>();
     data['status'] = this.status;
     data['message'] = this.message;
     if (this.user != null) {
@@ -55,46 +54,43 @@ class User {
   bool? isFake;
   bool? isVerified;
   int? loginType;
-  int? sub;
   String? createdAt;
   String? updatedAt;
 
-  User({
-    this.id,
-    this.name,
-    this.userName,
-    this.gender,
-    this.bio,
-    this.age,
-    this.image,
-    this.isProfileImageBanned,
-    this.countryFlagImage,
-    this.country,
-    this.ipAddress,
-    this.coin,
-    this.receivedCoin,
-    this.purchasedCoin,
-    this.receivedGift,
-    this.totalWithdrawalCoin,
-    this.totalWithdrawalAmount,
-    this.uniqueId,
-    this.email,
-    this.mobileNumber,
-    this.identity,
-    this.fcmToken,
-    this.date,
-    this.lastlogin,
-    this.isLive,
-    this.liveHistoryId,
-    this.isBlock,
-    this.isOnline,
-    this.isFake,
-    this.isVerified,
-    this.loginType,
-    this.sub,
-    this.createdAt,
-    this.updatedAt,
-  });
+  User(
+      {this.id,
+      this.name,
+      this.userName,
+      this.gender,
+      this.bio,
+      this.age,
+      this.image,
+      this.isProfileImageBanned,
+      this.countryFlagImage,
+      this.country,
+      this.ipAddress,
+      this.coin,
+      this.receivedCoin,
+      this.purchasedCoin,
+      this.receivedGift,
+      this.totalWithdrawalCoin,
+      this.totalWithdrawalAmount,
+      this.uniqueId,
+      this.email,
+      this.mobileNumber,
+      this.identity,
+      this.fcmToken,
+      this.date,
+      this.lastlogin,
+      this.isLive,
+      this.liveHistoryId,
+      this.isBlock,
+      this.isOnline,
+      this.isFake,
+      this.isVerified,
+      this.loginType,
+      this.createdAt,
+      this.updatedAt});
 
   User.fromJson(Map<String, dynamic> json) {
     id = json['_id'];
@@ -128,13 +124,12 @@ class User {
     isFake = json['isFake'];
     isVerified = json['isVerified'];
     loginType = json['loginType'];
-    sub = json['sub'] is int ? json['sub'] : int.tryParse(json['sub']?.toString() ?? '');
     createdAt = json['createdAt'];
     updatedAt = json['updatedAt'];
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = Map<String, dynamic>();
+    final Map<String, dynamic> data = new Map<String, dynamic>();
     data['_id'] = this.id;
     data['name'] = this.name;
     data['userName'] = this.userName;
@@ -166,7 +161,6 @@ class User {
     data['isFake'] = this.isFake;
     data['isVerified'] = this.isVerified;
     data['loginType'] = this.loginType;
-    data['sub'] = this.sub; // Added sub
     data['createdAt'] = this.createdAt;
     data['updatedAt'] = this.updatedAt;
     return data;

@@ -3,18 +3,17 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:screenshot/screenshot.dart';
-import 'package:auralive/ui/preview_network_image_ui.dart';
-import 'package:auralive/main.dart';
-import 'package:auralive/pages/my_qr_code_page/controller/my_qr_code_controller.dart';
-import 'package:auralive/pages/my_qr_code_page/widget/my_qr_code_widget.dart';
-import 'package:auralive/ui/simple_app_bar_ui.dart';
-import 'package:auralive/utils/asset.dart';
+import 'package:shortie/ui/preview_network_image_ui.dart';
+import 'package:shortie/main.dart';
+import 'package:shortie/pages/my_qr_code_page/controller/my_qr_code_controller.dart';
+import 'package:shortie/pages/my_qr_code_page/widget/my_qr_code_widget.dart';
+import 'package:shortie/ui/simple_app_bar_ui.dart';
+import 'package:shortie/utils/asset.dart';
 
-import 'package:auralive/utils/color.dart';
-import 'package:auralive/size_extension.dart';
-import 'package:auralive/utils/database.dart';
-import 'package:auralive/utils/enums.dart';
-import 'package:auralive/utils/font_style.dart';
+import 'package:shortie/utils/color.dart';
+import 'package:shortie/utils/database.dart';
+import 'package:shortie/utils/enums.dart';
+import 'package:shortie/utils/font_style.dart';
 
 class MyQrCodeView extends GetView<MyQrCodeController> {
   const MyQrCodeView({super.key});

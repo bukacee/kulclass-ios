@@ -4,16 +4,15 @@ import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:auralive/ui/app_button_ui.dart';
-import 'package:auralive/main.dart';
-import 'package:auralive/pages/help_page/controller/help_controller.dart';
-import 'package:auralive/pages/help_page/widget/help_widget.dart';
-import 'package:auralive/ui/simple_app_bar_ui.dart';
-import 'package:auralive/utils/asset.dart';
-import 'package:auralive/utils/color.dart';
-import 'package:auralive/size_extension.dart';
-import 'package:auralive/utils/enums.dart';
-import 'package:auralive/utils/font_style.dart';
+import 'package:shortie/ui/app_button_ui.dart';
+import 'package:shortie/main.dart';
+import 'package:shortie/pages/help_page/controller/help_controller.dart';
+import 'package:shortie/pages/help_page/widget/help_widget.dart';
+import 'package:shortie/ui/simple_app_bar_ui.dart';
+import 'package:shortie/utils/asset.dart';
+import 'package:shortie/utils/color.dart';
+import 'package:shortie/utils/enums.dart';
+import 'package:shortie/utils/font_style.dart';
 
 class HelpView extends GetView<HelpController> {
   const HelpView({super.key});
@@ -26,7 +25,7 @@ class HelpView extends GetView<HelpController> {
         child: AppBar(
           automaticallyImplyLeading: false,
           backgroundColor: AppColor.white,
-          shadowColor: AppColor.black.withValues(alpha: 0.4),
+          shadowColor: AppColor.black.withOpacity(0.4),
           flexibleSpace: SimpleAppBarUi(title: EnumLocal.txtHelp.name.tr),
         ),
       ),
@@ -81,7 +80,7 @@ class HelpView extends GetView<HelpController> {
                         width: 1.5,
                         height: 25,
                         decoration: BoxDecoration(
-                          color: AppColor.colorUnselectedIcon.withValues(alpha: 0.3),
+                          color: AppColor.colorUnselectedIcon.withOpacity(0.3),
                           borderRadius: BorderRadius.circular(10),
                         ),
                       ),
@@ -181,12 +180,12 @@ class GradiantBorderContainer extends StatelessWidget {
         borderRadius: BorderRadius.circular(radius),
       ),
       child: DottedBorder(
-        // dashPattern: const [3, 6],
-        // borderType: BorderType.RRect,
-        // color: AppColor.colorScaffold,
-        // radius: Radius.circular(radius),
-        // padding: const EdgeInsets.all(1.3),
-        // strokeWidth: 5,
+        dashPattern: const [3, 6],
+        borderType: BorderType.RRect,
+        color: AppColor.colorScaffold,
+        radius: Radius.circular(radius),
+        padding: const EdgeInsets.all(1.3),
+        strokeWidth: 5,
         child: Container(
           height: height,
           width: width,

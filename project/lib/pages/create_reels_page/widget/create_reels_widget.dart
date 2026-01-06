@@ -3,24 +3,23 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_rx/src/rx_typedefs/rx_typedefs.dart';
-import 'package:auralive/custom/custom_format_time.dart';
-import 'package:auralive/ui/no_data_found_ui.dart';
-import 'package:auralive/ui/preview_network_image_ui.dart';
-import 'package:auralive/shimmer/sound_shimmer_ui.dart';
-import 'package:auralive/main.dart';
-import 'package:auralive/pages/create_reels_page/api/favorite_unfavorite_api.dart';
-import 'package:auralive/pages/create_reels_page/controller/create_reels_controller.dart';
-import 'package:auralive/utils/api.dart';
-import 'package:auralive/utils/asset.dart';
-import 'package:auralive/utils/color.dart';
-import 'package:auralive/size_extension.dart';
-import 'package:auralive/utils/database.dart';
-import 'package:auralive/utils/enums.dart';
-import 'package:auralive/utils/font_style.dart';
+import 'package:shortie/custom/custom_format_time.dart';
+import 'package:shortie/ui/no_data_found_ui.dart';
+import 'package:shortie/ui/preview_network_image_ui.dart';
+import 'package:shortie/shimmer/sound_shimmer_ui.dart';
+import 'package:shortie/main.dart';
+import 'package:shortie/pages/create_reels_page/api/favorite_unfavorite_api.dart';
+import 'package:shortie/pages/create_reels_page/controller/create_reels_controller.dart';
+import 'package:shortie/utils/api.dart';
+import 'package:shortie/utils/asset.dart';
+import 'package:shortie/utils/color.dart';
+import 'package:shortie/utils/database.dart';
+import 'package:shortie/utils/enums.dart';
+import 'package:shortie/utils/font_style.dart';
 
 class AddMusicBottomSheet {
   static void show({required BuildContext context}) {
-    final controller = Get.put(CreateReelsController());
+    final controller = Get.find<CreateReelsController>();
     controller.initAllSound();
     controller.initFavoriteSound();
 
@@ -208,15 +207,14 @@ class DiscoverTabUi extends StatelessWidget {
                                 singerName: controller.searchSounds[index].singerName ?? "",
                                 songTime: CustomFormatTime.convert(controller.searchSounds[index].songTime ?? 0),
                                 isFavorite: controller.searchSounds[index].isFavorite ?? false,
-                                isSelected: controller.selectedSound?["id"] == (controller.searchSounds[index].id ?? ""),
+                                isSelected:
+                                    controller.selectedSound?["id"] == (controller.searchSounds[index].id ?? ""),
                                 callback: () => controller.onChangeSound(
                                   {
                                     "id": controller.searchSounds[index].id ?? "",
                                     "name": controller.searchSounds[index].songTitle ?? "",
                                     "image": controller.searchSounds[index].songImage ?? "",
-                                    "link": (controller.searchSounds[index].songLink ?? ""),
-                                    "singer": (controller.searchSounds[index].singerName ?? ""),
-                                    "duration": (controller.searchSounds[index].songTime ?? ""),
+                                    "link": (Api.baseUrl + (controller.searchSounds[index].songLink ?? "")),
                                   },
                                 ),
                               ),
@@ -246,14 +244,13 @@ class DiscoverTabUi extends StatelessWidget {
                                 singerName: controller.mainSoundCollection[index].singerName ?? "",
                                 songTime: CustomFormatTime.convert(controller.mainSoundCollection[index].songTime ?? 0),
                                 isFavorite: controller.mainSoundCollection[index].isFavorite ?? false,
-                                isSelected: controller.selectedSound?["id"] == (controller.mainSoundCollection[index].id ?? ""),
+                                isSelected:
+                                    controller.selectedSound?["id"] == (controller.mainSoundCollection[index].id ?? ""),
                                 callback: () => controller.onChangeSound({
                                   "id": controller.mainSoundCollection[index].id ?? "",
                                   "name": controller.mainSoundCollection[index].songTitle ?? "",
                                   "image": controller.mainSoundCollection[index].songImage ?? "",
-                                  "link": (controller.mainSoundCollection[index].songLink ?? ""),
-                                  "singer": (controller.mainSoundCollection[index].singerName ?? ""),
-                                  "duration": (controller.mainSoundCollection[index].songTime ?? ""),
+                                  "link": Api.baseUrl + (controller.mainSoundCollection[index].songLink ?? ""),
                                 }),
                               ),
                             ),
@@ -294,15 +291,14 @@ class FavouriteTabUi extends StatelessWidget {
                                 singerName: controller.searchSounds[index].singerName ?? "",
                                 songTime: CustomFormatTime.convert(controller.searchSounds[index].songTime ?? 0),
                                 isFavorite: controller.searchSounds[index].isFavorite ?? false,
-                                isSelected: controller.selectedSound?["id"] == (controller.searchSounds[index].id ?? ""),
+                                isSelected:
+                                    controller.selectedSound?["id"] == (controller.searchSounds[index].id ?? ""),
                                 callback: () => controller.onChangeSound(
                                   {
                                     "id": controller.searchSounds[index].id ?? "",
                                     "name": controller.searchSounds[index].songTitle ?? "",
                                     "image": controller.searchSounds[index].songImage ?? "",
-                                    "link": (controller.searchSounds[index].songLink ?? ""),
-                                    "singer": (controller.searchSounds[index].singerName ?? ""),
-                                    "duration": (controller.searchSounds[index].songTime ?? ""),
+                                    "link": (Api.baseUrl + (controller.searchSounds[index].songLink ?? "")),
                                   },
                                 ),
                               ),
@@ -328,18 +324,20 @@ class FavouriteTabUi extends StatelessWidget {
                                 id: controller.favoriteSoundCollection[index].songId?.id ?? "",
                                 songTitle: controller.favoriteSoundCollection[index].songId?.songTitle ?? "",
                                 songImage: controller.favoriteSoundCollection[index].songId?.songImage ?? "",
-                                songCategoryName: controller.favoriteSoundCollection[index].songId?.songCategoryId?.name ?? "",
+                                songCategoryName:
+                                    controller.favoriteSoundCollection[index].songId?.songCategoryId?.name ?? "",
                                 singerName: controller.favoriteSoundCollection[index].songId?.singerName ?? "",
-                                songTime: CustomFormatTime.convert(controller.favoriteSoundCollection[index].songId?.songTime ?? 0),
+                                songTime: CustomFormatTime.convert(
+                                    controller.favoriteSoundCollection[index].songId?.songTime ?? 0),
                                 isFavorite: true,
-                                isSelected: controller.selectedSound?["id"] == (controller.favoriteSoundCollection[index].songId?.id ?? ""),
+                                isSelected: controller.selectedSound?["id"] ==
+                                    (controller.favoriteSoundCollection[index].songId?.id ?? ""),
                                 callback: () => controller.onChangeSound({
-                                  "id": controller.searchSounds[index].id ?? "",
-                                  "name": controller.searchSounds[index].songTitle ?? "",
-                                  "image": controller.searchSounds[index].songImage ?? "",
-                                  "link": (controller.searchSounds[index].songLink ?? ""),
-                                  "singer": (controller.searchSounds[index].singerName ?? ""),
-                                  "duration": (controller.searchSounds[index].songTime ?? ""),
+                                  "id": controller.favoriteSoundCollection[index].songId?.id ?? "",
+                                  "name": controller.favoriteSoundCollection[index].songId?.songTitle ?? "",
+                                  "image": controller.favoriteSoundCollection[index].songId?.songImage ?? "",
+                                  "link":
+                                      Api.baseUrl + (controller.favoriteSoundCollection[index].songId?.songLink ?? ""),
                                 }),
                               ),
                             ),

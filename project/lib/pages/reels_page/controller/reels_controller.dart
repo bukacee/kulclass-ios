@@ -1,14 +1,10 @@
 import 'package:get/get.dart';
 import 'package:preload_page_view/preload_page_view.dart';
-import 'package:quick_actions/quick_actions.dart';
-import 'package:auralive/google_ad/google_ad_services.dart';
-import 'package:auralive/pages/reels_page/api/fetch_reels_api.dart';
-import 'package:auralive/pages/reels_page/model/fetch_reels_model.dart';
-import 'package:auralive/routes/app_routes.dart';
-import 'package:auralive/utils/branch_io_services.dart';
-import 'package:auralive/utils/database.dart';
 
-import '../../bottom_bar_page/controller/bottom_bar_controller.dart';
+import 'package:shortie/pages/reels_page/api/fetch_reels_api.dart';
+import 'package:shortie/pages/reels_page/model/fetch_reels_model.dart';
+import 'package:shortie/utils/branch_io_services.dart';
+import 'package:shortie/utils/database.dart';
 
 class ReelsController extends GetxController {
   PreloadPageController preloadPageController = PreloadPageController();
@@ -18,56 +14,9 @@ class ReelsController extends GetxController {
 
   bool isPaginationLoading = false;
 
-  List mainReels = []; // *** >>> Google Ad Code <<< ***
-  // List<Data> mainReels = [];
+  List<Data> mainReels = [];
 
   int currentPageIndex = 0;
-  final quickAction = QuickActions();
-  BottomBarController controller = Get.put(BottomBarController());
-
-  @override
-  void onInit() {
-    // TODO: implement onInit
-    super.onInit();
-
-    quickAction.setShortcutItems([
-      ShortcutItem(
-        type: 'reel',
-        localizedTitle: 'Reel',
-        icon: "reel",
-      ),
-      ShortcutItem(
-        type: 'chat',
-        localizedTitle: 'Chat',
-        icon: "message",
-      ),
-      ShortcutItem(
-        type: 'feeds',
-        localizedTitle: 'Feeds',
-        icon: "feed",
-      ),
-      ShortcutItem(
-        type: 'search',
-        localizedTitle: 'Search',
-        icon: "search",
-      ),
-    ]);
-
-    quickAction.initialize(
-          (type) {
-        if (type == 'reel') {
-          controller.onChangeBottomBar(0);
-        } else if (type == 'chat') {
-          controller.onChangeBottomBar(3);
-        } else if (type == 'feeds') {
-          controller.onChangeBottomBar(2);
-        } else if (type == 'search') {
-          // controller.onChangeBottomBar(0);
-          Get.toNamed(AppRoutes.searchPage);
-        }
-      },
-    );
-  }
 
   Future<void> init() async {
     currentPageIndex = 0;
@@ -104,22 +53,7 @@ class ReelsController extends GetxController {
       if (fetchReelsModel!.data!.isNotEmpty) {
         final paginationData = fetchReelsModel?.data ?? [];
 
-        // <<< Code Start *** >>> Google Ad Code <<< ***
-        if (GoogleAdServices.isShowFullNativeAdReels) {
-          for (int i = 0; i < paginationData.length; i++) {
-            if (i != 0 && i % GoogleAdServices.adShowIndex == 0) {
-              mainReels.add(null);
-              mainReels.add(paginationData[i]);
-            } else {
-              mainReels.add(paginationData[i]);
-            }
-          }
-        } else {
-          mainReels.addAll(paginationData);
-        }
-        // *** >>> Google Ad Code <<< *** Code End >>>
-
-        // mainReels.addAll(paginationData);
+        mainReels.addAll(paginationData);
 
         update(["onGetReels"]);
       }

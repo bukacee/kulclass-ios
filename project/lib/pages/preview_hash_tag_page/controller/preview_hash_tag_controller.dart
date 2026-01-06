@@ -1,12 +1,12 @@
 import 'package:get/get.dart';
-import 'package:auralive/pages/preview_hash_tag_page/api/fetch_hash_tag_post_api.dart';
-import 'package:auralive/pages/preview_hash_tag_page/api/fetch_hash_tag_video_api.dart';
-import 'package:auralive/pages/preview_hash_tag_page/model/fetch_hash_tag_post_model.dart';
-import 'package:auralive/pages/preview_hash_tag_page/model/fetch_hash_tag_video_model.dart';
-import 'package:auralive/pages/preview_hash_tag_page/widget/preview_hash_tag_widget.dart';
-import 'package:auralive/pages/preview_shorts_video_page/model/preview_shorts_video_model.dart';
-import 'package:auralive/routes/app_routes.dart';
-import 'package:auralive/utils/database.dart';
+import 'package:shortie/pages/preview_hash_tag_page/api/fetch_hash_tag_post_api.dart';
+import 'package:shortie/pages/preview_hash_tag_page/api/fetch_hash_tag_video_api.dart';
+import 'package:shortie/pages/preview_hash_tag_page/model/fetch_hash_tag_post_model.dart';
+import 'package:shortie/pages/preview_hash_tag_page/model/fetch_hash_tag_video_model.dart';
+import 'package:shortie/pages/preview_hash_tag_page/widget/preview_hash_tag_widget.dart';
+import 'package:shortie/pages/preview_shorts_video_page/model/preview_shorts_video_model.dart';
+import 'package:shortie/routes/app_routes.dart';
+import 'package:shortie/utils/database.dart';
 
 class PreviewHashTagController extends GetxController {
   String hashTagId = "";

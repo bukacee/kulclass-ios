@@ -2,8 +2,8 @@ import 'dart:io';
 
 import 'package:chewie/chewie.dart';
 import 'package:get/get.dart';
-import 'package:auralive/routes/app_routes.dart';
-import 'package:auralive/utils/utils.dart';
+import 'package:shortie/routes/app_routes.dart';
+import 'package:shortie/utils/utils.dart';
 import 'package:video_player/video_player.dart';
 
 class PreviewCreatedReelsController extends GetxController {
@@ -35,13 +35,14 @@ class PreviewCreatedReelsController extends GetxController {
 
   Future<void> initializeVideoPlayer(String videoPath) async {
     try {
-      await onDisposeVideoPlayer();
+      videoPlayerController?.dispose();
+      videoPlayerController = null;
 
       videoPlayerController = VideoPlayerController.file(File(videoPath));
+
       await videoPlayerController?.initialize();
 
-      if (videoPlayerController != null &&
-          (videoPlayerController?.value.isInitialized ?? false)) {
+      if (videoPlayerController != null && (videoPlayerController?.value.isInitialized ?? false)) {
         chewieController = ChewieController(
           videoPlayerController: videoPlayerController!,
           looping: true,
@@ -59,7 +60,7 @@ class PreviewCreatedReelsController extends GetxController {
         }
       }
     } catch (e) {
-      await onDisposeVideoPlayer();
+      onDisposeVideoPlayer();
       Utils.showLog("Reels Video Initialization Failed !!! => $e");
     }
   }
@@ -102,20 +103,13 @@ class PreviewCreatedReelsController extends GetxController {
     update(["onShowPlayPauseIcon"]);
   }
 
-  Future<void> onDisposeVideoPlayer() async {
+  void onDisposeVideoPlayer() {
     try {
       onStopVideo();
-
-      if (videoPlayerController != null) {
-        await videoPlayerController!.dispose(); // ✅ video_player is async
-        videoPlayerController = null;
-      }
-
-      if (chewieController != null) {
-        chewieController!.dispose(); // ✅ remove await, returns void
-        chewieController = null;
-      }
-
+      videoPlayerController?.dispose();
+      chewieController?.dispose();
+      chewieController = null;
+      videoPlayerController = null;
       onChangeLoading(true);
       Utils.showLog("Video Dispose Success");
     } catch (e) {
@@ -123,11 +117,10 @@ class PreviewCreatedReelsController extends GetxController {
     }
   }
 
-
   @override
   void onClose() async {
     await 500.milliseconds.delay();
-    await onDisposeVideoPlayer();
+    onDisposeVideoPlayer();
     super.onClose();
   }
 
@@ -137,16 +130,10 @@ class PreviewCreatedReelsController extends GetxController {
     if (Utils.shortsDuration > videoTime) {
       Get.toNamed(
         AppRoutes.uploadReelsPage,
-        arguments: {
-          "video": videoUrl,
-          "image": videoThumbnail,
-          "time": videoTime,
-          "songId": songId
-        },
+        arguments: {"video": videoUrl, "image": videoThumbnail, "time": videoTime, "songId": songId},
       );
     } else {
-      Utils.showToast(
-          "your duration of Video greater than decided by the admin !!");
+      Utils.showToast("your duration of Video greater than decided by the admin !!");
     }
   }
 }

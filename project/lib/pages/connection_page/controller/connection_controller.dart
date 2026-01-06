@@ -1,9 +1,9 @@
 import 'package:get/get.dart';
-import 'package:auralive/pages/connection_page/api/fetch_followers_api.dart';
-import 'package:auralive/pages/connection_page/api/fetch_following_api.dart';
-import 'package:auralive/pages/connection_page/model/fetch_followers_model.dart';
-import 'package:auralive/pages/connection_page/model/fetch_following_model.dart';
-import 'package:auralive/pages/connection_page/widget/connection_widget.dart';
+import 'package:shortie/pages/connection_page/api/fetch_followers_api.dart';
+import 'package:shortie/pages/connection_page/api/fetch_following_api.dart';
+import 'package:shortie/pages/connection_page/model/fetch_followers_model.dart';
+import 'package:shortie/pages/connection_page/model/fetch_following_model.dart';
+import 'package:shortie/pages/connection_page/widget/connection_widget.dart';
 
 class ConnectionController extends GetxController {
   @override

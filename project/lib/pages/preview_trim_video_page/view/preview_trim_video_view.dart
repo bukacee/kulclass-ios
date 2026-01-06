@@ -3,16 +3,15 @@ import 'package:chewie/chewie.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:auralive/custom/custom_icon_button.dart';
-import 'package:auralive/pages/preview_trim_video_page/controller/preview_trim_video_controller.dart';
-import 'package:auralive/ui/app_button_ui.dart';
-import 'package:auralive/ui/loading_ui.dart';
-import 'package:auralive/main.dart';
-import 'package:auralive/utils/asset.dart';
-import 'package:auralive/utils/color.dart';
-import 'package:auralive/size_extension.dart';
-import 'package:auralive/utils/enums.dart';
-import 'package:auralive/utils/font_style.dart';
+import 'package:shortie/custom/custom_icon_button.dart';
+import 'package:shortie/pages/preview_trim_video_page/controller/preview_trim_video_controller.dart';
+import 'package:shortie/ui/app_button_ui.dart';
+import 'package:shortie/ui/loading_ui.dart';
+import 'package:shortie/main.dart';
+import 'package:shortie/utils/asset.dart';
+import 'package:shortie/utils/color.dart';
+import 'package:shortie/utils/enums.dart';
+import 'package:shortie/utils/font_style.dart';
 
 class PreviewTrimVideoView extends GetView<PreviewTrimVideoController> {
   const PreviewTrimVideoView({super.key});

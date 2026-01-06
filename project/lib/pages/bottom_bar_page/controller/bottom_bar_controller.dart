@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:auralive/pages/feed_page/view/feed_view.dart';
-import 'package:auralive/pages/message_page/view/message_view.dart';
-import 'package:auralive/pages/profile_page/view/profile_view.dart';
-import 'package:auralive/pages/reels_page/view/reels_view.dart';
-import 'package:auralive/pages/stream_page/view/stream_view.dart';
-import 'package:auralive/routes/app_routes.dart';
-import 'package:auralive/ui/send_gift_on_video_bottom_sheet_ui.dart';
-import 'package:auralive/utils/branch_io_services.dart';
-import 'package:auralive/utils/socket_services.dart';
+
+import 'package:shortie/pages/feed_page/view/feed_view.dart';
+import 'package:shortie/pages/message_page/view/message_view.dart';
+import 'package:shortie/pages/profile_page/view/profile_view.dart';
+import 'package:shortie/pages/reels_page/view/reels_view.dart';
+import 'package:shortie/pages/stream_page/view/stream_view.dart';
+import 'package:shortie/routes/app_routes.dart';
+import 'package:shortie/ui/send_gift_on_video_bottom_sheet_ui.dart';
+import 'package:shortie/utils/branch_io_services.dart';
+import 'package:shortie/utils/socket_services.dart';
 
 class BottomBarController extends GetxController {
   int selectedTabIndex = 0;

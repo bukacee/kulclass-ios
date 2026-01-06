@@ -3,22 +3,21 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
-import 'package:auralive/custom/custom_format_number.dart';
-import 'package:auralive/main.dart';
-import 'package:auralive/pages/profile_page/controller/profile_controller.dart';
-import 'package:auralive/routes/app_routes.dart';
-import 'package:auralive/shimmer/grid_view_shimmer_ui.dart';
-import 'package:auralive/shimmer/post_list_shimmer_ui.dart';
-import 'package:auralive/ui/no_data_found_ui.dart';
-import 'package:auralive/ui/preview_image_ui.dart';
-import 'package:auralive/ui/preview_network_image_ui.dart';
-import 'package:auralive/utils/asset.dart';
-import 'package:auralive/utils/color.dart';
-import 'package:auralive/size_extension.dart';
-import 'package:auralive/utils/database.dart';
-import 'package:auralive/utils/font_style.dart';
-import 'package:flutter_svga/flutter_svga.dart';
-import 'package:auralive/custom/svga_simple_image.dart';
+import 'package:shortie/custom/custom_format_number.dart';
+import 'package:shortie/main.dart';
+import 'package:shortie/pages/profile_page/controller/profile_controller.dart';
+import 'package:shortie/routes/app_routes.dart';
+import 'package:shortie/shimmer/grid_view_shimmer_ui.dart';
+import 'package:shortie/shimmer/post_list_shimmer_ui.dart';
+import 'package:shortie/ui/no_data_found_ui.dart';
+import 'package:shortie/ui/preview_image_ui.dart';
+import 'package:shortie/ui/preview_network_image_ui.dart';
+import 'package:shortie/utils/api.dart';
+import 'package:shortie/utils/asset.dart';
+import 'package:shortie/utils/color.dart';
+import 'package:shortie/utils/database.dart';
+import 'package:shortie/utils/font_style.dart';
+import 'package:svgaplayer_flutter/svgaplayer_flutter.dart';
 
 class ProfileAppBarUi extends StatelessWidget {
   const ProfileAppBarUi({super.key});
@@ -104,7 +103,9 @@ class ReelsTabView extends StatelessWidget {
                               },
                               child: Container(
                                 clipBehavior: Clip.antiAlias,
-                                decoration: BoxDecoration(color: AppColor.colorTextGrey.withOpacity(0.1), borderRadius: BorderRadius.circular(14)),
+                                decoration: BoxDecoration(
+                                    color: AppColor.colorTextGrey.withOpacity(0.1),
+                                    borderRadius: BorderRadius.circular(14)),
                                 child: AspectRatio(
                                   aspectRatio: 0.75,
                                   child: Stack(
@@ -170,7 +171,9 @@ class ReelsTabView extends StatelessWidget {
                                     Image.asset(
                                       AppAsset.icLike,
                                       width: 18,
-                                      color: (controller.videoCollection[index].isLike ?? false) ? AppColor.colorTextRed : AppColor.white,
+                                      color: (controller.videoCollection[index].isLike ?? false)
+                                          ? AppColor.colorTextRed
+                                          : AppColor.white,
                                     ),
                                     Text(
                                       " ${CustomFormatNumber.convert(controller.videoCollection[index].totalLikes ?? 0)}",
@@ -239,7 +242,7 @@ class FeedsTabView extends StatelessWidget {
                           );
                         },
                         child: Container(
-                          color: AppColor.colorTextGrey.withOpacity(0.1),
+                          // color: AppColor.colorTextGrey.withOpacity(0.1),
                           child: AspectRatio(
                             aspectRatio: 0.88,
                             child: Stack(
@@ -256,6 +259,7 @@ class FeedsTabView extends StatelessWidget {
                                     height: Get.height,
                                     width: Get.width,
                                     decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(10),
                                       gradient: LinearGradient(
                                         colors: [AppColor.transparent, AppColor.black.withOpacity(0.5)],
                                         end: Alignment.topCenter,
@@ -279,7 +283,9 @@ class FeedsTabView extends StatelessWidget {
                                 //   ),
                                 // ),
                                 Visibility(
-                                  visible: (controller.postCollection[index].postImage?.any((item) => item.isBanned == true) ?? false),
+                                  visible: (controller.postCollection[index].postImage
+                                          ?.any((item) => item.isBanned == true) ??
+                                      false),
                                   child: BlurryContainer(
                                     height: Get.height,
                                     width: Get.width,
@@ -352,12 +358,18 @@ class CollectionsTabView extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
                           5.height,
-                          controller.giftCollection[index].giftType == 1 || controller.giftCollection[index].giftType == 2
+                          controller.giftCollection[index].giftType == 1 ||
+                                  controller.giftCollection[index].giftType == 2
                               ? Expanded(
                                   child: PreviewNetworkImageUi(image: controller.giftCollection[index].giftImage ?? ""),
                                 )
                               : controller.giftCollection[index].giftType == 3
-                                  ? Expanded(child: SizedBox(width: Get.width, child: SVGAImageWrapper(resUrl: controller.giftCollection[index].giftImage ?? "")))
+                                  ? Expanded(
+                                      child: SizedBox(
+                                          width: Get.width,
+                                          child: SVGASimpleImage(
+                                              resUrl:
+                                                  (Api.baseUrl + (controller.giftCollection[index].giftImage ?? "")))))
                                   : Offstage(),
                           5.height,
                           Container(

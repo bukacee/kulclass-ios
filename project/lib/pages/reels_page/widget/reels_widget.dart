@@ -7,32 +7,31 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
 import 'package:readmore/readmore.dart';
-import 'package:auralive/custom/custom_format_number.dart';
-import 'package:auralive/custom/custom_share.dart';
-import 'package:auralive/pages/bottom_bar_page/controller/bottom_bar_controller.dart';
-import 'package:auralive/routes/app_routes.dart';
-import 'package:auralive/ui/loading_ui.dart';
-import 'package:auralive/ui/preview_network_image_ui.dart';
-import 'package:auralive/ui/preview_profile_bottom_sheet_ui.dart';
-import 'package:auralive/custom/custom_icon_button.dart';
-import 'package:auralive/ui/comment_bottom_sheet_ui.dart';
-import 'package:auralive/main.dart';
-import 'package:auralive/pages/reels_page/api/reels_like_dislike_api.dart';
-import 'package:auralive/pages/reels_page/api/reels_share_api.dart';
-import 'package:auralive/pages/reels_page/controller/reels_controller.dart';
-import 'package:auralive/ui/report_bottom_sheet_ui.dart';
-import 'package:auralive/ui/send_gift_on_video_bottom_sheet_ui.dart';
-import 'package:auralive/ui/video_picker_bottom_sheet_ui.dart';
-import 'package:auralive/utils/api.dart';
-import 'package:auralive/utils/asset.dart';
-import 'package:auralive/utils/branch_io_services.dart';
-import 'package:auralive/utils/color.dart';
-import 'package:auralive/size_extension.dart';
-import 'package:auralive/utils/constant.dart';
-import 'package:auralive/utils/database.dart';
-import 'package:auralive/utils/enums.dart';
-import 'package:auralive/utils/font_style.dart';
-import 'package:auralive/utils/utils.dart';
+import 'package:shortie/custom/custom_format_number.dart';
+import 'package:shortie/custom/custom_share.dart';
+import 'package:shortie/pages/bottom_bar_page/controller/bottom_bar_controller.dart';
+import 'package:shortie/routes/app_routes.dart';
+import 'package:shortie/ui/loading_ui.dart';
+import 'package:shortie/ui/preview_network_image_ui.dart';
+import 'package:shortie/ui/preview_profile_bottom_sheet_ui.dart';
+import 'package:shortie/custom/custom_icon_button.dart';
+import 'package:shortie/ui/comment_bottom_sheet_ui.dart';
+import 'package:shortie/main.dart';
+import 'package:shortie/pages/reels_page/api/reels_like_dislike_api.dart';
+import 'package:shortie/pages/reels_page/api/reels_share_api.dart';
+import 'package:shortie/pages/reels_page/controller/reels_controller.dart';
+import 'package:shortie/ui/report_bottom_sheet_ui.dart';
+import 'package:shortie/ui/send_gift_on_video_bottom_sheet_ui.dart';
+import 'package:shortie/ui/video_picker_bottom_sheet_ui.dart';
+import 'package:shortie/utils/api.dart';
+import 'package:shortie/utils/asset.dart';
+import 'package:shortie/utils/branch_io_services.dart';
+import 'package:shortie/utils/color.dart';
+import 'package:shortie/utils/constant.dart';
+import 'package:shortie/utils/database.dart';
+import 'package:shortie/utils/enums.dart';
+import 'package:shortie/utils/font_style.dart';
+import 'package:shortie/utils/utils.dart';
 import 'package:vibration/vibration.dart';
 import 'package:video_player/video_player.dart';
 
@@ -95,17 +94,6 @@ class _PreviewReelsViewState extends State<PreviewReelsView> with SingleTickerPr
     super.dispose();
   }
 
-  void _videoListener() {
-    (videoPlayerController?.value.isBuffering ?? false)
-        ? isBuffering.value = true
-        : isBuffering.value = false;
-
-    if (isReelsPage.value == false) {
-      onStopVideo();
-    }
-  }
-
-
   Future<void> initializeVideoPlayer() async {
     try {
       String videoPath = controller.mainReels[widget.index].videoUrl!;
@@ -132,10 +120,16 @@ class _PreviewReelsViewState extends State<PreviewReelsView> with SingleTickerPr
           isVideoLoading.value = true;
         }
 
-        videoPlayerController?.addListener(_videoListener);
+        videoPlayerController?.addListener(
+          () {
+            // Use => If Video Buffering then show loading....
+            (videoPlayerController?.value.isBuffering ?? false) ? isBuffering.value = true : isBuffering.value = false;
 
-
-
+            if (isReelsPage.value == false) {
+              onStopVideo(); // Use => On Change Routes...
+            }
+          },
+        );
       }
     } catch (e) {
       onDisposeVideoPlayer();
@@ -155,22 +149,16 @@ class _PreviewReelsViewState extends State<PreviewReelsView> with SingleTickerPr
 
   void onDisposeVideoPlayer() {
     try {
-      if (videoPlayerController != null) {
-        videoPlayerController?.removeListener(_videoListener);
-        videoPlayerController?.pause();
-        videoPlayerController?.dispose();
-        videoPlayerController = null;
-      }
-
+      onStopVideo();
+      videoPlayerController?.dispose();
       chewieController?.dispose();
       chewieController = null;
-
+      videoPlayerController = null;
       isVideoLoading.value = true;
     } catch (e) {
       Utils.showLog(">>>> On Dispose VideoPlayer Error => $e");
     }
   }
-
 
   void customSetting() {
     isLike.value = controller.mainReels[widget.index].isLike!;
@@ -293,27 +281,19 @@ class _PreviewReelsViewState extends State<PreviewReelsView> with SingleTickerPr
                 height: (Get.height - AppConstant.bottomBarSize),
                 width: Get.width,
                 child: Obx(
-                      () {
-                    if (isVideoLoading.value || chewieController == null) {
-                      return Align(
-                        alignment: Alignment.bottomCenter,
-                        child: LinearProgressIndicator(color: AppColor.primary),
-                      );
-                    }
-
-                    return SizedBox.expand(
-                      child: FittedBox(
-                        fit: BoxFit.cover,
-                        child: SizedBox(
-                          width: videoPlayerController?.value.size.width ?? 0,
-                          height: videoPlayerController?.value.size.height ?? 0,
-                          child: Chewie(controller: chewieController!),
+                  () => isVideoLoading.value
+                      ? Align(alignment: Alignment.bottomCenter, child: LinearProgressIndicator(color: AppColor.primary))
+                      : SizedBox.expand(
+                          child: FittedBox(
+                            fit: BoxFit.cover,
+                            child: SizedBox(
+                              width: videoPlayerController?.value.size.width ?? 0,
+                              height: videoPlayerController?.value.size.height ?? 0,
+                              child: Chewie(controller: chewieController!),
+                            ),
+                          ),
                         ),
-                      ),
-                    );
-                  },
                 ),
-
               ),
             ),
             Positioned(
@@ -333,41 +313,44 @@ class _PreviewReelsViewState extends State<PreviewReelsView> with SingleTickerPr
                     errorWidget: (context, url, error) => const Offstage(),
                   )),
             ),
-            
+            Align(
+              alignment: Alignment.center,
+              child: SendGiftOnVideoBottomSheetUi.onShowGift(),
+            ),
             Obx(
-                  () => Visibility(
+              () => Visibility(
                 visible: isShowLikeAnimation.value,
                 child: Align(alignment: Alignment.center, child: Lottie.asset(AppAsset.lottieLike, fit: BoxFit.cover, height: 300, width: 300)),
               ),
             ),
             Obx(
-                  () => isShowIcon.value
+              () => isShowIcon.value
                   ? Align(
-                alignment: Alignment.center,
-                child: GestureDetector(
-                  onTap: onClickPlayPause,
-                  child: Container(
-                    height: 70,
-                    width: 70,
-                    padding: EdgeInsets.only(left: isPlaying.value ? 0 : 2),
-                    decoration: BoxDecoration(color: AppColor.black.withOpacity(0.2), shape: BoxShape.circle),
-                    child: Center(
-                      child: Image.asset(
-                        isPlaying.value ? AppAsset.icPause : AppAsset.icPlay,
-                        width: 30,
-                        height: 30,
-                        color: AppColor.white,
+                      alignment: Alignment.center,
+                      child: GestureDetector(
+                        onTap: onClickPlayPause,
+                        child: Container(
+                          height: 70,
+                          width: 70,
+                          padding: EdgeInsets.only(left: isPlaying.value ? 0 : 2),
+                          decoration: BoxDecoration(color: AppColor.black.withOpacity(0.2), shape: BoxShape.circle),
+                          child: Center(
+                            child: Image.asset(
+                              isPlaying.value ? AppAsset.icPause : AppAsset.icPlay,
+                              width: 30,
+                              height: 30,
+                              color: AppColor.white,
+                            ),
+                          ),
+                        ),
                       ),
-                    ),
-                  ),
-                ),
-              )
+                    )
                   : const Offstage(),
             ),
             Positioned(
               bottom: 0,
               child: Obx(
-                    () => Visibility(
+                () => Visibility(
                   visible: (isVideoLoading == false),
                   child: Container(
                     height: Get.height / 4,
@@ -433,11 +416,27 @@ class _PreviewReelsViewState extends State<PreviewReelsView> with SingleTickerPr
                 child: Column(
                   children: [
                     const Spacer(),
- 
-
-
+                    GestureDetector(
+                      onTap: () {
+                        Utils.showLog("Video User Id => ${controller.mainReels[widget.index].userId} => ${Database.loginUserId}");
+                        if (controller.mainReels[widget.index].userId != Database.loginUserId) {
+                          isReelsPage.value = false;
+                          SendGiftOnVideoBottomSheetUi.show(
+                            context: context,
+                            videoId: controller.mainReels[widget.index].id ?? "",
+                          );
+                        } else {
+                          Utils.showToast(EnumLocal.txtYouCantSendGiftOwnVideo.name.tr);
+                        }
+                      },
+                      child: SizedBox(
+                        width: 65,
+                        child: Lottie.asset(AppAsset.lottieGift),
+                      ),
+                    ),
+                    10.height,
                     Obx(
-                          () => SizedBox(
+                      () => SizedBox(
                         height: 40,
                         child: AnimatedContainer(
                           duration: Duration(milliseconds: 300),
@@ -454,7 +453,7 @@ class _PreviewReelsViewState extends State<PreviewReelsView> with SingleTickerPr
                       ),
                     ),
                     Obx(
-                          () => Text(
+                      () => Text(
                         CustomFormatNumber.convert(customChanges["like"]),
                         style: AppFontStyle.styleW700(AppColor.white, 14),
                       ),
@@ -462,7 +461,7 @@ class _PreviewReelsViewState extends State<PreviewReelsView> with SingleTickerPr
                     15.height,
                     CustomIconButton(icon: AppAsset.icComment, circleSize: 40, callback: onClickComment, iconSize: 34),
                     Obx(
-                          () => Text(
+                      () => Text(
                         CustomFormatNumber.convert(customChanges["comment"]),
                         style: AppFontStyle.styleW700(AppColor.white, 14),
                       ),
@@ -729,5 +728,5 @@ class _PreviewReelsViewState extends State<PreviewReelsView> with SingleTickerPr
 //         ),
 //       ),
 //     ),
-//   ), 
+//   ),
 // ),

@@ -2,15 +2,13 @@ import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:auralive/ui/loading_ui.dart';
-import 'package:auralive/pages/go_live_page/api/create_live_user_api.dart';
-import 'package:auralive/pages/go_live_page/model/create_live_user_model.dart';
-import 'package:auralive/routes/app_routes.dart';
-import 'package:auralive/utils/database.dart';
-import 'package:auralive/utils/enums.dart';
-import 'package:auralive/utils/utils.dart';
-import 'package:flutter/foundation.dart' show kIsWeb;
-
+import 'package:shortie/ui/loading_ui.dart';
+import 'package:shortie/pages/go_live_page/api/create_live_user_api.dart';
+import 'package:shortie/pages/go_live_page/model/create_live_user_model.dart';
+import 'package:shortie/routes/app_routes.dart';
+import 'package:shortie/utils/database.dart';
+import 'package:shortie/utils/enums.dart';
+import 'package:shortie/utils/utils.dart';
 
 class GoLiveController extends GetxController {
   CameraController? cameraController;
@@ -30,20 +28,27 @@ class GoLiveController extends GetxController {
     super.onClose();
   }
 
+  // Future<void> onRequestPermissions() async {
+  //   final status = await [
+  //     Permission.camera,
+  //     Permission.microphone,
+  //     Permission.storage,
+  //   ].request();
+  //
+  //   if (status[Permission.camera]!.isGranted || status[Permission.microphone]!.isGranted || status[Permission.storage]!.isGranted) {
+  //     onInitializeCamera();
+  //   } else {
+  //     Utils.showLog("Please Granted Permission !!");
+  //     Get.back();
+  //   }
+  // }
   Future<void> onRequestPermissions() async {
-    // Corrected code: Check if the app is NOT running on the web
-    if (!kIsWeb) {
-      final camera = await Permission.camera.request();
-      final microphone = await Permission.microphone.request();
-      if (camera.isGranted && microphone.isGranted) {
-        onInitializeCamera();
-      } else {
-        Utils.showToast(EnumLocal.txtPleaseAllowPermission.name.tr);
-      }
-    } else {
-      // For web, you might still want to initialize the camera
-      // as browser permissions are handled automatically by the Camera package
+    final camera = await Permission.camera.request();
+    final microphone = await Permission.microphone.request();
+    if (camera.isGranted && microphone.isGranted) {
       onInitializeCamera();
+    } else {
+      Utils.showToast(EnumLocal.txtPleaseAllowPermission.name.tr);
     }
   }
 

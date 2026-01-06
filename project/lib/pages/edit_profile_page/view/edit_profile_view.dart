@@ -3,18 +3,17 @@ import 'dart:io';
 import 'package:blurrycontainer/blurrycontainer.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:auralive/ui/loading_ui.dart';
-import 'package:auralive/ui/preview_network_image_ui.dart';
-import 'package:auralive/ui/app_button_ui.dart';
-import 'package:auralive/main.dart';
-import 'package:auralive/pages/edit_profile_page/controller/edit_profile_controller.dart';
-import 'package:auralive/ui/simple_app_bar_ui.dart';
-import 'package:auralive/utils/asset.dart';
-import 'package:auralive/utils/color.dart';
-import 'package:auralive/size_extension.dart';
-import 'package:auralive/pages/edit_profile_page/widget/edit_profile_widget.dart';
-import 'package:auralive/utils/enums.dart';
-import 'package:auralive/utils/font_style.dart';
+import 'package:shortie/ui/loading_ui.dart';
+import 'package:shortie/ui/preview_network_image_ui.dart';
+import 'package:shortie/ui/app_button_ui.dart';
+import 'package:shortie/main.dart';
+import 'package:shortie/pages/edit_profile_page/controller/edit_profile_controller.dart';
+import 'package:shortie/ui/simple_app_bar_ui.dart';
+import 'package:shortie/utils/asset.dart';
+import 'package:shortie/utils/color.dart';
+import 'package:shortie/pages/edit_profile_page/widget/edit_profile_widget.dart';
+import 'package:shortie/utils/enums.dart';
+import 'package:shortie/utils/font_style.dart';
 
 class EditProfileView extends GetView<EditProfileController> {
   const EditProfileView({super.key});
@@ -121,7 +120,7 @@ class EditProfileView extends GetView<EditProfileController> {
                     ),
                   ),
                 ),
-              ), 
+              ),
               40.height,
               EditProfileFieldUi(
                 enabled: true,
@@ -151,90 +150,24 @@ class EditProfileView extends GetView<EditProfileController> {
                   height: 20,
                   width: 20,
                   child: Obx(
-                        () => Center(
+                    () => Center(
                       child: controller.isCheckingUserName.value
                           ? Padding(
-                        padding: const EdgeInsets.all(15),
-                        child: CircularProgressIndicator(color: AppColor.primary, strokeWidth: 3),
-                      )
+                              padding: const EdgeInsets.all(15),
+                              child: CircularProgressIndicator(color: AppColor.primary, strokeWidth: 3),
+                            )
                           : controller.isValidUserName == null
-                          ? Image.asset(AppAsset.icEditPen, height: 20, width: 20)
-                          : controller.isValidUserName == true
-                          ? Icon(
-                        Icons.done_all,
-                        color: AppColor.colorClosedGreen,
-                      )
-                          : Image.asset(AppAsset.icClose, color: Colors.red, height: 20, width: 20),
+                              ? Image.asset(AppAsset.icEditPen, height: 20, width: 20)
+                              : controller.isValidUserName == true
+                                  ? Icon(
+                                      Icons.done_all,
+                                      color: AppColor.colorClosedGreen,
+                                    )
+                                  : Image.asset(AppAsset.icClose, color: Colors.red, height: 20, width: 20),
                     ),
                   ),
                 ),
               ),
-
-
-              Visibility(
-  visible: !Platform.isIOS, // Hide if platform is iOS
-  child: Column(
-    children: [              
-              15.height,
-              Obx(
-                    () => UserNameFieldUi(
-                  enabled: true,
-                  contentPadding: 15,
-                  keyboardType: TextInputType.number,
-                  controller: controller.subController,
-                  maxLines: 1,
-                  onChange: (p0) => controller.onChangeSub(),
-                  titleWidget: RichText(
-                    text: TextSpan(
-                      children: [
-                        TextSpan(
-                          text: "${EnumLocal.txtSubscriptionFee.name.tr} ",
-                          style: TextStyle(color: Colors.red, fontSize: 14),
-                        ),
-                        TextSpan(
-                          text: "(${controller.subscriptionTitle.value})",
-                          style: TextStyle(color: Colors.green, fontSize: 14),
-                        ),
-                      ],
-                    ),
-                  ),
-                  suffixIcon: SizedBox(
-                    height: 20,
-                    width: 20,
-                    child: Obx(
-                          () => Center(
-                        child: controller.isCheckingSub.value
-                            ? Padding(
-                          padding: const EdgeInsets.all(15),
-                          child: CircularProgressIndicator(
-                            color: AppColor.primary,
-                            strokeWidth: 3,
-                          ),
-                        )
-                            : controller.isValidSub == null
-                            ? Image.asset(AppAsset.icEditPen, height: 20, width: 20)
-                            : controller.isValidSub == true
-                            ? Icon(
-                          Icons.done_all,
-                          color: AppColor.colorClosedGreen,
-                        )
-                            : Image.asset(
-                          AppAsset.icClose,
-                          color: Colors.red,
-                          height: 20,
-                          width: 20,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-              ],
-  ),
-),
-
-
-
               15.height,
               EditProfileFieldUi(
                 enabled: false,
@@ -262,50 +195,34 @@ class EditProfileView extends GetView<EditProfileController> {
                 maxLines: 3,
               ),
               15.height,
-              
-
-              Visibility(
-  visible: false,
-  maintainState: true,
-  maintainAnimation: true,
-  maintainSize: true,
-  child: Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      Text(
-        EnumLocal.txtGender.name.tr,
-        style: AppFontStyle.styleW500(AppColor.coloGreyText, 14),
-      ),
-      5.height,
-      GetBuilder<EditProfileController>(
-        id: "onChangeGender",
-        builder: (logic) => Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            RadioItem(
-              isSelected: logic.selectedGender == "male",
-              title: EnumLocal.txtMale.name.tr,
-              callback: () => logic.onChangeGender("male"),
-            ),
-            RadioItem(
-              isSelected: logic.selectedGender == "female",
-              title: EnumLocal.txtFemale.name.tr,
-              callback: () => logic.onChangeGender("female"),
-            ),
-            RadioItem(
-              isSelected: logic.selectedGender == "other",
-              title: EnumLocal.txtOther.name.tr,
-              callback: () => logic.onChangeGender("other"),
-            ),
-          ],
-        ),
-      ),
-    ],
-  ),
-),
-
-
-              
+              Text(
+                EnumLocal.txtGender.name.tr,
+                style: AppFontStyle.styleW500(AppColor.coloGreyText, 14),
+              ),
+              5.height,
+              GetBuilder<EditProfileController>(
+                id: "onChangeGender",
+                builder: (logic) => Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    RadioItem(
+                      isSelected: logic.selectedGender == "male",
+                      title: EnumLocal.txtMale.name.tr,
+                      callback: () => logic.onChangeGender("male"),
+                    ),
+                    RadioItem(
+                      isSelected: logic.selectedGender == "female",
+                      title: EnumLocal.txtFemale.name.tr,
+                      callback: () => logic.onChangeGender("female"),
+                    ),
+                    RadioItem(
+                      isSelected: logic.selectedGender == "other",
+                      title: EnumLocal.txtOther.name.tr,
+                      callback: () => logic.onChangeGender("other"),
+                    ),
+                  ],
+                ),
+              ),
               15.height,
             ],
           ),

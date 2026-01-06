@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:auralive/pages/edit_post_page/api/edit_post_api.dart';
-import 'package:auralive/pages/feed_page/model/post_image_model.dart';
-import 'package:auralive/pages/preview_hash_tag_page/api/create_hash_tag_api.dart';
-import 'package:auralive/pages/preview_hash_tag_page/api/fetch_hash_tag_api.dart';
-import 'package:auralive/pages/preview_hash_tag_page/model/create_hash_tag_model.dart';
-import 'package:auralive/pages/preview_hash_tag_page/model/fetch_hash_tag_model.dart';
-import 'package:auralive/pages/edit_post_page/model/edit_post_model.dart';
-import 'package:auralive/ui/loading_ui.dart';
-import 'package:auralive/utils/database.dart';
-import 'package:auralive/utils/enums.dart';
-import 'package:auralive/utils/internet_connection.dart';
-import 'package:auralive/utils/utils.dart';
+import 'package:shortie/pages/edit_post_page/api/edit_post_api.dart';
+import 'package:shortie/pages/feed_page/model/post_image_model.dart';
+import 'package:shortie/pages/preview_hash_tag_page/api/create_hash_tag_api.dart';
+import 'package:shortie/pages/preview_hash_tag_page/api/fetch_hash_tag_api.dart';
+import 'package:shortie/pages/preview_hash_tag_page/model/create_hash_tag_model.dart';
+import 'package:shortie/pages/preview_hash_tag_page/model/fetch_hash_tag_model.dart';
+import 'package:shortie/pages/edit_post_page/model/edit_post_model.dart';
+import 'package:shortie/ui/loading_ui.dart';
+import 'package:shortie/utils/database.dart';
+import 'package:shortie/utils/enums.dart';
+import 'package:shortie/utils/internet_connection.dart';
+import 'package:shortie/utils/utils.dart';
 
 class EditPostController extends GetxController {
   List<PostImage> selectedImages = [];

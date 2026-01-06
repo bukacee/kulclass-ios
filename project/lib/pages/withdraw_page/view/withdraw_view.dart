@@ -1,20 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:auralive/custom/custom_fetch_user_coin.dart';
-import 'package:auralive/custom/custom_format_number.dart';
-import 'package:auralive/ui/app_button_ui.dart';
-import 'package:auralive/main.dart';
-import 'package:auralive/pages/splash_screen_page/api/admin_setting_api.dart';
-import 'package:auralive/pages/withdraw_page/controller/withdraw_controller.dart';
-import 'package:auralive/shimmer/withdraw_shimmer_ui.dart';
-import 'package:auralive/ui/preview_network_image_ui.dart';
-import 'package:auralive/ui/simple_app_bar_ui.dart';
-import 'package:auralive/utils/asset.dart';
-import 'package:auralive/utils/color.dart';
-import 'package:auralive/size_extension.dart';
-import 'package:auralive/utils/enums.dart';
-import 'package:auralive/utils/font_style.dart';
-import 'package:auralive/pages/withdraw_page/widget/withdraw_widget.dart';
+import 'package:shortie/custom/custom_fetch_user_coin.dart';
+import 'package:shortie/custom/custom_format_number.dart';
+import 'package:shortie/ui/app_button_ui.dart';
+import 'package:shortie/main.dart';
+import 'package:shortie/pages/splash_screen_page/api/admin_setting_api.dart';
+import 'package:shortie/pages/withdraw_page/controller/withdraw_controller.dart';
+import 'package:shortie/shimmer/withdraw_shimmer_ui.dart';
+import 'package:shortie/ui/preview_network_image_ui.dart';
+import 'package:shortie/ui/simple_app_bar_ui.dart';
+import 'package:shortie/utils/asset.dart';
+import 'package:shortie/utils/color.dart';
+import 'package:shortie/utils/enums.dart';
+import 'package:shortie/utils/font_style.dart';
+import 'package:shortie/pages/withdraw_page/widget/withdraw_widget.dart';
 
 class WithdrawView extends GetView<WithdrawController> {
   const WithdrawView({super.key});
@@ -77,7 +76,7 @@ class WithdrawView extends GetView<WithdrawController> {
                                         ),
                                         Obx(
                                           () => Text(
-                                            "\$${CustomFormatNumber.convert(CustomFetchUserCoin.coin.value)} (USD)",
+                                            CustomFormatNumber.convert(CustomFetchUserCoin.coin.value),
                                             style: AppFontStyle.styleW700(AppColor.white, 30),
                                           ),
                                         ),
@@ -93,12 +92,16 @@ class WithdrawView extends GetView<WithdrawController> {
                                             mainAxisAlignment: MainAxisAlignment.center,
                                             children: [
                                               Text(
-                                                " Withdrawal is in USD",
+                                                "${AdminSettingsApi.adminSettingModel?.data?.minCoinForCashOut ?? 0} Coin",
                                                 style: AppFontStyle.styleW700(AppColor.colorOrange, 13),
                                               ),
                                               8.width,
-
-
+                                              Image.asset(AppAsset.icWithdrawCoin, width: 16),
+                                              8.width,
+                                              Text(
+                                                "=  ${AdminSettingsApi.adminSettingModel?.data?.currency?.symbol ?? ""} 1.00",
+                                                style: AppFontStyle.styleW700(AppColor.colorOrange, 13),
+                                              ),
                                             ],
                                           ),
                                         ),

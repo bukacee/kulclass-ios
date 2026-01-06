@@ -1,11 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
-import 'package:auralive/pages/search_page/api/search_hash_tag_api.dart';
-import 'package:auralive/pages/search_page/api/search_user_api.dart';
-import 'package:auralive/pages/search_page/model/search_hash_tag_model.dart';
-import 'package:auralive/pages/search_page/model/search_user_model.dart';
-import 'package:auralive/pages/search_page/widget/search_widget.dart';
-import 'package:auralive/utils/database.dart';
+import 'package:shortie/pages/search_page/api/search_hash_tag_api.dart';
+import 'package:shortie/pages/search_page/api/search_user_api.dart';
+import 'package:shortie/pages/search_page/model/search_hash_tag_model.dart';
+import 'package:shortie/pages/search_page/model/search_user_model.dart';
+import 'package:shortie/pages/search_page/widget/search_widget.dart';
+import 'package:shortie/utils/database.dart';
 
 class SearchController extends GetxController {
   TextEditingController searchFieldController = TextEditingController();

@@ -1,19 +1,16 @@
 import 'dart:io';
 import 'package:dotted_border/dotted_border.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:auralive/pages/upload_post_page/widget/upload_post_widget.dart';
-import 'package:auralive/shimmer/caption_shimmer_ui.dart';
-import 'package:auralive/ui/app_button_ui.dart';
-import 'package:auralive/main.dart';
-import 'package:auralive/pages/upload_post_page/controller/upload_post_controller.dart';
-import 'package:auralive/ui/simple_app_bar_ui.dart';
-import 'package:auralive/utils/asset.dart';
-import 'package:auralive/utils/color.dart';
-import 'package:auralive/size_extension.dart';
-import 'package:auralive/utils/enums.dart';
-import 'package:auralive/utils/font_style.dart';
+import 'package:shortie/pages/upload_post_page/widget/upload_post_widget.dart';
+import 'package:shortie/ui/app_button_ui.dart';
+import 'package:shortie/main.dart';
+import 'package:shortie/pages/upload_post_page/controller/upload_post_controller.dart';
+import 'package:shortie/ui/simple_app_bar_ui.dart';
+import 'package:shortie/utils/asset.dart';
+import 'package:shortie/utils/color.dart';
+import 'package:shortie/utils/enums.dart';
+import 'package:shortie/utils/font_style.dart';
 
 class UploadPostView extends GetView<UploadPostController> {
   const UploadPostView({super.key});
@@ -39,126 +36,96 @@ class UploadPostView extends GetView<UploadPostController> {
               id: "onChangeImages",
               builder: (logic) => ListView.builder(
                 scrollDirection: Axis.horizontal,
-                itemCount: logic.selectedImages.length < 5 ? (logic.selectedImages.length + 1) : logic.selectedImages.length,
+                itemCount:
+                    logic.selectedImages.length < 5 ? (logic.selectedImages.length + 1) : logic.selectedImages.length,
                 padding: EdgeInsets.only(left: 15, top: 15, bottom: 15),
                 itemBuilder: (context, index) => Padding(
                   padding: EdgeInsets.only(right: 15),
                   child: (index == (logic.selectedImages.length) && logic.selectedImages.length < 5)
                       ? GestureDetector(
-                    onTap: () => controller.onSelectNewImage(context),
-                    child: DottedBorder(
-                      options: RoundedRectDottedBorderOptions(radius: Radius.circular(15)),
-                      // dashPattern: [4, 3],
-                      // borderType: BorderType.RRect,
-                      // color: AppColor.colorGreyHasTagText.withOpacity(0.5),
-                      // radius: Radius.circular(8),
-                      // strokeWidth: 1,
-                      // padding: EdgeInsets.all(0.3),
-                      child: Container(
-                        width: 135,
-                        decoration: BoxDecoration(
-                          color: AppColor.transparent,
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        child: Center(child: Image.asset(AppAsset.icAdd, width: 40)),
-                      ),
-                    ),
-                  )
-                      : SizedBox(
-                    width: 135,
-                    child: Stack(
-                      clipBehavior: Clip.none,
-                      children: [
-                        Container(
-                          height: 140,
-                          clipBehavior: Clip.antiAlias,
-                          decoration: BoxDecoration(color: Colors.grey.shade200, borderRadius: BorderRadius.circular(8)),
-                          child: AspectRatio(
-                            aspectRatio: 1,
-                            child: Image.file(File(controller.selectedImages[index]), fit: BoxFit.cover),
-                          ),
-                        ),
-                        Positioned(
-                          top: -8,
-                          right: -8,
-                          child: GestureDetector(
-                            onTap: () => logic.onCancelImage(index),
+                          onTap: () => controller.onSelectNewImage(context),
+                          child: DottedBorder(
+                            dashPattern: [4, 3],
+                            borderType: BorderType.RRect,
+                            color: AppColor.colorGreyHasTagText.withOpacity(0.5),
+                            radius: Radius.circular(8),
+                            strokeWidth: 1,
+                            padding: EdgeInsets.all(0.3),
                             child: Container(
-                              height: 50,
-                              width: 50,
-                              color: AppColor.transparent,
-                              alignment: Alignment.topRight,
-                              child: Container(
-                                height: 25,
-                                width: 25,
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: AppColor.black,
-                                  border: Border.all(color: AppColor.colorGreyBg, width: 2),
+                              width: 135,
+                              decoration: BoxDecoration(
+                                color: AppColor.transparent,
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: Center(child: Image.asset(AppAsset.icAdd, width: 40)),
+                            ),
+                          ),
+                        )
+                      : SizedBox(
+                          width: 135,
+                          child: Stack(
+                            clipBehavior: Clip.none,
+                            children: [
+                              Container(
+                                height: 140,
+                                clipBehavior: Clip.antiAlias,
+                                decoration:
+                                    BoxDecoration(color: Colors.grey.shade200, borderRadius: BorderRadius.circular(8)),
+                                child: AspectRatio(
+                                  aspectRatio: 1,
+                                  child: Image.file(File(controller.selectedImages[index]), fit: BoxFit.cover),
                                 ),
-                                child: Center(
-                                  child: Image.asset(
-                                    AppAsset.icClose,
-                                    color: AppColor.white,
-                                    width: 13,
+                              ),
+                              Positioned(
+                                top: -8,
+                                right: -8,
+                                child: GestureDetector(
+                                  onTap: () => logic.onCancelImage(index),
+                                  child: Container(
+                                    height: 50,
+                                    width: 50,
+                                    color: AppColor.transparent,
+                                    alignment: Alignment.topRight,
+                                    child: Container(
+                                      height: 25,
+                                      width: 25,
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        color: AppColor.black,
+                                        border: Border.all(color: AppColor.colorGreyBg, width: 2),
+                                      ),
+                                      child: Center(
+                                        child: Image.asset(
+                                          AppAsset.icClose,
+                                          color: AppColor.white,
+                                          width: 13,
+                                        ),
+                                      ),
+                                    ),
                                   ),
                                 ),
                               ),
-                            ),
+                            ],
                           ),
                         ),
-                      ],
-                    ),
-                  ),
                 ),
               ),
             ),
           ),
           20.height,
-          Container(
-            color: Colors.transparent,
-            width: Get.width,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 15),
-                  child: RichText(
-                    text: TextSpan(
-                      text: EnumLocal.txtCaption.name.tr,
-                      style: AppFontStyle.styleW700(AppColor.black, 15),
-                      children: [
-                        TextSpan(
-                          text: " ${EnumLocal.txtOptionalInBrackets.name.tr}",
-                          style: AppFontStyle.styleW400(AppColor.coloGreyText, 10),
-                        ),
-                      ],
-                    ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 15),
+            child: RichText(
+              text: TextSpan(
+                text: EnumLocal.txtCaption.name.tr,
+                style: AppFontStyle.styleW700(AppColor.black, 15),
+                children: [
+                  TextSpan(
+                    text: " ${EnumLocal.txtOptionalInBrackets.name.tr}",
+                    style: AppFontStyle.styleW400(AppColor.coloGreyText, 10),
                   ),
-                ),
-                GetBuilder<UploadPostController>(
-                  id: "onChangeAiSwitch",
-                  builder: (controller) => controller.selectedImages.isNotEmpty
-                      ? Row(
-                    children: [
-                      Text(
-                        "Auto Caption",
-                        style: AppFontStyle.styleW700(AppColor.colorTextGrey, 12),
-                      ),
-                      0.width,
-                      Transform.scale(
-                        scale: 0.6,
-                        child: CupertinoSwitch(
-                          value: controller.isAiCaptionSwitchOn,
-                          activeColor: AppColor.primary,
-                          onChanged: (value) => controller.onChangeAiSwitch(),
-                        ),
-                      ),
-                    ],
-                  )
-                      : Offstage(),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
           5.height,
@@ -171,59 +138,25 @@ class UploadPostView extends GetView<UploadPostController> {
               );
             },
             child: GetBuilder<UploadPostController>(
-              id: "onGenerateAiCaption",
-              builder: (controller) => GetBuilder<UploadPostController>(
-                id: "onChangeHashtag",
-                builder: (controller) => Container(
-                  height: 130,
-                  width: Get.width,
-                  padding: const EdgeInsets.only(left: 15, top: 5),
-                  margin: EdgeInsets.symmetric(horizontal: 15),
-                  decoration: BoxDecoration(
-                    color: AppColor.colorBorder.withOpacity(0.2),
-                    borderRadius: BorderRadius.circular(10),
-                    border: Border.all(color: AppColor.colorBorder.withOpacity(0.8)),
-                  ),
-                  child: controller.isLoadingAiCaption
-                      ? CaptionShimmerUi()
-                      : Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Expanded(
-                        child: SingleChildScrollView(
-                          child: controller.captionController.text.isNotEmpty
-                              ? RichText(
-                            text: TextSpan(
-                              children: _buildTextSpans(controller.captionController.text),
-                            ),
-                          )
-                              : Text(
-                            EnumLocal.txtEnterYourTextWithHashtag.name.tr,
-                            style: AppFontStyle.styleW400(AppColor.coloGreyText, 15),
-                          ),
-                        ),
-                      ),
-                      GetBuilder<UploadPostController>(
-                        id: "onChangeAiSwitch",
-                        builder: (controller) => controller.isAiCaptionSwitchOn
-                            ? GestureDetector(
-                          onTap: () => controller.onFetchAiCaption(),
-                          child: Container(
-                            height: 30,
-                            width: 40,
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: AppColor.transparent,
-                            ),
-                            child: Icon(
-                              Icons.refresh_outlined,
-                              weight: 25,
-                            ),
-                          ),
-                        )
-                            : Offstage(),
-                      ),
-                    ],
+              id: "onChangeHashtag",
+              builder: (controller) => Container(
+                height: 130,
+                width: Get.width,
+                padding: const EdgeInsets.only(left: 15, top: 5),
+                margin: EdgeInsets.symmetric(horizontal: 15),
+                decoration: BoxDecoration(
+                  color: AppColor.colorBorder.withOpacity(0.2),
+                  borderRadius: BorderRadius.circular(10),
+                  border: Border.all(color: AppColor.colorBorder.withOpacity(0.8)),
+                ),
+                child: SingleChildScrollView(
+                  child: Text(
+                    controller.captionController.text.isEmpty
+                        ? EnumLocal.txtEnterYourTextWithHashtag.name.tr
+                        : controller.captionController.text,
+                    style: controller.captionController.text.isEmpty
+                        ? AppFontStyle.styleW400(AppColor.coloGreyText, 15)
+                        : AppFontStyle.styleW600(AppColor.black, 15),
                   ),
                 ),
               ),
@@ -238,50 +171,6 @@ class UploadPostView extends GetView<UploadPostController> {
       ).paddingSymmetric(horizontal: Get.width / 6.5, vertical: 25),
     );
   }
-}
-
-List<TextSpan> _buildTextSpans(String text) {
-  List<TextSpan> spans = [];
-  final RegExp hashtagRegex = RegExp(r'(#\w+)');
-  final List<String> parts = text.split(hashtagRegex);
-  final Iterable<RegExpMatch> matches = hashtagRegex.allMatches(text);
-
-  int currentPosition = 0;
-  for (final match in matches) {
-    // Add text before the hashtag
-    if (match.start > currentPosition) {
-      spans.add(TextSpan(
-        text: text.substring(currentPosition, match.start),
-        style: AppFontStyle.styleW600(AppColor.black, 15),
-      ));
-    }
-
-    // Add the hashtag
-    spans.add(TextSpan(
-      text: match.group(0),
-      style: AppFontStyle.styleW700(AppColor.primary, 15),
-    ));
-
-    currentPosition = match.end;
-  }
-
-  // Add remaining text after last hashtag
-  if (currentPosition < text.length) {
-    spans.add(TextSpan(
-      text: text.substring(currentPosition),
-      style: AppFontStyle.styleW600(AppColor.black, 15),
-    ));
-  }
-
-  // If no hashtags, just return the whole text as black
-  if (spans.isEmpty) {
-    spans.add(TextSpan(
-      text: text,
-      style: AppFontStyle.styleW600(AppColor.black, 15),
-    ));
-  }
-
-  return spans;
 }
 
 // >>>>>>>>>>>>>>>>>>>>>>>> Old Hashtag Function <<<<<<<<<<<<<<<<<<<<<<<<<<<<<

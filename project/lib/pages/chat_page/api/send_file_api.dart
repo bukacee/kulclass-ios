@@ -1,8 +1,8 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:auralive/pages/chat_page/model/send_file_model.dart';
-import 'package:auralive/utils/api.dart';
-import 'package:auralive/utils/utils.dart';
+import 'package:shortie/pages/chat_page/model/send_file_model.dart';
+import 'package:shortie/utils/api.dart';
+import 'package:shortie/utils/utils.dart';
 
 class SendFileApi {
   static Future<SendFileModel?> callApi({

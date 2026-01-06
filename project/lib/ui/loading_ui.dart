@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:auralive/utils/color.dart';
-import 'package:auralive/size_extension.dart';
+import 'package:shortie/utils/color.dart';
 
 class LoadingUi extends StatelessWidget {
   const LoadingUi({super.key, this.color, this.size});

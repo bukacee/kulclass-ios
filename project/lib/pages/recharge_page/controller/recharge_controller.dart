@@ -2,12 +2,12 @@ import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
-import 'package:auralive/pages/recharge_page/api/fetch_banner_api.dart';
-import 'package:auralive/pages/recharge_page/api/fetch_coin_plan_api.dart';
-import 'package:auralive/pages/recharge_page/model/fetch_banner_model.dart';
-import 'package:auralive/pages/recharge_page/model/fetch_coin_plan_model.dart';
-import 'package:auralive/routes/app_routes.dart';
-import 'package:auralive/utils/utils.dart';
+import 'package:shortie/pages/recharge_page/api/fetch_banner_api.dart';
+import 'package:shortie/pages/recharge_page/api/fetch_coin_plan_api.dart';
+import 'package:shortie/pages/recharge_page/model/fetch_banner_model.dart';
+import 'package:shortie/pages/recharge_page/model/fetch_coin_plan_model.dart';
+import 'package:shortie/routes/app_routes.dart';
+import 'package:shortie/utils/utils.dart';
 
 class RechargeController extends GetxController {
   bool isLoading = false;

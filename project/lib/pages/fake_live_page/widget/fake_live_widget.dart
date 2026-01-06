@@ -4,20 +4,20 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_rx/src/rx_typedefs/rx_typedefs.dart';
 import 'package:lottie/lottie.dart';
-import 'package:auralive/custom/custom_format_number.dart';
-import 'package:auralive/pages/fake_live_page/widget/fake_comment_data.dart';
-import 'package:auralive/ui/circle_icon_button_ui.dart';
-import 'package:auralive/ui/preview_network_image_ui.dart';
-import 'package:auralive/main.dart';
-import 'package:auralive/ui/send_gift_on_live_bottom_sheet_ui.dart';
-import 'package:auralive/ui/stop_live_streaming_dialog_ui.dart';
+import 'package:shortie/custom/custom_format_number.dart';
 
-import 'package:auralive/utils/asset.dart';
-import 'package:auralive/utils/color.dart';
-import 'package:auralive/size_extension.dart';
-import 'package:auralive/utils/enums.dart';
-import 'package:auralive/utils/font_style.dart';
-import 'package:auralive/utils/socket_services.dart';
+
+import 'package:shortie/main.dart';
+import 'package:shortie/pages/fake_live_page/widget/fake_comment_data.dart';
+import 'package:shortie/ui/circle_icon_button_ui.dart';
+import 'package:shortie/ui/preview_network_image_ui.dart';
+import 'package:shortie/ui/send_gift_on_live_bottom_sheet_ui.dart';
+import 'package:shortie/ui/stop_live_streaming_dialog_ui.dart';
+import 'package:shortie/utils/asset.dart';
+import 'package:shortie/utils/color.dart';
+import 'package:shortie/utils/enums.dart';
+import 'package:shortie/utils/font_style.dart';
+import 'package:shortie/utils/socket_services.dart';
 
 import '../controller/fake_live_controller.dart';
 

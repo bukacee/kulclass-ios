@@ -1,25 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:auralive/custom/custom_fetch_user_coin.dart';
-import 'package:auralive/custom/custom_format_number.dart';
-import 'package:auralive/routes/app_routes.dart';
-import 'package:auralive/ui/loading_ui.dart';
-import 'package:auralive/main.dart';
-import 'package:auralive/pages/splash_screen_page/api/fetch_gift_api.dart';
-import 'package:auralive/pages/splash_screen_page/api/send_gift_api.dart';
-import 'package:auralive/pages/splash_screen_page/model/fetch_gift_model.dart';
-import 'package:auralive/ui/preview_network_image_ui.dart';
-import 'package:auralive/utils/api.dart';
-import 'package:auralive/utils/asset.dart';
-import 'package:auralive/utils/color.dart';
-import 'package:auralive/size_extension.dart';
-import 'package:auralive/utils/database.dart';
-import 'package:auralive/utils/enums.dart';
-import 'package:auralive/utils/font_style.dart';
-import 'package:auralive/utils/utils.dart';
-import 'package:flutter_svga/flutter_svga.dart';
-import 'package:auralive/custom/svga_simple_image.dart';
-
+import 'package:shortie/custom/custom_fetch_user_coin.dart';
+import 'package:shortie/custom/custom_format_number.dart';
+import 'package:shortie/routes/app_routes.dart';
+import 'package:shortie/ui/loading_ui.dart';
+import 'package:shortie/main.dart';
+import 'package:shortie/pages/splash_screen_page/api/fetch_gift_api.dart';
+import 'package:shortie/pages/splash_screen_page/api/send_gift_api.dart';
+import 'package:shortie/pages/splash_screen_page/model/fetch_gift_model.dart';
+import 'package:shortie/ui/preview_network_image_ui.dart';
+import 'package:shortie/utils/api.dart';
+import 'package:shortie/utils/asset.dart';
+import 'package:shortie/utils/color.dart';
+import 'package:shortie/utils/database.dart';
+import 'package:shortie/utils/enums.dart';
+import 'package:shortie/utils/font_style.dart';
+import 'package:shortie/utils/utils.dart';
+import 'package:svgaplayer_flutter/svgaplayer_flutter.dart';
 
 class SendGiftOnVideoBottomSheetUi {
   static RxBool isLoading = false.obs;
@@ -44,11 +41,14 @@ class SendGiftOnVideoBottomSheetUi {
 
   static Future<void> onSendGift({required String videoId}) async {
     if (CustomFetchUserCoin.coin == 0 || CustomFetchUserCoin.coin < (giftCollection[sendGiftIndex.value].coin ?? 0)) {
-      Utils.showToast(EnumLocal.txtYouDonHaveSufficientCoinsToSendTheGift.name.tr, AppColor.colorTextDarkGrey.withOpacity(0.85));
+      Utils.showToast(
+          EnumLocal.txtYouDonHaveSufficientCoinsToSendTheGift.name.tr, AppColor.colorTextDarkGrey.withOpacity(0.85));
     } else {
       Get.back();
       isShowGift.value = true;
-      giftCollection[sendGiftIndex.value].type == 1 || giftCollection[sendGiftIndex.value].type == 2 ? await 1500.milliseconds.delay() : await 8000.milliseconds.delay();
+      giftCollection[sendGiftIndex.value].type == 1 || giftCollection[sendGiftIndex.value].type == 2
+          ? await 1500.milliseconds.delay()
+          : await 8000.milliseconds.delay();
 
       isShowGift.value = false;
       await SendGiftApi.callApi(
@@ -64,14 +64,17 @@ class SendGiftOnVideoBottomSheetUi {
     return Obx(
       () => isShowGift.value
           ? giftCollection[sendGiftIndex.value].type == 1 || giftCollection[sendGiftIndex.value].type == 2
-              ? SizedBox(height: 200, width: 200, child: PreviewNetworkImageUi(image: giftCollection[sendGiftIndex.value].image ?? ""))
+              ? SizedBox(
+                  height: 200,
+                  width: 200,
+                  child: PreviewNetworkImageUi(image: giftCollection[sendGiftIndex.value].image ?? ""))
               : SizedBox(
                   height: Get.height,
                   width: Get.width,
                   child: SizedBox.expand(
                     child: FittedBox(
                       fit: BoxFit.cover,
-                      child: SVGAImageWrapper(resUrl: giftCollection[sendGiftIndex.value].image ?? ""),
+                      child: SVGASimpleImage(resUrl: (Api.baseUrl + (giftCollection[sendGiftIndex.value].image ?? ""))),
                     ),
                   ),
                 )
@@ -201,7 +204,11 @@ class SendGiftOnVideoBottomSheetUi {
                               5.height,
                               giftCollection[index].type == 1 || giftCollection[index].type == 2
                                   ? Expanded(child: PreviewNetworkImageUi(image: giftCollection[index].image ?? ""))
-                                  : Expanded(child: SVGAImageWrapper(resUrl: (giftCollection[index].image) != null ? (Api.baseUrl + (giftCollection[index].image ?? "")) : "")),
+                                  : Expanded(
+                                      child: SVGASimpleImage(
+                                          resUrl: (giftCollection[index].image) != null
+                                              ? (Api.baseUrl + (giftCollection[index].image ?? ""))
+                                              : "")),
                               5.height,
                               Container(
                                 padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 3),
@@ -210,10 +217,9 @@ class SendGiftOnVideoBottomSheetUi {
                                   borderRadius: BorderRadius.circular(6),
                                 ),
                                 child: Text(
-                                  "${CustomFormatNumber.convert(giftCollection[index].coin ?? 0)} USD",
+                                  "${CustomFormatNumber.convert(giftCollection[index].coin ?? 0)} Coins",
                                   style: AppFontStyle.styleW700(AppColor.primary, 12),
                                 ),
-
                               ),
                               8.height,
                               GestureDetector(
@@ -242,48 +248,65 @@ class SendGiftOnVideoBottomSheetUi {
                       ),
               ),
             ),
-            10.height,
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                GestureDetector(
-                  onTap: () {
-                    Get.back();
-                    Get.toNamed(AppRoutes.rechargePage);
-                  },
-                  child: Container(
-                    height: 40,
-                    padding: EdgeInsets.symmetric(horizontal: 10),
-                    decoration: BoxDecoration(
-                      color: AppColor.primary,
-                      borderRadius: BorderRadius.circular(50),
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Container(
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              border: Border.all(color: AppColor.white, width: 1.5),
-                            ),
-                            child: Image.asset(AppAsset.icCoin, width: 25)),
-                        5.width,
-                        Text(
-                          EnumLocal.txtRecharge.name.tr,
-                          style: AppFontStyle.styleW600(AppColor.white, 15),
-                        ),
-                        5.width,
-                        Image.asset(AppAsset.icArrowRight, width: 15, color: AppColor.white),
-                      ],
-                    ),
+            Container(
+              decoration: BoxDecoration(
+                color: AppColor.white,
+                boxShadow: [
+                  BoxShadow(
+                    color: AppColor.colorSecondaryTextGrey.withOpacity(0.2), // Shadow color
+                    spreadRadius: 2,
+                    blurRadius: 10,
+                    offset: Offset(10, 0), // Move shadow to the right
                   ),
-                ),
-                15.width,
-              ],
+                ],
+              ),
+              child: Column(
+                children: [
+                  10.height,
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      GestureDetector(
+                        onTap: () {
+                          Get.back();
+                          Get.toNamed(AppRoutes.rechargePage);
+                        },
+                        child: Container(
+                          height: 40,
+                          padding: EdgeInsets.symmetric(horizontal: 10),
+                          decoration: BoxDecoration(
+                            color: AppColor.primary,
+                            borderRadius: BorderRadius.circular(50),
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Container(
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    border: Border.all(color: AppColor.white, width: 1.5),
+                                  ),
+                                  child: Image.asset(AppAsset.icCoin, width: 25)),
+                              5.width,
+                              Text(
+                                EnumLocal.txtRecharge.name.tr,
+                                style: AppFontStyle.styleW600(AppColor.white, 15),
+                              ),
+                              5.width,
+                              Image.asset(AppAsset.icArrowRight, width: 15, color: AppColor.white),
+                            ],
+                          ),
+                        ),
+                      ),
+                      15.width,
+                    ],
+                  ),
+                  10.height,
+                ],
+              ),
             ),
-            10.height,
           ],
         ),
       ),

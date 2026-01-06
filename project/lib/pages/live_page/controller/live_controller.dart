@@ -2,12 +2,12 @@ import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
-import 'package:auralive/pages/connection_page/api/follow_unfollow_api.dart';
-import 'package:auralive/ui/loading_ui.dart';
-import 'package:auralive/utils/database.dart';
-import 'package:auralive/utils/enums.dart';
-import 'package:auralive/utils/socket_services.dart';
-import 'package:auralive/utils/utils.dart';
+import 'package:shortie/pages/connection_page/api/follow_unfollow_api.dart';
+import 'package:shortie/ui/loading_ui.dart';
+import 'package:shortie/utils/database.dart';
+import 'package:shortie/utils/enums.dart';
+import 'package:shortie/utils/socket_services.dart';
+import 'package:shortie/utils/utils.dart';
 import 'package:zego_express_engine/zego_express_engine.dart';
 
 class LiveController extends GetxController {

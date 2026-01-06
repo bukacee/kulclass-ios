@@ -2,18 +2,17 @@ import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
-import 'package:auralive/main.dart';
-import 'package:auralive/pages/bottom_bar_page/controller/bottom_bar_controller.dart';
-import 'package:auralive/pages/scan_qr_code_page/controller/scan_qr_code_controller.dart';
-import 'package:auralive/routes/app_routes.dart';
-import 'package:auralive/ui/simple_app_bar_ui.dart';
-import 'package:auralive/utils/asset.dart';
-import 'package:auralive/utils/color.dart';
-import 'package:auralive/size_extension.dart';
-import 'package:auralive/utils/database.dart';
-import 'package:auralive/utils/enums.dart';
-import 'package:auralive/utils/font_style.dart';
-import 'package:auralive/utils/utils.dart';
+import 'package:shortie/main.dart';
+import 'package:shortie/pages/bottom_bar_page/controller/bottom_bar_controller.dart';
+import 'package:shortie/pages/scan_qr_code_page/controller/scan_qr_code_controller.dart';
+import 'package:shortie/routes/app_routes.dart';
+import 'package:shortie/ui/simple_app_bar_ui.dart';
+import 'package:shortie/utils/asset.dart';
+import 'package:shortie/utils/color.dart';
+import 'package:shortie/utils/database.dart';
+import 'package:shortie/utils/enums.dart';
+import 'package:shortie/utils/font_style.dart';
+import 'package:shortie/utils/utils.dart';
 
 class ScanQrCodeView extends GetView<ScanQrCodeController> {
   const ScanQrCodeView({super.key});
@@ -111,12 +110,12 @@ class GradiantBorderContainer extends StatelessWidget {
         borderRadius: BorderRadius.circular(radius),
       ),
       child: DottedBorder(
-        // dashPattern: const [3, 6],
-        // borderType: BorderType.RRect,
-        // color: AppColor.colorScaffold,
-        // radius: Radius.circular(radius),
-        // padding: const EdgeInsets.all(1.5),
-        // strokeWidth: 5,
+        dashPattern: const [3, 6],
+        borderType: BorderType.RRect,
+        color: AppColor.colorScaffold,
+        radius: Radius.circular(radius),
+        padding: const EdgeInsets.all(1.5),
+        strokeWidth: 5,
         child: Container(
           height: height,
           width: width,

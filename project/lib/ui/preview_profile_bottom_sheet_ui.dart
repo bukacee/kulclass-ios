@@ -1,22 +1,21 @@
 import 'package:blurrycontainer/blurrycontainer.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:auralive/ui/preview_country_flag_ui.dart';
-import 'package:auralive/ui/preview_network_image_ui.dart';
-import 'package:auralive/shimmer/preview_profile_bottom_sheet_shimmer_ui.dart';
-import 'package:auralive/ui/app_button_ui.dart';
-import 'package:auralive/main.dart';
-import 'package:auralive/pages/connection_page/api/follow_unfollow_api.dart';
-import 'package:auralive/pages/profile_page/api/fetch_profile_api.dart';
-import 'package:auralive/pages/profile_page/model/fetch_profile_model.dart';
-import 'package:auralive/routes/app_routes.dart';
-import 'package:auralive/utils/asset.dart';
-import 'package:auralive/utils/color.dart';
-import 'package:auralive/size_extension.dart';
-import 'package:auralive/utils/database.dart';
-import 'package:auralive/utils/enums.dart';
-import 'package:auralive/utils/font_style.dart';
-import 'package:auralive/utils/utils.dart';
+import 'package:shortie/ui/preview_country_flag_ui.dart';
+import 'package:shortie/ui/preview_network_image_ui.dart';
+import 'package:shortie/shimmer/preview_profile_bottom_sheet_shimmer_ui.dart';
+import 'package:shortie/ui/app_button_ui.dart';
+import 'package:shortie/main.dart';
+import 'package:shortie/pages/connection_page/api/follow_unfollow_api.dart';
+import 'package:shortie/pages/profile_page/api/fetch_profile_api.dart';
+import 'package:shortie/pages/profile_page/model/fetch_profile_model.dart';
+import 'package:shortie/routes/app_routes.dart';
+import 'package:shortie/utils/asset.dart';
+import 'package:shortie/utils/color.dart';
+import 'package:shortie/utils/database.dart';
+import 'package:shortie/utils/enums.dart';
+import 'package:shortie/utils/font_style.dart';
+import 'package:shortie/utils/utils.dart';
 
 class PreviewProfileBottomSheetUi {
   static FetchProfileModel? fetchProfileModel;
@@ -43,12 +42,10 @@ class PreviewProfileBottomSheetUi {
     }
   }
 
-
   static void show({
     required String userId,
     required BuildContext context,
   }) {
-
     onGetProfile(userId);
     showModalBottomSheet(
       isScrollControlled: true,
@@ -94,7 +91,6 @@ class PreviewProfileBottomSheetUi {
                     ],
                   ).paddingOnly(left: 50),
                   const Spacer(),
-
                   GestureDetector(
                     onTap: () => Get.back(),
                     child: Container(
@@ -230,45 +226,40 @@ class PreviewProfileBottomSheetUi {
                                   ),
                                 ],
                               ),
-                              //15.height,
-                              //Row(
-                                //crossAxisAlignment: CrossAxisAlignment.center,
-                                //mainAxisAlignment: MainAxisAlignment.center,
-                                //children: [
-                                  //GestureDetector(
-                                    //onTap: () => onClickFollow(userId),
-                                    //child: Obx(
-                                      //() => Container(
-                                        //padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-                                        //decoration: BoxDecoration(
-                                          //color: AppColor.colorBorder.withOpacity(0.1),
-                                          //borderRadius: BorderRadius.circular(20),
-                                          //border: Border.all(color: AppColor.colorBorder.withOpacity(0.6), width: 1),
-                                        //),
-                                        //child: Row(
-                                        //children: [
-                                        //Image.asset(
-                                        //ctrl.isFollow ? AppAsset.icFollowing : AppAsset.icFollow,
-                                        //height: 18,
-                                        //color: AppColor.primary,
-                                        //),
-                                        //8.width,
-                                        // Show the formatted string using controller values
-                                        //Text(
-                                        //ctrl.isFollow
-                                        //  ? EnumLocal.txtFollowing.name.tr
-                                        //: "Subscribe - \$${ctrl.subAmountUSD.toStringAsFixed(2)} "
-                                        //"(~ ${ctrl.ownerCurrencyCode} ${ctrl.subAmountOwnerCurrency.toStringAsFixed(2)} • "
-                                        //"${ctrl.viewerCurrencyCode} ${ctrl.subAmountViewerCurrency.toStringAsFixed(2)})",
-                                        //style: AppFontStyle.styleW600(AppColor.primary, 16),
-                                        //),
-                                        // ],
-                                        //),
-                                      //),
-                                    //),
-                                  //),
-                                //],
-                              //),
+                              15.height,
+                              Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  GestureDetector(
+                                    onTap: () => onClickFollow(userId),
+                                    child: Obx(
+                                      () => Container(
+                                        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+                                        decoration: BoxDecoration(
+                                          color: AppColor.colorBorder.withOpacity(0.1),
+                                          borderRadius: BorderRadius.circular(20),
+                                          border: Border.all(color: AppColor.colorBorder.withOpacity(0.6), width: 1),
+                                        ),
+                                        child: Row(
+                                          children: [
+                                            Image.asset(
+                                              isFollow.value ? AppAsset.icFollowing : AppAsset.icFollow,
+                                              height: 18,
+                                              color: AppColor.primary,
+                                            ),
+                                            8.width,
+                                            Text(
+                                              isFollow.value ? EnumLocal.txtFollowing.name.tr : EnumLocal.txtFollow.name.tr,
+                                              style: AppFontStyle.styleW600(AppColor.primary, 16),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
                               20.height,
                               Row(
                                 children: [

@@ -1,22 +1,23 @@
+import 'package:audioplayers/audioplayers.dart';
 import 'package:blurrycontainer/blurrycontainer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
-import 'package:auralive/custom/custom_format_audio_time.dart';
-import 'package:auralive/custom/custom_format_chat_time.dart';
-import 'package:auralive/ui/loading_ui.dart';
-import 'package:auralive/ui/preview_network_image_ui.dart';
-import 'package:auralive/main.dart';
-import 'package:auralive/pages/chat_page/controller/chat_controller.dart';
-import 'package:auralive/ui/preview_profile_bottom_sheet_ui.dart';
-import 'package:auralive/utils/asset.dart';
-import 'package:auralive/utils/color.dart';
-import 'package:auralive/size_extension.dart';
-import 'package:auralive/utils/enums.dart';
-import 'package:auralive/utils/font_style.dart';
-import 'package:audioplayers/audioplayers.dart';
-import 'package:auralive/utils/utils.dart';
+import 'package:shortie/custom/custom_format_audio_time.dart';
+import 'package:shortie/custom/custom_format_chat_time.dart';
+
+
+import 'package:shortie/main.dart';
+import 'package:shortie/pages/chat_page/controller/chat_controller.dart';
+import 'package:shortie/ui/loading_ui.dart';
+import 'package:shortie/ui/preview_network_image_ui.dart';
+import 'package:shortie/ui/preview_profile_bottom_sheet_ui.dart';
+import 'package:shortie/utils/asset.dart';
+import 'package:shortie/utils/color.dart';
+import 'package:shortie/utils/enums.dart';
+import 'package:shortie/utils/font_style.dart';
+import 'package:shortie/utils/utils.dart';
 import 'package:vibration/vibration.dart';
 
 class ChatAppBarUi extends GetView<ChatController> {
@@ -179,7 +180,8 @@ class MessageTextFieldUi extends GetView<ChatController> {
                         decoration: InputDecoration(
                           border: InputBorder.none,
                           contentPadding: const EdgeInsets.only(bottom: 2),
-                          hintText: controller.isRecordingAudio ? CustomFormatAudioTime.convert(controller.countTime) : EnumLocal.txtTypeSomething.name.tr,
+                          hintText:
+                              controller.isRecordingAudio ? CustomFormatAudioTime.convert(controller.countTime) : EnumLocal.txtTypeSomething.name.tr,
                           // hintText: controller.isRecordingAudio ? EnumLocal.txtAudioRecording.name.tr : EnumLocal.txtTypeSomething.name.tr,
                           hintStyle: AppFontStyle.styleW400(controller.isRecordingAudio ? AppColor.primary : AppColor.coloGreyText, 16),
                         ),

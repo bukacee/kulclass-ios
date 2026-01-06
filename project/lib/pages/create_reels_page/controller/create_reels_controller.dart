@@ -1,29 +1,27 @@
 import 'dart:async';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:camera/camera.dart';
-import 'package:deepar_flutter_plus/deepar_flutter_plus.dart';
-import 'package:ffmpeg_kit_flutter_new/ffmpeg_kit.dart';
-
-// import 'package:ffmpeg_kit_flutter/ffmpeg_kit.dart';
+import 'package:deepar_flutter/deepar_flutter.dart';
+import 'package:ffmpeg_kit_flutter/ffmpeg_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:auralive/custom/custom_thumbnail.dart';
-import 'package:auralive/custom/custom_video_time.dart';
-import 'package:auralive/ui/loading_ui.dart';
-import 'package:auralive/pages/create_reels_page/api/fetch_all_sound_api.dart';
-import 'package:auralive/pages/create_reels_page/api/fetch_favorite_sound_api.dart';
-import 'package:auralive/pages/create_reels_page/api/search_sound_api.dart';
-import 'package:auralive/pages/create_reels_page/model/fetch_all_sound_model.dart';
-import 'package:auralive/pages/create_reels_page/model/fetch_favorite_sound_model.dart';
-import 'package:auralive/pages/create_reels_page/model/search_sound_model.dart';
-import 'package:auralive/pages/create_reels_page/widget/create_reels_widget.dart';
-import 'package:auralive/routes/app_routes.dart';
-import 'package:auralive/utils/asset.dart';
-import 'package:auralive/utils/database.dart';
-import 'package:auralive/utils/enums.dart';
-import 'package:auralive/utils/utils.dart';
+import 'package:shortie/custom/custom_thumbnail.dart';
+import 'package:shortie/custom/custom_video_time.dart';
+import 'package:shortie/ui/loading_ui.dart';
+import 'package:shortie/pages/create_reels_page/api/fetch_all_sound_api.dart';
+import 'package:shortie/pages/create_reels_page/api/fetch_favorite_sound_api.dart';
+import 'package:shortie/pages/create_reels_page/api/search_sound_api.dart';
+import 'package:shortie/pages/create_reels_page/model/fetch_all_sound_model.dart';
+import 'package:shortie/pages/create_reels_page/model/fetch_favorite_sound_model.dart';
+import 'package:shortie/pages/create_reels_page/model/search_sound_model.dart';
+import 'package:shortie/pages/create_reels_page/widget/create_reels_widget.dart';
+import 'package:shortie/routes/app_routes.dart';
+import 'package:shortie/utils/asset.dart';
+import 'package:shortie/utils/database.dart';
+import 'package:shortie/utils/enums.dart';
+import 'package:shortie/utils/utils.dart';
 
 class CreateReelsController extends GetxController {
   // >>>>> >>>>> >>>>> Main Variable <<<<< <<<<< <<<<<
@@ -49,7 +47,7 @@ class CreateReelsController extends GetxController {
 
   // >>>>> >>>>> >>>>> Camera Controller <<<<< <<<<< <<<<<
 
-  DeepArControllerPlus deepArController = DeepArControllerPlus();
+  DeepArController deepArController = DeepArController();
 
   final List effectsCollection = [
     "None",
@@ -329,7 +327,7 @@ class CreateReelsController extends GetxController {
     try {
       Utils.showLog("Effect Controller Initializing...");
 
-      await deepArController.initialize(
+      isInitializeEffect = await deepArController.initialize(
         androidLicenseKey: Utils.effectAndroidLicenseKey,
         iosLicenseKey: Utils.effectIosLicenseKey,
         resolution: Resolution.medium,
@@ -337,8 +335,6 @@ class CreateReelsController extends GetxController {
 
       isFrontCamera = true;
       update(["onInitializeEffect"]);
-
-      isInitializeEffect = deepArController.isInitialized;
 
       Utils.showLog("Effect Controller Initialize => $isInitializeEffect");
     } catch (e) {
@@ -348,7 +344,7 @@ class CreateReelsController extends GetxController {
 
   Future<void> onDisposeEffect() async {
     deepArController.destroy();
-    deepArController = DeepArControllerPlus();
+    deepArController = DeepArController();
     isInitializeEffect = false;
     update(["onInitializeEffect"]);
     Utils.showLog("Effect Controller Dispose Success");
@@ -529,10 +525,10 @@ class CreateReelsController extends GetxController {
   Future<String?> onRemoveAudio(String videoPath) async {
     final String videoWithoutAudioPath = '${(await getTemporaryDirectory()).path}/RM_${DateTime.now().millisecondsSinceEpoch}.mp4';
     final ffmpegRemoveAudioCommand = '-i $videoPath -c copy -an $videoWithoutAudioPath';
-    // final sessionRemoveAudio = await FFmpegKit.executeAsync(ffmpegRemoveAudioCommand);
-    // final returnCodeRemoveAudio = await sessionRemoveAudio.getReturnCode();
+    final sessionRemoveAudio = await FFmpegKit.executeAsync(ffmpegRemoveAudioCommand);
+    final returnCodeRemoveAudio = await sessionRemoveAudio.getReturnCode();
     Utils.showLog("Remove Audio Path => $videoWithoutAudioPath");
-    // Utils.showLog("Return Code => $returnCodeRemoveAudio");
+    Utils.showLog("Return Code => $returnCodeRemoveAudio");
     return videoWithoutAudioPath;
   }
 
@@ -548,15 +544,11 @@ class CreateReelsController extends GetxController {
 
       final minTime = (videoTime! < soundTime) ? videoTime : soundTime;
 
-      // final command = '-i $videoPath -i $audioPath -t $minTime -c:v copy -c:a aac -strict experimental -map 0:v:0 -map 1:a:0 $path';
-
       final command = '-i $videoPath -i $audioPath -t $minTime -c:v copy -c:a aac -strict experimental -map 0:v:0 -map 1:a:0 $path';
-
       final sessionRemoveAudio = await FFmpegKit.executeAsync(command);
       final returnCodeRemoveAudio = await sessionRemoveAudio.getReturnCode();
-      Utils.showLog("Return Code => $returnCodeRemoveAudio");
-
       Utils.showLog("Merge Video Path => $path");
+      Utils.showLog("Return Code => $returnCodeRemoveAudio");
       return path;
     } else {
       return null;
@@ -581,38 +573,34 @@ class CreateReelsController extends GetxController {
       Utils.showLog("Removing Audio From Video...");
 
       Utils.showToast(EnumLocal.txtPleaseWaitSomeTime.name.tr);
-      // final removeVideoPath = await onRemoveAudio(videoPath);
-      // await 2.seconds.delay();
-      // if (removeVideoPath != null) {
-      //   Utils.showLog("REMOVE AUDIO PATH => ${removeVideoPath}");
+      final removeVideoPath = await onRemoveAudio(videoPath);
+      await 2.seconds.delay();
+      if (removeVideoPath != null) {
+        final mergeVideoPath = await onMergeAudioWithVideo(removeVideoPath, selectedSound?["link"]);
+        await 5.seconds.delay();
+        Get.back(); // Stop Loading...
 
-      Utils.showLog("SONG => ${selectedSound}");
+        if (mergeVideoPath != null && videoTime != null && videoImage != null) {
+          Utils.showLog("Video Path => ${mergeVideoPath}");
+          Utils.showLog("Video Image => ${videoImage}");
+          Utils.showLog("Video Time => ${videoTime}");
 
-      final mergeVideoPath = await onMergeAudioWithVideo(videoPath, selectedSound?["link"]);
-      await 5.seconds.delay();
-      Get.back(); // Stop Loading...
-
-      if (mergeVideoPath != null && videoTime != null && videoImage != null) {
-        Utils.showLog("Video Path => ${mergeVideoPath}");
-        Utils.showLog("Video Image => ${videoImage}");
-        Utils.showLog("Video Time => ${videoTime}");
-
-        Get.offAndToNamed(
-          AppRoutes.previewCreatedReelsPage,
-          arguments: {
-            "video": mergeVideoPath,
-            "image": videoImage,
-            "time": videoTime?.toInt(),
-            "songId": selectedSound?["id"] ?? "",
-          },
-        );
+          Get.offAndToNamed(
+            AppRoutes.previewCreatedReelsPage,
+            arguments: {
+              "video": mergeVideoPath,
+              "image": videoImage,
+              "time": videoTime?.toInt(),
+              "songId": selectedSound?["id"] ?? "",
+            },
+          );
+        } else {
+          Utils.showToast(EnumLocal.txtSomeThingWentWrong.name.tr);
+          Utils.showLog("Get Video Image/Video Time Failed !!");
+        }
       } else {
-        Utils.showToast(EnumLocal.txtSomeThingWentWrong.name.tr);
-        Utils.showLog("Get Video Image/Video Time Failed !!");
+        Get.back(); // Stop Loading...
       }
-      // } else {
-      //   Get.back(); // Stop Loading...
-      // }
     } else {
       videoTime = (await CustomVideoTime.onGet(videoPath) ?? 0).toDouble();
       Get.back(); // Stop Loading...

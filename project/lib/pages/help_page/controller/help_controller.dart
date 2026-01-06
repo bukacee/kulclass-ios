@@ -1,14 +1,14 @@
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:auralive/custom/custom_image_picker.dart';
-import 'package:auralive/pages/help_page/api/help_api.dart';
-import 'package:auralive/pages/help_page/model/help_model.dart';
-import 'package:auralive/ui/image_picker_bottom_sheet_ui.dart';
-import 'package:auralive/ui/loading_ui.dart';
-import 'package:auralive/utils/database.dart';
-import 'package:auralive/utils/enums.dart';
-import 'package:auralive/utils/utils.dart';
+import 'package:shortie/custom/custom_image_picker.dart';
+import 'package:shortie/pages/help_page/api/help_api.dart';
+import 'package:shortie/pages/help_page/model/help_model.dart';
+import 'package:shortie/ui/image_picker_bottom_sheet_ui.dart';
+import 'package:shortie/ui/loading_ui.dart';
+import 'package:shortie/utils/database.dart';
+import 'package:shortie/utils/enums.dart';
+import 'package:shortie/utils/utils.dart';
 
 class HelpController extends GetxController {
   TextEditingController complaintController = TextEditingController();

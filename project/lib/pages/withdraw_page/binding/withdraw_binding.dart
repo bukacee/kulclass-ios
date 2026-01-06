@@ -1,5 +1,5 @@
 import 'package:get/get.dart';
-import 'package:auralive/pages/withdraw_page/controller/withdraw_controller.dart';
+import 'package:shortie/pages/withdraw_page/controller/withdraw_controller.dart';
 
 class WithdrawBinding extends Bindings {
   @override

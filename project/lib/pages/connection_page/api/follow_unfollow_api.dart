@@ -1,41 +1,27 @@
-import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:auralive/utils/api.dart';
-import 'package:auralive/utils/utils.dart';
+import 'package:shortie/utils/api.dart';
+import 'package:shortie/utils/utils.dart';
 
 class FollowUnfollowApi {
   static Future<void> callApi({required String loginUserId, required String userId}) async {
-    Utils.showLog("Paid Follow Api Calling...");
+    Utils.showLog("Follow-Unfollow Api Calling...");
 
-    final uri = Uri.parse(Api.followUnfollow);
+    final uri = Uri.parse("${Api.followUnfollow}?fromUserId=$loginUserId&toUserId=$userId");
 
-    Utils.showLog("Paid Follow Url => $uri");
+    Utils.showLog("Follow-Unfollow Url => $uri");
 
-    final headers = {
-      "key": Api.secretKey,
-      "Content-Type": "application/json",
-    };
-
-    final body = {
-      "follower_id": loginUserId,
-      "followed_id": userId,
-    };
+    final headers = {"key": Api.secretKey};
 
     try {
-      final response = await http.post(uri, headers: headers, body: jsonEncode(body));
+      final response = await http.post(uri, headers: headers);
 
       if (response.statusCode == 200) {
-        final responseData = jsonDecode(response.body);
-        Utils.showToast(responseData['message'] ?? "Success"); // 👈 show message to user
-        Utils.showLog("Paid Follow Api Response => ${response.body}");
+        Utils.showLog("Follow-Unfollow Api Response => ${response.body}");
       } else {
-        final responseData = jsonDecode(response.body);
-        Utils.showToast(responseData['message'] ?? "Something went wrong"); // 👈 show error
-        Utils.showLog("Paid Follow Api StatusCode Error => ${response.statusCode}");
+        Utils.showLog("Follow-Unfollow Api StateCode Error");
       }
     } catch (error) {
-      Utils.showToast("Network error, please try again."); // 👈 show catch error
-      Utils.showLog("Paid Follow Api Error => $error");
+      Utils.showLog("Follow-Unfollow Api Error => $error");
     }
   }
 }

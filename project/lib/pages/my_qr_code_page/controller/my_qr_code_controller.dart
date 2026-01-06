@@ -1,16 +1,16 @@
 import 'dart:io';
 
 import 'package:flutter/services.dart';
-import 'package:gallery_saver_plus/gallery_saver.dart';
+import 'package:gallery_saver/gallery_saver.dart';
 import 'package:get/get.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:screenshot/screenshot.dart';
-import 'package:auralive/custom/custom_share.dart';
-import 'package:auralive/ui/loading_ui.dart';
-import 'package:auralive/utils/branch_io_services.dart';
-import 'package:auralive/utils/database.dart';
-import 'package:auralive/utils/enums.dart';
-import 'package:auralive/utils/utils.dart';
+import 'package:shortie/custom/custom_share.dart';
+import 'package:shortie/ui/loading_ui.dart';
+import 'package:shortie/utils/branch_io_services.dart';
+import 'package:shortie/utils/database.dart';
+import 'package:shortie/utils/enums.dart';
+import 'package:shortie/utils/utils.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class MyQrCodeController extends GetxController {

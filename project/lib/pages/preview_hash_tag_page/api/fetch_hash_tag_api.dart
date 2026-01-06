@@ -1,8 +1,8 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:auralive/pages/preview_hash_tag_page/model/fetch_hash_tag_model.dart';
-import 'package:auralive/utils/api.dart';
-import 'package:auralive/utils/utils.dart';
+import 'package:shortie/pages/preview_hash_tag_page/model/fetch_hash_tag_model.dart';
+import 'package:shortie/utils/api.dart';
+import 'package:shortie/utils/utils.dart';
 
 class FetchHashTagApi {
   static Future<FetchHashTagModel?> callApi({required String hashTag}) async {

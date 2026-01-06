@@ -1,8 +1,8 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:auralive/pages/edit_profile_page/model/edit_profile_model.dart';
-import 'package:auralive/utils/api.dart';
-import 'package:auralive/utils/utils.dart';
+import 'package:shortie/pages/edit_profile_page/model/edit_profile_model.dart';
+import 'package:shortie/utils/api.dart';
+import 'package:shortie/utils/utils.dart';
 
 class EditProfileApi {
   static Future<EditProfileModel?> callApi({
@@ -14,23 +14,13 @@ class EditProfileApi {
     required String bio,
     required String gender,
     required String countryFlagImage,
-    required int sub,
   }) async {
     Utils.showLog("Edit Profile Api Calling...");
 
     try {
-      if (loginUserId.isEmpty) {
-        Utils.showLog("❌ ERROR: loginUserId is EMPTY!");
-        return null;
-      }
-
       var headers = {'key': Api.secretKey};
 
-      var request = http.MultipartRequest(
-        'PATCH',
-        Uri.parse("${Api.editProfile}?userId=$loginUserId"),
-      );
-
+      var request = http.MultipartRequest('PATCH', Uri.parse("${Api.editProfile}?userId=$loginUserId"));
       request.fields.addAll({
         'name': name,
         'userName': userName,
@@ -38,7 +28,6 @@ class EditProfileApi {
         'bio': bio,
         'country': country,
         'countryFlagImage': countryFlagImage,
-        'sub': sub.toString(),
       });
 
       if (image != null) {
@@ -49,21 +38,17 @@ class EditProfileApi {
 
       final response = await request.send();
 
-      final body = await response.stream.bytesToString();
-      Utils.showLog("📨 Edit Profile RAW Response => $body");
-
-      final decoded = jsonDecode(body);
-
-      // Accept ALL 2xx success codes
-      if (response.statusCode >= 200 && response.statusCode < 300) {
-        return EditProfileModel.fromJson(decoded);
+      if (response.statusCode == 200) {
+        final responseBody = await response.stream.bytesToString();
+        final jsonResult = jsonDecode(responseBody);
+        Utils.showLog("Edit Profile Api Response => ${jsonResult}");
+        return EditProfileModel.fromJson(jsonResult);
+      } else {
+        Utils.showLog("Edit Profile Api Response Error");
+        return null;
       }
-
-      Utils.showLog("❌ Server Error ${response.statusCode}: $decoded");
-      return EditProfileModel.fromJson(decoded); // return error model too
-
     } catch (e) {
-      Utils.showLog("🔥 Edit Profile Api Crash => $e");
+      Utils.showLog("Edit Profile Api Error => $e");
       return null;
     }
   }

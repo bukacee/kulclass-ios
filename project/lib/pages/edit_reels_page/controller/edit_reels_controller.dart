@@ -4,20 +4,19 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:auralive/custom/custom_image_picker.dart';
-import 'package:auralive/pages/edit_reels_page/api/edit_reels_api.dart';
-import 'package:auralive/pages/edit_reels_page/model/edit_reels_model.dart';
-import 'package:auralive/pages/preview_hash_tag_page/api/create_hash_tag_api.dart';
-import 'package:auralive/pages/preview_hash_tag_page/api/fetch_hash_tag_api.dart';
-import 'package:auralive/pages/preview_hash_tag_page/model/create_hash_tag_model.dart';
-import 'package:auralive/pages/preview_hash_tag_page/model/fetch_hash_tag_model.dart';
-import 'package:auralive/pages/splash_screen_page/api/upload_file_api.dart';
-import 'package:auralive/ui/image_picker_bottom_sheet_ui.dart';
-import 'package:auralive/ui/loading_ui.dart';
-import 'package:auralive/utils/database.dart';
-import 'package:auralive/utils/enums.dart';
-import 'package:auralive/utils/internet_connection.dart';
-import 'package:auralive/utils/utils.dart';
+import 'package:shortie/custom/custom_image_picker.dart';
+import 'package:shortie/pages/edit_reels_page/api/edit_reels_api.dart';
+import 'package:shortie/pages/edit_reels_page/model/edit_reels_model.dart';
+import 'package:shortie/pages/preview_hash_tag_page/api/create_hash_tag_api.dart';
+import 'package:shortie/pages/preview_hash_tag_page/api/fetch_hash_tag_api.dart';
+import 'package:shortie/pages/preview_hash_tag_page/model/create_hash_tag_model.dart';
+import 'package:shortie/pages/preview_hash_tag_page/model/fetch_hash_tag_model.dart';
+import 'package:shortie/ui/image_picker_bottom_sheet_ui.dart';
+import 'package:shortie/ui/loading_ui.dart';
+import 'package:shortie/utils/database.dart';
+import 'package:shortie/utils/enums.dart';
+import 'package:shortie/utils/internet_connection.dart';
+import 'package:shortie/utils/utils.dart';
 
 class EditReelsController extends GetxController {
   EditReelsModel? editReelsModel;
@@ -193,40 +192,26 @@ class EditReelsController extends GetxController {
 
       Utils.showLog("Hast Tag Id => $hashTagIds");
 
-      if (selectedImage != null) {
-        final image = await UploadFileApi.callApi(
-          filePath: selectedImage ?? "",
-          fileType: 2,
-          keyName: "${DateTime.now().millisecondsSinceEpoch}.jpg",
-        );
-        await onCallEditApi(hashTag: hashTagIds.map((e) => "$e").join(',').toString(), image: image);
+      editReelsModel = await EditReelsApi.callApi(
+        loginUserId: Database.loginUserId,
+        videoImage: selectedImage,
+        videoId: videoId,
+        hashTag: hashTagIds.map((e) => "$e").join(',').toString(),
+        caption: captionController.text.trim(),
+      );
+
+      if (editReelsModel?.status == true && editReelsModel?.data?.id != null) {
+        Utils.showToast(EnumLocal.txtReelsUploadSuccessfully.name.tr);
+        Get.close(2);
+      } else if (editReelsModel?.status == false && editReelsModel?.message == "your duration of Video greater than decided by the admin.") {
+        Utils.showToast(editReelsModel?.message ?? "");
       } else {
-        await onCallEditApi(hashTag: hashTagIds.map((e) => "$e").join(',').toString(), image: selectedImage);
+        Utils.showToast(EnumLocal.txtSomeThingWentWrong.name.tr);
       }
+      Get.back(); // Stop Loading...
     } else {
       Utils.showToast(EnumLocal.txtConnectionLost.name.tr);
       Utils.showLog("Internet Connection Lost !!");
     }
-  }
-
-  Future<void> onCallEditApi({required String hashTag, String? image}) async {
-    editReelsModel = await EditReelsApi.callApi(
-      loginUserId: Database.loginUserId,
-      videoImage: image,
-      videoId: videoId,
-      hashTag: hashTag,
-      caption: captionController.text.trim(),
-    );
-
-    if (editReelsModel?.status == true && editReelsModel?.data?.id != null) {
-      Utils.showToast(EnumLocal.txtReelsUploadSuccessfully.name.tr);
-      Get.close(2);
-    } else if (editReelsModel?.status == false && editReelsModel?.message == "your duration of Video greater than decided by the admin.") {
-      Utils.showToast(editReelsModel?.message ?? "");
-    } else {
-      Utils.showToast(EnumLocal.txtSomeThingWentWrong.name.tr);
-    }
-
-    Get.back(); // Stop Loading...
   }
 }

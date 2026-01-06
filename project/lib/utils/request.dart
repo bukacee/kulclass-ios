@@ -1,6 +1,6 @@
 import 'package:get/get_rx/src/rx_typedefs/rx_typedefs.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:auralive/utils/utils.dart';
+import 'package:shortie/utils/utils.dart';
 
 class AppRequest {
   static Future<void> notificationPermission({Callback? callback}) async {
@@ -106,25 +106,4 @@ class AppRequest {
       return true;
     }
   }
-
-  static Future<void> requestLiveStreamingPermissions({Callback? onGranted}) async {
-    bool mic = await microphonePermission();
-    if (!mic) return;
-
-    bool cam = false;
-    await cameraPermission(callback: () {
-      cam = true;
-    });
-    if (!cam) return;
-
-    bool audio = await audioPermission();
-    if (!audio) return;
-
-    // Optional: storage or phone, depending on your use case
-    // bool store = await storagePermission();
-    // if (!store) return;
-
-    onGranted?.call(); // ✅ All required permissions granted
-  }
-
 }

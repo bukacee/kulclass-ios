@@ -2,15 +2,14 @@ import 'package:blurrycontainer/blurrycontainer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:auralive/custom/custom_dot_indicator.dart';
-import 'package:auralive/main.dart';
-import 'package:auralive/pages/feed_page/model/post_image_model.dart';
-import 'package:auralive/pages/profile_page/controller/profile_controller.dart';
-import 'package:auralive/routes/app_routes.dart';
-import 'package:auralive/ui/preview_network_image_ui.dart';
-import 'package:auralive/utils/asset.dart';
-import 'package:auralive/utils/color.dart';
-import 'package:auralive/size_extension.dart';
+import 'package:shortie/custom/custom_dot_indicator.dart';
+import 'package:shortie/main.dart';
+import 'package:shortie/pages/feed_page/model/post_image_model.dart';
+import 'package:shortie/pages/profile_page/controller/profile_controller.dart';
+import 'package:shortie/routes/app_routes.dart';
+import 'package:shortie/ui/preview_network_image_ui.dart';
+import 'package:shortie/utils/asset.dart';
+import 'package:shortie/utils/color.dart';
 
 class PreviewImageUi extends StatefulWidget {
   PreviewImageUi({

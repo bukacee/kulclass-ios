@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:auralive/utils/color.dart';
-import 'package:auralive/size_extension.dart';
+import 'package:shortie/utils/color.dart';
 
 class PaymentRadioButtonUi extends StatelessWidget {
   const PaymentRadioButtonUi({super.key, required this.isSelected});

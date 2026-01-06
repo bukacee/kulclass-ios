@@ -1,8 +1,8 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:auralive/pages/reels_page/model/fetch_reels_model.dart';
-import 'package:auralive/utils/api.dart';
-import 'package:auralive/utils/utils.dart';
+import 'package:shortie/pages/reels_page/model/fetch_reels_model.dart';
+import 'package:shortie/utils/api.dart';
+import 'package:shortie/utils/utils.dart';
 
 class FetchReelsApi {
   static int startPagination = 0;
@@ -25,27 +25,11 @@ class FetchReelsApi {
 
       if (response.statusCode == 200) {
         final jsonResponse = json.decode(response.body);
-        Utils.showLog("Get Reels Api Response => ${response.body}");
 
-        // Check if the response is a Map or a List at the top level.
-        if (jsonResponse is Map<String, dynamic>) {
-          // If it's a map, proceed with the normal parsing.
-          return FetchReelsModel.fromJson(jsonResponse);
-        } else if (jsonResponse is List<dynamic>) {
-          // If it's a list, manually create the model and parse the data.
-          // This is the most likely scenario given your error.
-          final List<Data> reelsData = jsonResponse.map((json) => Data.fromJson(json)).toList();
-          return FetchReelsModel(
-            status: true,
-            message: "Reels fetched successfully",
-            data: reelsData,
-          );
-        } else {
-          // Handle unexpected response types
-          Utils.showLog("Get Reels Api Error: Unexpected JSON response type");
-        }
+        Utils.showLog("Get Reels Api Response => ${response.body}");
+        return FetchReelsModel.fromJson(jsonResponse);
       } else {
-        Utils.showLog("Get Reels Api StateCode Error: ${response.statusCode}");
+        Utils.showLog("Get Reels Api StateCode Error");
       }
     } catch (error) {
       Utils.showLog("Get Reels Api Error => $error");

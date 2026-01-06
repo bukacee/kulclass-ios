@@ -1,5 +1,5 @@
 import 'package:get/get.dart';
-import 'package:auralive/pages/preview_user_profile_page/controller/preview_user_profile_controller.dart';
+import 'package:shortie/pages/preview_user_profile_page/controller/preview_user_profile_controller.dart';
 
 class PreviewUserProfileBinding extends Bindings {
   @override

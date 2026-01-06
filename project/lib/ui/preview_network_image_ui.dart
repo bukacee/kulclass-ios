@@ -2,12 +2,11 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:auralive/utils/api.dart';
-import 'package:auralive/utils/asset.dart';
-import 'package:auralive/utils/color.dart';
-import 'package:auralive/size_extension.dart';
-import 'package:auralive/utils/database.dart';
-import 'package:auralive/utils/utils.dart';
+import 'package:shortie/utils/api.dart';
+import 'package:shortie/utils/asset.dart';
+import 'package:shortie/utils/color.dart';
+import 'package:shortie/utils/database.dart';
+import 'package:shortie/utils/utils.dart';
 
 class PreviewNetworkImageUi extends StatelessWidget {
   const PreviewNetworkImageUi({super.key, this.image});
@@ -18,10 +17,13 @@ class PreviewNetworkImageUi extends StatelessWidget {
   Widget build(BuildContext context) {
     return (image != null && image != "")
         ? Database.networkImage(Api.baseUrl + image!) != null
-            ? CachedNetworkImage(
-                imageUrl: Database.networkImage(Api.baseUrl + image!)!,
-                fit: BoxFit.cover,
-                errorWidget: (context, url, error) => Offstage(),
+            ? ClipRRect(
+                borderRadius: BorderRadius.circular(8),
+                child: CachedNetworkImage(
+                  imageUrl: Database.networkImage(Api.baseUrl + image!)!,
+                  fit: BoxFit.cover,
+                  errorWidget: (context, url, error) => Offstage(),
+                ),
               )
             : FutureBuilder(
                 future: _onCheckImage(Api.baseUrl + image!),
@@ -33,10 +35,13 @@ class PreviewNetworkImageUi extends StatelessWidget {
                   } else {
                     if (snapshot.data == true) {
                       Database.onSetNetworkImage(Api.baseUrl + image!);
-                      return CachedNetworkImage(
-                        imageUrl: Api.baseUrl + image!,
-                        fit: BoxFit.cover,
-                        errorWidget: (context, url, error) => Offstage(),
+                      return ClipRRect(
+                        borderRadius: BorderRadius.circular(8),
+                        child: CachedNetworkImage(
+                          imageUrl: Api.baseUrl + image!,
+                          fit: BoxFit.cover,
+                          errorWidget: (context, url, error) => Offstage(),
+                        ),
                       );
                     } else {
                       return Offstage();

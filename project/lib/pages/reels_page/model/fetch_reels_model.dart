@@ -5,25 +5,21 @@ class FetchReelsModel {
 
   FetchReelsModel({this.status, this.message, this.data});
 
-  factory FetchReelsModel.fromJson(Map<String, dynamic> json) {
-    List<Data>? dataList;
+  FetchReelsModel.fromJson(Map<String, dynamic> json) {
+    status = json['status'];
+    message = json['message'];
     if (json['data'] != null) {
-      dataList = (json['data'] as List)
-          .map((v) => Data.fromJson(v as Map<String, dynamic>))
-          .toList();
+      data = <Data>[];
+      json['data'].forEach((v) {
+        data!.add(new Data.fromJson(v));
+      });
     }
-
-    return FetchReelsModel(
-      status: json['status'] as bool?,
-      message: json['message'] as String?,
-      data: dataList,
-    );
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    data['status'] = status;
-    data['message'] = message;
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['status'] = this.status;
+    data['message'] = this.message;
     if (this.data != null) {
       data['data'] = this.data!.map((v) => v.toJson()).toList();
     }
@@ -59,29 +55,29 @@ class Data {
 
   Data(
       {this.id,
-        this.caption,
-        this.videoUrl,
-        this.videoImage,
-        this.songId,
-        this.shareCount,
-        this.isFake,
-        this.createdAt,
-        this.hashTag,
-        this.userId,
-        this.name,
-        this.userName,
-        this.userImage,
-        this.isVerified,
-        this.isLike,
-        this.isFollow,
-        this.totalLikes,
-        this.totalComments,
-        this.time,
-        this.isProfileImageBanned,
-        this.songTitle,
-        this.songImage,
-        this.songLink,
-        this.singerName});
+      this.caption,
+      this.videoUrl,
+      this.videoImage,
+      this.songId,
+      this.shareCount,
+      this.isFake,
+      this.createdAt,
+      this.hashTag,
+      this.userId,
+      this.name,
+      this.userName,
+      this.userImage,
+      this.isVerified,
+      this.isLike,
+      this.isFollow,
+      this.totalLikes,
+      this.totalComments,
+      this.time,
+      this.isProfileImageBanned,
+      this.songTitle,
+      this.songImage,
+      this.songLink,
+      this.singerName});
 
   Data.fromJson(Map<String, dynamic> json) {
     id = json['_id'];

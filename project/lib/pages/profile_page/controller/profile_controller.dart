@@ -3,46 +3,31 @@ import 'dart:developer';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:auralive/custom/custom_fetch_user_coin.dart';
-import 'package:auralive/pages/preview_shorts_video_page/model/preview_shorts_video_model.dart';
-import 'package:auralive/pages/profile_page/api/delete_post_api.dart';
-import 'package:auralive/pages/profile_page/api/delete_reels_api.dart';
-import 'package:auralive/pages/profile_page/api/fetch_profile_api.dart';
-import 'package:auralive/pages/profile_page/api/fetch_profile_collection_api.dart';
-import 'package:auralive/pages/profile_page/api/fetch_profile_post_api.dart';
-import 'package:auralive/pages/profile_page/api/fetch_profile_video_api.dart';
-import 'package:auralive/pages/profile_page/model/delete_post_model.dart';
-import 'package:auralive/pages/profile_page/model/delete_reels_model.dart';
-import 'package:auralive/pages/profile_page/model/fetch_profile_collection_model.dart';
-import 'package:auralive/pages/profile_page/model/fetch_profile_model.dart';
-import 'package:auralive/pages/profile_page/model/fetch_profile_post_model.dart';
-import 'package:auralive/pages/profile_page/model/fetch_profile_video_model.dart';
-import 'package:auralive/routes/app_routes.dart';
-import 'package:auralive/ui/delete_post_dialog_ui.dart';
-import 'package:auralive/ui/delete_reels_dialog_ui.dart';
-import 'package:auralive/ui/loading_ui.dart';
-import 'package:auralive/utils/database.dart';
-import 'package:auralive/utils/enums.dart';
-import 'package:auralive/utils/utils.dart';
-import 'package:auralive/utils/currency_helper.dart';
-import 'package:get_storage/get_storage.dart';
-import 'package:auralive/pages/login_page/controller/login_controller.dart';
+import 'package:shortie/custom/custom_fetch_user_coin.dart';
+import 'package:shortie/pages/preview_shorts_video_page/model/preview_shorts_video_model.dart';
+import 'package:shortie/pages/profile_page/api/delete_post_api.dart';
+import 'package:shortie/pages/profile_page/api/delete_reels_api.dart';
+import 'package:shortie/pages/profile_page/api/fetch_profile_api.dart';
+import 'package:shortie/pages/profile_page/api/fetch_profile_collection_api.dart';
+import 'package:shortie/pages/profile_page/api/fetch_profile_post_api.dart';
+import 'package:shortie/pages/profile_page/api/fetch_profile_video_api.dart';
+import 'package:shortie/pages/profile_page/model/delete_post_model.dart';
+import 'package:shortie/pages/profile_page/model/delete_reels_model.dart';
+import 'package:shortie/pages/profile_page/model/fetch_profile_collection_model.dart';
+import 'package:shortie/pages/profile_page/model/fetch_profile_model.dart';
+import 'package:shortie/pages/profile_page/model/fetch_profile_post_model.dart';
+import 'package:shortie/pages/profile_page/model/fetch_profile_video_model.dart';
+import 'package:shortie/routes/app_routes.dart';
+import 'package:shortie/ui/delete_post_dialog_ui.dart';
+import 'package:shortie/ui/delete_reels_dialog_ui.dart';
+import 'package:shortie/ui/loading_ui.dart';
+import 'package:shortie/utils/database.dart';
+import 'package:shortie/utils/enums.dart';
+import 'package:shortie/utils/utils.dart';
 
 class ProfileController extends GetxController with GetTickerProviderStateMixin {
   ScrollController scrollController = ScrollController();
   TabController? tabController;
-
-  late String viewerCountry;
-
-  //touse
-  // Owner's raw amount is treated as USD (per your spec)
-  double coinAmountUSD = 0.0;
- // Owner-local converted amount & currency code
-  // ProfileController.dart
-  RxDouble coinOwnerCurrency = 0.0.obs;
-  RxString ownerCurrencyCode = 'USD'.obs;
-
-
 
   RxBool isTabBarPinned = false.obs;
 
@@ -85,8 +70,6 @@ class ProfileController extends GetxController with GetTickerProviderStateMixin 
     super.onInit();
   }
 
-
-
   Future<void> init() async {
     tabController?.index = 0;
 
@@ -98,9 +81,6 @@ class ProfileController extends GetxController with GetTickerProviderStateMixin 
     onGetVideo(userId: Database.loginUserId);
     CustomFetchUserCoin.init();
   }
-
-
-
 
   void onScroll() {
     isTabBarPinned.value = scrollController.offset > 75;
@@ -140,32 +120,12 @@ class ProfileController extends GetxController with GetTickerProviderStateMixin 
   Future<void> onGetProfile({required String userId}) async {
     isLoadingProfile = true;
     update(["onGetProfile"]);
-
-    fetchProfileModel = await FetchProfileApi.callApi(
-      loginUserId: Database.loginUserId,
-      otherUserId: userId,
-    );
-
+    fetchProfileModel = await FetchProfileApi.callApi(loginUserId: Database.loginUserId, otherUserId: userId);
     if (fetchProfileModel?.userProfileData?.user?.name != null) {
       isLoadingProfile = false;
       update(["onGetProfile"]);
-
-      // Raw amount in USD
-      coinAmountUSD = double.tryParse(CustomFetchUserCoin.coin.value.toString()) ?? 0.0;
-
-      // Detect owner currency
-      final ownerCountryRaw = fetchProfileModel?.userProfileData?.user?.country ?? '';
-      ownerCurrencyCode.value = CurrencyHelper.getCurrencyCodeFromCountry(ownerCountryRaw);
-
-      // Convert USD -> owner's currency
-      coinOwnerCurrency.value = await CurrencyHelper.convert(
-        coinAmountUSD,
-        'USD',
-        ownerCurrencyCode.value, // ✅ use .value to get the String
-      );
     }
   }
-
 
   Future<void> onGetVideo({required String userId}) async {
     isLoadingVideo = true;

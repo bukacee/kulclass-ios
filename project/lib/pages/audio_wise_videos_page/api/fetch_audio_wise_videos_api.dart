@@ -1,8 +1,8 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:auralive/pages/audio_wise_videos_page/model/fetch_audio_wise_videos_model.dart';
-import 'package:auralive/utils/api.dart';
-import 'package:auralive/utils/utils.dart';
+import 'package:shortie/pages/audio_wise_videos_page/model/fetch_audio_wise_videos_model.dart';
+import 'package:shortie/utils/api.dart';
+import 'package:shortie/utils/utils.dart';
 
 class FetchAudioWiseVideosApi {
   static int startPagination = 0;
