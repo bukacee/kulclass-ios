@@ -49,7 +49,9 @@ class UploadPostView extends GetView<UploadPostController> {
                           child: DB.DottedBorder( 
       //color: AppColor.colorScaffold, // Now this will work
       //radius: Radius.circular(radius),
-      padding: const EdgeInsets.all(0.3), 
+      //padding: const EdgeInsets.all(0.3), 
+                          child: Padding( // <--- ADD THIS WRAPPER
+                            padding: const EdgeInsets.all(1.3),
                             child: Container(
                               width: 135,
                               decoration: BoxDecoration(
@@ -57,6 +59,7 @@ class UploadPostView extends GetView<UploadPostController> {
                                 borderRadius: BorderRadius.circular(8),
                               ),
                               child: Center(child: Image.asset(AppAsset.icAdd, width: 40)),
+                            ),
                             ),
                           ),
                         )

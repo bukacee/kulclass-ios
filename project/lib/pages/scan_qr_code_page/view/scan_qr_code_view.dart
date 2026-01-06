@@ -112,9 +112,11 @@ class GradiantBorderContainer extends StatelessWidget {
       child: DB.DottedBorder( 
       //color: AppColor.colorScaffold, // Now this will work
       //radius: Radius.circular(radius),
-      padding: const EdgeInsets.all(1.5),
+      //padding: const EdgeInsets.all(1.5),
       strokeWidth: 5, 
-        child: Container(
+        child: Padding( // <--- ADD THIS WRAPPER
+          padding: const EdgeInsets.all(1.3),
+          child: Container(
           height: height,
           width: width,
           decoration: BoxDecoration(
@@ -122,6 +124,7 @@ class GradiantBorderContainer extends StatelessWidget {
             borderRadius: BorderRadius.circular(radius - 1),
           ),
           child: child,
+        ),
         ),
       ),
     );
