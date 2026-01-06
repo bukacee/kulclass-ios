@@ -57,7 +57,7 @@ dependencies:
   in_app_purchase: ^3.2.0
   dio: ^5.4.3+1
   qr_flutter: ^4.1.0
-  mobile_scanner: ^6.0.2
+  mobile_scanner: ^7.0.1
   date_picker_plus: ^4.0.0
   http: ^0.13.1
   svgaplayer_flutter: ^2.0.0-nullsafety.0
