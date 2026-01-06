@@ -270,7 +270,7 @@ class GradiantBorderContainer extends StatelessWidget {
       ),
       // Use the alias DB here if you imported it as DB, otherwise remove 'DB.'
       child: DB.DottedBorder(
-        color: AppColor.colorScaffold, // If this still errors, change to 'strokeColor' or remove line
+        //color: AppColor.colorScaffold, // If this still errors, change to 'strokeColor' or remove line
         radius: Radius.circular(radius),
         padding: const EdgeInsets.all(1),
         strokeWidth: 5,
