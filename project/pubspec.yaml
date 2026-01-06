@@ -41,7 +41,7 @@ dependencies:
   google_sign_in: ^6.2.1
   video_thumbnail: ^0.5.3
   image_picker: ^1.1.1
-  ffmpeg_kit_flutter_new: ^3.0.0
+  ffmpeg_kit_flutter_new: ^4.1.0
   audioplayers: ^6.0.0
   deepar_flutter: ^0.0.5
 #  zego_express_engine: ^3.14.5+2
