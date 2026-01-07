@@ -10,8 +10,7 @@ import 'package:auralive/pages/edit_reels_page/model/edit_reels_model.dart';
 import 'package:auralive/pages/preview_hash_tag_page/api/create_hash_tag_api.dart';
 import 'package:auralive/pages/preview_hash_tag_page/api/fetch_hash_tag_api.dart';
 import 'package:auralive/pages/preview_hash_tag_page/model/create_hash_tag_model.dart';
-import 'package:auralive/pages/preview_hash_tag_page/model/fetch_hash_tag_model.dart';
-import 'package:auralive/pages/splash_screen_page/api/upload_file_api.dart';
+import 'package:auralive/pages/preview_hash_tag_page/model/fetch_hash_tag_model.dart'; 
 import 'package:auralive/ui/image_picker_bottom_sheet_ui.dart';
 import 'package:auralive/ui/loading_ui.dart';
 import 'package:auralive/utils/database.dart';
@@ -193,16 +192,12 @@ class EditReelsController extends GetxController {
 
       Utils.showLog("Hast Tag Id => $hashTagIds");
 
-      if (selectedImage != null) {
-        final image = await UploadFileApi.callApi(
-          filePath: selectedImage ?? "",
-          fileType: 2,
-          keyName: "${DateTime.now().millisecondsSinceEpoch}.jpg",
-        );
-        await onCallEditApi(hashTag: hashTagIds.map((e) => "$e").join(',').toString(), image: image);
-      } else {
-        await onCallEditApi(hashTag: hashTagIds.map((e) => "$e").join(',').toString(), image: selectedImage);
-      }
+      // >>>>>> Changed: UploadFileApi call removed <<<<<<
+      await onCallEditApi(
+          hashTag: hashTagIds.map((e) => "$e").join(',').toString(),
+          image: selectedImage
+      );
+
     } else {
       Utils.showToast(EnumLocal.txtConnectionLost.name.tr);
       Utils.showLog("Internet Connection Lost !!");
