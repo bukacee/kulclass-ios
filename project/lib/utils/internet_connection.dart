@@ -4,7 +4,7 @@ import 'package:auralive/utils/utils.dart';
 
 class InternetConnection {
   // Default to true to be optimistic, or false if you prefer strict checking
-  static RxBool isConnect = false.obs;
+  static RxBool isConnect = true.obs; 
 
   static Future<void> init() async {
     final connectivity = Connectivity();

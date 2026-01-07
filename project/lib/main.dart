@@ -26,6 +26,8 @@ import 'package:auralive/utils/utils.dart';
 void main() async {
   // 1. Initialize Bindings ONLY
   WidgetsFlutterBinding.ensureInitialized();
+
+  await InternetConnection.init();
   
   // 2. Init Storage (Fast)
   await GetStorage.init();
