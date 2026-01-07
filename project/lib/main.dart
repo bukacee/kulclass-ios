@@ -8,7 +8,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_branch_sdk/flutter_branch_sdk.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:in_app_purchase/in_app_purchase.dart';
+// Removed: in_app_purchase import
+
 import 'package:auralive/localization/locale_constant.dart';
 import 'package:auralive/localization/localizations_delegate.dart';
 import 'package:auralive/routes/app_pages.dart';
@@ -43,7 +44,7 @@ void main() async {
 class MyApp extends StatefulWidget {
   const MyApp({super.key});
 
-  static final StreamController purchaseStreamController = StreamController<PurchaseDetails>.broadcast();
+  // Removed: purchaseStreamController
 
   @override
   State<MyApp> createState() => _MyAppState();
