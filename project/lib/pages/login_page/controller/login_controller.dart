@@ -94,6 +94,12 @@ class LoginController extends GetxController {
     if (InternetConnection.isConnect.value) {
       Get.dialog(const LoadingUi(), barrierDismissible: false); // Start Loading...
 
+      if (Database.identity == null || Database.identity.isEmpty) {
+         Get.back();
+         Utils.showToast("Error: Device Identity is missing. Restart App.");
+         return;
+      }
+
       UserCredential? userCredential = await signInWithGoogle();
 
       if (userCredential?.user?.email != null && userCredential?.user?.displayName != null) {
@@ -177,6 +183,4 @@ class LoginController extends GetxController {
   }
   return null;
 }
-
-
 }
