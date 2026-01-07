@@ -12,6 +12,8 @@ import 'package:auralive/utils/utils.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_branch_sdk/flutter_branch_sdk.dart';
 import 'package:auralive/utils/platform_device_id.dart';
+import 'package:get_storage/get_storage.dart'; 
+
 
 class SplashScreenController extends GetxController {
   @override
@@ -69,29 +71,50 @@ class SplashScreenController extends GetxController {
     }
   }
 
-  Future<void> _initializeDeviceAndPush() async {
-    try {
-      // Get Device ID safely
-      String? identity = await PlatformDeviceId.getDeviceId;
+
+Future<void> _initializeDeviceAndPush() async {
+  try {
+    final box = GetStorage();
+    String? finalIdentity;
+
+    // 1. Check if we already have a saved ID from a previous launch
+    String? savedId = box.read('persistent_device_id');
+
+    if (savedId != null && savedId.isNotEmpty) {
+      // ✅ FOUND: Use the existing ID (The app "remembers" the user)
+      finalIdentity = savedId;
+      Utils.showLog("Using saved persistent ID => $finalIdentity");
+    } else {
+      // ❌ NOT FOUND: This is the first launch (or cache cleared)
       
-      // Get FCM Token
-      String? fcmToken = await FirebaseMessaging.instance.getToken();
-      
-      Utils.showLog("Device Id => $identity");
-      
-      if (identity != null) {
-        // Now init your DB
-        await Database.init(identity, fcmToken ?? "");
+      // Try to get real Device ID from OS
+      String? platformId = await PlatformDeviceId.getDeviceId;
+
+      if (platformId != null && platformId.isNotEmpty) {
+        finalIdentity = platformId;
+      } else {
+        // Fallback: Generate a random ID once
+        finalIdentity = "ios_id_${DateTime.now().millisecondsSinceEpoch}";
       }
-      
-      // Init Branch (Safe here)
-      await FlutterBranchSdk.init();
 
-    } catch (e) {
-      Utils.showLog("Error initializing device/push: $e");
+      // 💾 SAVE IT: Store this ID so we reuse it next time
+      await box.write('persistent_device_id', finalIdentity);
+      Utils.showLog("Generated and saved new ID => $finalIdentity");
     }
-  }
 
+    // 2. Get FCM Token
+    String? fcmToken = await FirebaseMessaging.instance.getToken();
+    
+    // 3. Initialize Database with the STABLE identity
+    await Database.init(finalIdentity, fcmToken ?? "");
+    
+    // 4. Init Branch
+    await FlutterBranchSdk.init();
+
+  } catch (e) {
+    Utils.showLog("Error initializing device/push: $e");
+  }
+}
   Future<void> splashScreen() async {
     Timer(
       const Duration(milliseconds: 100),
