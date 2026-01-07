@@ -93,58 +93,52 @@ class LoginController extends GetxController {
   }
 
   Future<void> onGoogleLogin() async {
-    if (InternetConnection.isConnect.value) {
-      Get.dialog(const LoadingUi(), barrierDismissible: false); 
+  if (InternetConnection.isConnect.value) {
+    Get.dialog(const LoadingUi(), barrierDismissible: false);
 
-      // ---------------------------------------------------------
-      // 🛡️ SELF-HEALING: If Identity is missing, fix it now.
-      // ---------------------------------------------------------
-      if (Database.identity.isEmpty) {
-         Utils.showLog("⚠️ Identity missing during Login. Generating fallback...");
-         
-         // 1. Generate a fallback ID
-         String newId = "ios_fix_${DateTime.now().millisecondsSinceEpoch}";
-         
-         // 2. Try to get FCM token again (or use empty string)
-         String? token = await FirebaseMessaging.instance.getToken();
-         
-         // 3. Force Initialize Database
-         await Database.init(newId, token ?? "");
-         
-         Utils.showLog("✅ Identity fixed: ${Database.identity}");
-      }
-      // ---------------------------------------------------------
+    // [DEBUG] Checkpoint 1
+    Utils.showToast("1. Checking Identity...");
+    
+    // Self-Healing Identity Logic
+    if (Database.identity.isEmpty) {
+       String newId = "ios_fix_${DateTime.now().millisecondsSinceEpoch}";
+       String? token = await FirebaseMessaging.instance.getToken();
+       await Database.init(newId, token ?? "");
+    }
 
-      // Now proceed with Google Sign In
-      UserCredential? userCredential = await signInWithGoogle();
+    // [DEBUG] Checkpoint 2
+    Utils.showToast("2. Opening Google Dialog...");
+    
+    UserCredential? userCredential = await signInWithGoogle();
 
-      if (userCredential?.user?.email != null) {
-        // Calling Login API...
-        loginModel = await LoginApi.callApi(
-          loginType: 2,
-          email: userCredential?.user?.email ?? "",
-          identity: Database.identity, // This is now guaranteed to be valid
-          fcmToken: Database.fcmToken,
-          userName: userCredential?.user?.displayName ?? "",
-        );
+    if (userCredential?.user?.email != null) {
+      // [DEBUG] Checkpoint 4 (Only if Step 3 finished)
+      Utils.showToast("4. Calling Backend API...");
+      
+      loginModel = await LoginApi.callApi(
+        loginType: 2,
+        email: userCredential?.user?.email ?? "",
+        identity: Database.identity,
+        fcmToken: Database.fcmToken,
+        userName: userCredential?.user?.displayName ?? "",
+      );
 
-        Get.back(); // Stop Loading
+      Get.back(); // Stop Loading
 
-        if (loginModel?.status == true && loginModel?.user?.id != null) {
-          await onGetProfile(loginUserId: loginModel!.user!.id!);
-        } else if (loginModel?.message == "You are blocked by the admin.") {
-          Utils.showToast("${loginModel?.message}");
-        } else {
-          // If it fails here, it's a Backend Issue (Step 3 we discussed)
-          Utils.showToast(EnumLocal.txtSomeThingWentWrong.name.tr);
-        }
+      if (loginModel?.status == true) {
+         Utils.showToast("5. Login Success!");
+         await onGetProfile(loginUserId: loginModel!.user!.id!);
       } else {
-        Get.back(); // Stop Loading
+         Utils.showToast("API Error: ${loginModel?.message}");
       }
     } else {
-      Utils.showToast(EnumLocal.txtConnectionLost.name.tr);
+      Get.back();
+      Utils.showToast("Google Sign In Cancelled or Failed");
     }
+  } else {
+    Utils.showToast(EnumLocal.txtConnectionLost.name.tr);
   }
+}
 
   Future<void> onGetProfile({required String loginUserId}) async {
     Get.dialog(const LoadingUi(), barrierDismissible: false); // Start Loading...
@@ -168,15 +162,11 @@ class LoginController extends GetxController {
     }
   }
 
-  static Future<UserCredential?> signInWithGoogle() async {
+   static Future<UserCredential?> signInWithGoogle() async {
   try {
     final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
     
-    // Check if user cancelled the dialog
-    if (googleUser == null) {
-      Utils.showToast("Google Sign In Cancelled");
-      return null;
-    }
+    if (googleUser == null) return null;
 
     final GoogleSignInAuthentication? googleAuth = await googleUser.authentication;
     final credential = GoogleAuthProvider.credential(
@@ -184,14 +174,19 @@ class LoginController extends GetxController {
         idToken: googleAuth?.idToken
     );
     
+    // [DEBUG] Checkpoint 3 - THE DANGER ZONE
+    Utils.showToast("3. Verifying with Firebase (This might hang)...");
+    
+    // This line sends the Silent Push. If APNs is broken, it hangs here.
     final result = await FirebaseAuth.instance.signInWithCredential(credential);
+    
     return result;
-
   } catch (error) {
-    // ⚠️ SHOW THE REAL ERROR ON SCREEN TO DEBUG ⚠️
     Utils.showToast("Auth Error: $error");
-    Utils.showLog("Google Login Error => $error");
   }
   return null;
 }
+
+
+
 }
