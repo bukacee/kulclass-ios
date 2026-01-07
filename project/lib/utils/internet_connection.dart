@@ -3,42 +3,31 @@ import 'package:get/get.dart';
 import 'package:auralive/utils/utils.dart';
 
 class InternetConnection {
+  // Default to true to be optimistic, or false if you prefer strict checking
   static RxBool isConnect = false.obs;
 
-  static void init() {
-    Connectivity().onConnectivityChanged.listen(
-      (result) {
-        switch (result.first) {
-          case ConnectivityResult.none:
-            isConnect.value = false;
-            Utils.showLog("Network Not Connect...");
-            break;
-          case ConnectivityResult.bluetooth:
-            isConnect.value = true;
-            Utils.showLog("Network Connected to Bluetooth...");
-            break;
-          case ConnectivityResult.wifi:
-            isConnect.value = true;
-            Utils.showLog("Network Connected to Wifi...");
-            break;
-          case ConnectivityResult.ethernet:
-            isConnect.value = true;
-            Utils.showLog("Network Connected to Ethernet...");
-            break;
-          case ConnectivityResult.mobile:
-            isConnect.value = true;
-            Utils.showLog("Network Connected to Mobile...");
-            break;
-          case ConnectivityResult.vpn:
-            isConnect.value = true;
-            Utils.showLog("Network Connected to VPN...");
-            break;
-          case ConnectivityResult.other:
-            isConnect.value = true;
-            Utils.showLog("Network Connected to Other...");
-            break;
-        }
-      },
-    );
+  static Future<void> init() async {
+    final connectivity = Connectivity();
+
+    // ✅ FIX 1: Check the current status IMMEDIATELY
+    // Don't wait for a change. Ask "Are we connected right now?"
+    List<ConnectivityResult> initialResult = await connectivity.checkConnectivity();
+    _updateConnectionStatus(initialResult);
+
+    // ✅ FIX 2: Listen for FUTURE changes
+    connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
+  }
+
+  // Helper method to avoid duplicating logic
+  static void _updateConnectionStatus(List<ConnectivityResult> result) {
+    // If the list is empty or contains 'none', we are disconnected
+    if (result.contains(ConnectivityResult.none) || result.isEmpty) {
+      isConnect.value = false;
+      Utils.showLog("Network Not Connected...");
+    } else {
+      // Otherwise, we are connected (Wifi, Mobile, etc.)
+      isConnect.value = true;
+      Utils.showLog("Network Connected: ${result.first}");
+    }
   }
 }
