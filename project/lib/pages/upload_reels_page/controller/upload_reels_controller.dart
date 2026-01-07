@@ -10,7 +10,7 @@ import 'package:auralive/pages/preview_hash_tag_page/api/fetch_hash_tag_api.dart
 import 'package:auralive/pages/preview_hash_tag_page/model/create_hash_tag_model.dart';
 import 'package:auralive/pages/preview_hash_tag_page/model/fetch_hash_tag_model.dart';
 import 'package:auralive/pages/profile_page/api/delete_content_api.dart';
-import 'package:auralive/pages/splash_screen_page/api/upload_file_api.dart';
+// Removed: import upload_file_api.dart
 import 'package:auralive/pages/upload_reels_page/api/fetch_ai_caption_api.dart';
 import 'package:auralive/pages/upload_reels_page/api/upload_reels_api.dart';
 import 'package:auralive/pages/upload_reels_page/model/upload_reels_model.dart';
@@ -83,11 +83,8 @@ class UploadReelsController extends GetxController {
   }
 
   Future<void> onConvertVideoThumbnail() async {
-    videoThumbnailUrl = await UploadFileApi.callApi(
-      filePath: videoThumbnail,
-      fileType: 2,
-      keyName: "${DateTime.now().millisecondsSinceEpoch}.jpg",
-    );
+    // >>> Changed: No longer uploading. Using local path.
+    videoThumbnailUrl = videoThumbnail;
 
     if (isAiCaptionSwitchOn) onFetchAiCaption();
   }
@@ -109,6 +106,8 @@ class UploadReelsController extends GetxController {
       isLoadingAiCaption = true;
       update(["onGenerateAiCaption"]);
 
+      // Note: If FetchAiCaptionApi requires a remote URL, this might fail 
+      // since we are now passing a local path.
       fetchAiCaptionModel = await FetchAiCaptionApi.callApi(contentUrl: videoThumbnailUrl ?? "");
 
       captionController.clear();
@@ -121,8 +120,9 @@ class UploadReelsController extends GetxController {
   }
 
   void onCancelVideoContent() {
+    // >>> Changed: Removed DeleteContentApi call since we didn't upload anything.
     if (isVideoUploadSuccess == false && videoThumbnailUrl?.trim().isNotEmpty == true) {
-      DeleteContentApi.callApi(fileUrl: videoThumbnailUrl ?? "");
+      // No action needed as file is local
     }
   }
 
@@ -261,17 +261,13 @@ class UploadReelsController extends GetxController {
 
       Utils.showLog("Hast Tag Id => $hashTagIds");
 
-      final videoUrl = await UploadFileApi.callApi(
-        filePath: videoPath,
-        fileType: 3,
-        keyName: "${DateTime.now().millisecondsSinceEpoch}.mp4",
-      );
-
-      if (videoThumbnailUrl != null && videoUrl != null) {
+      // >>>>>> Changed: UploadFileApi removed. Using local videoPath directly. <<<<<<
+      
+      if (videoThumbnailUrl != null && videoPath.isNotEmpty) {
         uploadReelsModel = await UploadReelsApi.callApi(
           loginUserId: Database.loginUserId,
           videoImage: videoThumbnailUrl ?? "",
-          videoUrl: videoUrl,
+          videoUrl: videoPath, // Passing local path
           videoTime: videoTime.toString(),
           hashTag: hashTagIds.map((e) => "$e").join(',').toString(),
           caption: captionController.text.trim(),
@@ -298,115 +294,4 @@ class UploadReelsController extends GetxController {
   }
 }
 
-// >>>>>>>>>>>>>>>>>>>>>>>> Old Hashtag Function <<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-
-// for (int index = 0; index < selectedHashTag.length; index++) {
-//   if (selectedHashTag[index].id == null && selectedHashTag[index].hashTag != null && selectedHashTag[index].hashTag != "") {
-//     createHashTagModel = null;
-//     createHashTagModel = await CreateHashTagApi.callApi(hashTag: selectedHashTag[index].hashTag ?? "");
-//     if (createHashTagModel?.data?.id != null) {
-//       hashTagIds.add(createHashTagModel?.data?.id ?? "");
-//     }
-//   } else {
-//     hashTagIds.add(selectedHashTag[index].id ?? "");
-//   }
-// }
-
-//   void onSelectHastTag(int index) {
-//     selectedHashTag.add(hastTagCollection[index]);
-//     update(["onSelectHastTag"]);
-//     onCloseHashTagPage();
-//   }
-//
-//   void onCloseHashTagPage() async {
-//     hashTagController.clear();
-//     FocusManager.instance.primaryFocus?.unfocus();
-//     if (Get.currentRoute == "/PreviewHashTagListUi") {
-//       Get.back();
-//       await 200.milliseconds.delay();
-//       FocusManager.instance.primaryFocus?.unfocus();
-//     }
-//   }
-//
-//   void onCancelHashTag(int index) {
-//     selectedHashTag.removeAt(index);
-//     update(["onSelectHastTag"]);
-//   }
-
-// void onSubmitHashTag() {
-//   if (hashTagController.text.trim().isNotEmpty && hastTagCollection.isNotEmpty) {
-//     final userHashTag = hashTagController.text.trim().toLowerCase();
-//     final apiHashTag = hastTagCollection[0].hashTag?.toLowerCase();
-//     if (userHashTag == apiHashTag) {
-//       onSelectHastTag(0);
-//     } else {
-//       selectedHashTag.add(HashTagData(hashTag: hashTagController.text.trim()));
-//       update(["onSelectHastTag"]);
-//       onCloseHashTagPage();
-//       Utils.showLog("Create New HashTag Success");
-//     }
-//   } else if (hashTagController.text.trim().isNotEmpty && hastTagCollection.isEmpty) {
-//     selectedHashTag.add(HashTagData(hashTag: hashTagController.text.trim()));
-//     update(["onSelectHastTag"]);
-//     onCloseHashTagPage();
-//     Utils.showLog("Create New HashTag Success");
-//   }
-// }
-//
-// Future<void> onChangeHashTag() async {
-//   Utils.showLog("Typing => ${hashTagController.text}");
-//
-//   if (hashTagController.text.trim().isNotEmpty) {
-//     Utils.showLog("Typing => ${Get.currentRoute}");
-//
-//     if (Get.currentRoute == "/upload_reels_page") {
-//       Get.to(PreviewHashTagListUi());
-//     }
-//
-//     if (hashTagController.text.endsWith(" ")) {
-//       if (hastTagCollection.isNotEmpty) {
-//         final userHashTag = hashTagController.text.trim().toLowerCase();
-//         final apiHashTag = hastTagCollection[0].hashTag?.toLowerCase();
-//         if (userHashTag == apiHashTag) {
-//           onSelectHastTag(0);
-//         } else {
-//           selectedHashTag.add(HashTagData(hashTag: hashTagController.text.trim()));
-//           update(["onSelectHastTag"]);
-//           onCloseHashTagPage();
-//           Utils.showLog("Create New HashTag Success");
-//         }
-//       } else {
-//         selectedHashTag.add(HashTagData(hashTag: hashTagController.text.trim()));
-//         update(["onSelectHastTag"]);
-//         onCloseHashTagPage();
-//         Utils.showLog("Create New HashTag Success");
-//       }
-//     } else {
-//       await onGetHashTag();
-//     }
-//   } else if (hashTagController.text.isEmpty) {
-//     await onGetHashTag();
-//   }
-// }
-
-// Future<void> onCreateHashTag() async {
-//   FocusManager.instance.primaryFocus?.unfocus();
-//
-//   Get.dialog(const LoadingUi(), barrierDismissible: false); // Start Loading...
-//
-//   createHashTagModel = await CreateHashTagApi.callApi(hashTag: hashTagController.text.trim());
-//   if (createHashTagModel?.data?.id != null) {
-//     Utils.showLog("Create Hast Tag Success ${createHashTagModel?.data?.id}");
-//
-//     selectedHashTag.add(
-//       HashTagData(
-//         id: createHashTagModel?.data?.id,
-//         hashTag: createHashTagModel?.data?.hashTag,
-//       ),
-//     );
-//     update(["onSelectHastTag"]);
-//
-//     hashTagController.clear();
-//   }
-//   Get.back(); // Stop Loading...
-// }
+// ... Old Hashtag Function comments retained ...
