@@ -104,6 +104,9 @@
         <string>auraapplive-alternate.app.link</string>
     </array>
 
+    <key>DYLD_PRINT_TO_CONSOLE</key>
+	<string>1</string>
+
 	<!-- ✅ Google AdMob -->
 	<key>GADApplicationIdentifier</key>
 	<string>ca-app-pub-8396715300849409~2894826498</string>
