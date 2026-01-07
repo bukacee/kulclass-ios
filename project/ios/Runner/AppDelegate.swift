@@ -5,6 +5,7 @@ import flutter_local_notifications
 
 @UIApplicationMain
 @objc class AppDelegate: FlutterAppDelegate {
+  
   override func application(
     _ application: UIApplication,
     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
@@ -21,13 +22,19 @@ import flutter_local_notifications
     return super.application(application, didFinishLaunchingWithOptions: launchOptions)
   }
 
-  // 👇🏽 This handles the Google Sign-In redirect
-  override func application(_ app: UIApplication,
-                            open url: URL,
-                            options: [UIApplication.OpenURLOptionsKey : Any] = [:]) -> Bool {
+  // Handle Deep Links (Google Sign In + Branch + Others)
+  override func application(
+    _ app: UIApplication,
+    open url: URL,
+    options: [UIApplication.OpenURLOptionsKey : Any] = [:]
+  ) -> Bool {
+    
+    // 1. Try Google Sign In
     if GIDSignIn.sharedInstance.handle(url) {
       return true
     }
+    
+    // 2. Pass to Flutter plugins (This lets Branch.io handle the link if Google didn't)
     return super.application(app, open: url, options: options)
   }
 }
