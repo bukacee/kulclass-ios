@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:dotted_border/dotted_border.dart' as DB;
+import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:auralive/ui/app_button_ui.dart';
@@ -10,6 +10,7 @@ import 'package:auralive/ui/simple_app_bar_ui.dart';
 import 'package:auralive/utils/asset.dart';
 
 import 'package:auralive/utils/color.dart';
+import 'package:auralive/size_extension.dart';
 import 'package:auralive/utils/enums.dart';
 import 'package:auralive/utils/font_style.dart';
 import 'package:auralive/pages/verification_request_page/widget/verification_request_widget.dart';
@@ -45,79 +46,79 @@ class VerificationRequestView extends StatelessWidget {
                         radius: 20,
                         child: controller.profileImage != null
                             ? Container(
-                                clipBehavior: Clip.antiAlias,
-                                margin: EdgeInsets.all(1.5),
-                                decoration: BoxDecoration(borderRadius: BorderRadius.circular(18)),
-                                child: Stack(
-                                  children: [
-                                    Image.file(
-                                      File(controller.profileImage ?? ""),
-                                      height: 210,
-                                      width: Get.width,
-                                      fit: BoxFit.cover,
-                                    ),
-                                    Positioned(
-                                      top: 5,
-                                      right: 6,
-                                      child: GestureDetector(
-                                        onTap: controller.onCancelProfileImage,
-                                        child: Container(
-                                          height: 60,
-                                          width: 60,
-                                          color: AppColor.transparent,
-                                          alignment: Alignment.topRight,
-                                          child: Container(
-                                            height: 26,
-                                            width: 26,
-                                            decoration: BoxDecoration(
-                                              shape: BoxShape.circle,
-                                              color: AppColor.black,
-                                              border: Border.all(color: AppColor.colorGreyBg, width: 2),
-                                            ),
-                                            child: Center(
-                                              child: Image.asset(
-                                                AppAsset.icClose,
-                                                color: AppColor.white,
-                                                width: 15,
-                                              ),
-                                            ),
-                                          ),
+                          clipBehavior: Clip.antiAlias,
+                          margin: EdgeInsets.all(1.5),
+                          decoration: BoxDecoration(borderRadius: BorderRadius.circular(18)),
+                          child: Stack(
+                            children: [
+                              Image.file(
+                                File(controller.profileImage ?? ""),
+                                height: 210,
+                                width: Get.width,
+                                fit: BoxFit.cover,
+                              ),
+                              Positioned(
+                                top: 5,
+                                right: 6,
+                                child: GestureDetector(
+                                  onTap: controller.onCancelProfileImage,
+                                  child: Container(
+                                    height: 60,
+                                    width: 60,
+                                    color: AppColor.transparent,
+                                    alignment: Alignment.topRight,
+                                    child: Container(
+                                      height: 26,
+                                      width: 26,
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        color: AppColor.black,
+                                        border: Border.all(color: AppColor.colorGreyBg, width: 2),
+                                      ),
+                                      child: Center(
+                                        child: Image.asset(
+                                          AppAsset.icClose,
+                                          color: AppColor.white,
+                                          width: 15,
                                         ),
                                       ),
                                     ),
-                                  ],
-                                ),
-                              )
-                            : Center(
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                  children: [
-                                    Image.asset(AppAsset.icYourImage, width: 72),
-                                    Column(
-                                      children: [
-                                        Text(
-                                          EnumLocal.txtUploadYourImages.name.tr,
-                                          style: AppFontStyle.styleW500(AppColor.colorUnselectedIcon, 14),
-                                        ),
-                                        Text(
-                                          "(${EnumLocal.txtPersonalPhotos.name.tr})",
-                                          style: AppFontStyle.styleW500(AppColor.colorUnselectedIcon, 12),
-                                        ),
-                                      ],
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.symmetric(horizontal: 22),
-                                      child: AppButtonUi(
-                                        height: 38,
-                                        fontSize: 14,
-                                        gradient: AppColor.primaryLinearGradient,
-                                        title: EnumLocal.txtCapture.name.tr,
-                                        callback: () => controller.onPickProfileImage(context),
-                                      ),
-                                    ),
-                                  ],
+                                  ),
                                 ),
                               ),
+                            ],
+                          ),
+                        )
+                            : Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              Image.asset(AppAsset.icYourImage, width: 72),
+                              Column(
+                                children: [
+                                  Text(
+                                    EnumLocal.txtUploadYourImages.name.tr,
+                                    style: AppFontStyle.styleW500(AppColor.colorUnselectedIcon, 14),
+                                  ),
+                                  Text(
+                                    "(${EnumLocal.txtPersonalPhotos.name.tr})",
+                                    style: AppFontStyle.styleW500(AppColor.colorUnselectedIcon, 12),
+                                  ),
+                                ],
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.symmetric(horizontal: 22),
+                                child: AppButtonUi(
+                                  height: 38,
+                                  fontSize: 14,
+                                  gradient: AppColor.primaryLinearGradient,
+                                  title: EnumLocal.txtCapture.name.tr,
+                                  callback: () => controller.onPickProfileImage(context),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
                       ),
                     ),
                   ),
@@ -130,79 +131,79 @@ class VerificationRequestView extends StatelessWidget {
                         radius: 20,
                         child: controller.documentImage != null
                             ? Container(
-                                clipBehavior: Clip.antiAlias,
-                                margin: EdgeInsets.all(1.5),
-                                decoration: BoxDecoration(borderRadius: BorderRadius.circular(18)),
-                                child: Stack(
-                                  children: [
-                                    Image.file(
-                                      File(controller.documentImage ?? ""),
-                                      height: 210,
-                                      width: Get.width,
-                                      fit: BoxFit.cover,
-                                    ),
-                                    Positioned(
-                                      top: 5,
-                                      right: 6,
-                                      child: GestureDetector(
-                                        onTap: controller.onCancelDocumentImage,
-                                        child: Container(
-                                          height: 60,
-                                          width: 60,
-                                          color: AppColor.transparent,
-                                          alignment: Alignment.topRight,
-                                          child: Container(
-                                            height: 26,
-                                            width: 26,
-                                            decoration: BoxDecoration(
-                                              shape: BoxShape.circle,
-                                              color: AppColor.black,
-                                              border: Border.all(color: AppColor.colorGreyBg, width: 2),
-                                            ),
-                                            child: Center(
-                                              child: Image.asset(
-                                                AppAsset.icClose,
-                                                color: AppColor.white,
-                                                width: 15,
-                                              ),
-                                            ),
-                                          ),
+                          clipBehavior: Clip.antiAlias,
+                          margin: EdgeInsets.all(1.5),
+                          decoration: BoxDecoration(borderRadius: BorderRadius.circular(18)),
+                          child: Stack(
+                            children: [
+                              Image.file(
+                                File(controller.documentImage ?? ""),
+                                height: 210,
+                                width: Get.width,
+                                fit: BoxFit.cover,
+                              ),
+                              Positioned(
+                                top: 5,
+                                right: 6,
+                                child: GestureDetector(
+                                  onTap: controller.onCancelDocumentImage,
+                                  child: Container(
+                                    height: 60,
+                                    width: 60,
+                                    color: AppColor.transparent,
+                                    alignment: Alignment.topRight,
+                                    child: Container(
+                                      height: 26,
+                                      width: 26,
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        color: AppColor.black,
+                                        border: Border.all(color: AppColor.colorGreyBg, width: 2),
+                                      ),
+                                      child: Center(
+                                        child: Image.asset(
+                                          AppAsset.icClose,
+                                          color: AppColor.white,
+                                          width: 15,
                                         ),
                                       ),
                                     ),
-                                  ],
-                                ),
-                              )
-                            : Center(
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                  children: [
-                                    Image.asset(AppAsset.icIdImage, width: 72),
-                                    Column(
-                                      children: [
-                                        Text(
-                                          EnumLocal.txtUploadIDPhotos.name.tr,
-                                          style: AppFontStyle.styleW500(AppColor.colorUnselectedIcon, 14),
-                                        ),
-                                        Text(
-                                          "(${EnumLocal.txtClearPhotos.name.tr})",
-                                          style: AppFontStyle.styleW500(AppColor.colorUnselectedIcon, 12),
-                                        ),
-                                      ],
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.symmetric(horizontal: 22),
-                                      child: AppButtonUi(
-                                        height: 38,
-                                        fontSize: 14,
-                                        gradient: AppColor.primaryLinearGradient,
-                                        title: EnumLocal.txtAttach.name.tr,
-                                        callback: () => controller.onPickDocumentImage(context),
-                                      ),
-                                    ),
-                                  ],
+                                  ),
                                 ),
                               ),
+                            ],
+                          ),
+                        )
+                            : Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              Image.asset(AppAsset.icIdImage, width: 72),
+                              Column(
+                                children: [
+                                  Text(
+                                    EnumLocal.txtUploadIDPhotos.name.tr,
+                                    style: AppFontStyle.styleW500(AppColor.colorUnselectedIcon, 14),
+                                  ),
+                                  Text(
+                                    "(${EnumLocal.txtClearPhotos.name.tr})",
+                                    style: AppFontStyle.styleW500(AppColor.colorUnselectedIcon, 12),
+                                  ),
+                                ],
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.symmetric(horizontal: 22),
+                                child: AppButtonUi(
+                                  height: 38,
+                                  fontSize: 14,
+                                  gradient: AppColor.primaryLinearGradient,
+                                  title: EnumLocal.txtAttach.name.tr,
+                                  callback: () => controller.onPickDocumentImage(context),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
                       ),
                     ),
                   ),
@@ -268,14 +269,14 @@ class GradiantBorderContainer extends StatelessWidget {
         gradient: AppColor.primaryLinearGradient,
         borderRadius: BorderRadius.circular(radius),
       ),
-      // Use the alias DB here if you imported it as DB, otherwise remove 'DB.'
-      child: Container(
-  decoration: BoxDecoration(
-    border: Border.all(color: AppColor.colorScaffold, width: 5), // Solid border fallback
-  ),
-        child: Padding( // <--- ADD THIS WRAPPER
-          padding: const EdgeInsets.all(1.3),
-          child: Container(
+      child: DottedBorder(
+        // dashPattern: const [3, 6],
+        // borderType: BorderType.RRect,
+        // color: AppColor.colorScaffold,
+        // radius: Radius.circular(radius),
+        // padding: const EdgeInsets.all(1),
+        // strokeWidth: 5,
+        child: Container(
           height: height,
           width: width,
           decoration: BoxDecoration(
@@ -284,10 +285,7 @@ class GradiantBorderContainer extends StatelessWidget {
           ),
           child: child,
         ),
-        ),
       ),
     );
   }
-
-
 }

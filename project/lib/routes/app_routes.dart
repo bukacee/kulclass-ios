@@ -33,7 +33,7 @@ class AppRoutes {
   static const String privacyPolicyPage = '/privacy_policy_page';
   static const String termsOfUsePage = '/terms_of_use_page';
   static const String withdrawPage = '/withdraw_page';
-  static const String rechargePage = '/recharge_page';
+  static const String rechargePage = '/my_wallet_page';
   static const String paymentPage = '/payment_page';
 
   // >>>>> >>>>> >>>>> Reels Pages <<<<< <<<<< <<<<<

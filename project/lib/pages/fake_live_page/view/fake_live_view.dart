@@ -5,6 +5,7 @@ import 'package:auralive/pages/fake_live_page/controller/fake_live_controller.da
 import 'package:auralive/pages/fake_live_page/widget/fake_live_widget.dart';
 import 'package:auralive/ui/loading_ui.dart';
 import 'package:auralive/utils/color.dart';
+import 'package:auralive/size_extension.dart';
 import 'package:auralive/utils/database.dart';
 import 'package:auralive/utils/socket_services.dart';
 import 'package:auralive/utils/utils.dart';

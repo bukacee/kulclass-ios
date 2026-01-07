@@ -1,17 +1,16 @@
 import 'dart:async';
-
 import 'package:get/get.dart';
-import 'package:auralive/pages/splash_screen_page/api/admin_setting_api.dart';
 import 'package:auralive/routes/app_routes.dart';
+import 'package:auralive/pages/splash_screen_page/api/admin_setting_api.dart';
 import 'package:auralive/utils/branch_io_services.dart';
 import 'package:auralive/utils/database.dart';
 import 'package:auralive/utils/enums.dart';
 import 'package:auralive/utils/internet_connection.dart';
 import 'package:auralive/utils/request.dart';
 import 'package:auralive/utils/utils.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter_branch_sdk/flutter_branch_sdk.dart';
 import 'package:auralive/utils/platform_device_id.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 
 class SplashScreenController extends GetxController {
   @override
@@ -21,63 +20,58 @@ class SplashScreenController extends GetxController {
   }
 
   Future<void> init() async {
-    // 1. Initialize standard stuff
     await AppRequest.notificationPermission();
-    
-    // 2. MOVE THE MAIN.DART LOGIC HERE
-    await _initializeDeviceAndPush();
 
-    // 3. Proceed with your existing Admin/API checks
-    if (InternetConnection.isConnect.value) {
-      await AdminSettingsApi.callApi(); // Get Admin Setting Data...
+    // 🔄 Keep retrying if no internet
+    while (!InternetConnection.isConnect.value) {
+      Utils.showToast(EnumLocal.txtConnectionLost.name.tr);
+      Utils.showLog("Internet Connection Lost !! Retrying in 3s...");
+      await Future.delayed(const Duration(seconds: 3));
+    }
+
+    // 📱 Get device ID and FCM token
+    final deviceId = await PlatformDeviceId.getDeviceId;
+    final token = await FirebaseMessaging.instance.getToken();
+
+    if (deviceId != null) await Database.onSetIdentity(deviceId);
+    if (token != null) await Database.onSetFcmToken(token);
+
+    Utils.showLog("Device Id => $deviceId");
+    Utils.showLog("FCM Token => $token");
+
+    try {
+      // 🌐 Fetch admin settings
+      await AdminSettingsApi.callApi();
+
       if (AdminSettingsApi.adminSettingModel?.data != null) {
-        await Utils.onInitCreateEngine(); // Init Live...
+        await Utils.onInitCreateEngine();
 
-        await Utils.onInitPayment(); // Init Payment...
+        // ⚠️ Only call if you still support payments
+        // await Utils.onInitPayment();
 
         await splashScreen();
       } else {
         Utils.showToast(EnumLocal.txtSomeThingWentWrong.name.tr);
-        Utils.showLog("Admin Setting Api Calling Failed !!");
+        Utils.showLog("Admin Setting Api returned null or invalid data.");
       }
-    } else {
-      Utils.showToast(EnumLocal.txtConnectionLost.name.tr);
-      Utils.showLog("Internet Connection Lost !!");
-    }
-  }
-
-
-  Future<void> _initializeDeviceAndPush() async {
-    try {
-      // Get Device ID safely
-      String? identity = await PlatformDeviceId.getDeviceId;
-      
-      // Get FCM Token
-      String? fcmToken = await FirebaseMessaging.instance.getToken();
-      
-      Utils.showLog("Device Id => $identity");
-      
-      if (identity != null) {
-        // Now init your DB
-        await Database.init(identity, fcmToken ?? "");
-      }
-    } catch (e) {
-      Utils.showLog("Error initializing device/push: $e");
+    } catch (e, stack) {
+      // ❌ Log errors both locally and to Crashlytics
+      Utils.showToast(EnumLocal.txtSomeThingWentWrong.name.tr);
+      Utils.showLog("Admin Settings API failed: $e");
+      Utils.showLog(stack.toString());
+      await FirebaseCrashlytics.instance.recordError(e, stack, fatal: true);
     }
   }
 
   Future<void> splashScreen() async {
-    Timer(
-      Duration(milliseconds: 100),
-      () {
-        // Check User Is Login Or Not...
-        if (Database.isNewUser == false && Database.fetchLoginUserProfileModel?.user?.id != null) {
-          BranchIoServices.onListenBranchIoLinks();
-          Get.offAllNamed(AppRoutes.bottomBarPage);
-        } else {
-          Get.offAllNamed(AppRoutes.onBoardingPage);
-        }
-      },
-    );
+    await Future.delayed(const Duration(milliseconds: 500));
+
+    if (Database.isNewUser == false &&
+        Database.fetchLoginUserProfileModel?.user?.id != null) {
+      BranchIoServices.onListenBranchIoLinks();
+      Get.offAllNamed(AppRoutes.bottomBarPage);
+    } else {
+      Get.offAllNamed(AppRoutes.onBoardingPage);
+    }
   }
 }

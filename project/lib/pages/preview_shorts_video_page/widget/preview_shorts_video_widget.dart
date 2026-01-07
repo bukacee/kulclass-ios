@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
 import 'package:readmore/readmore.dart';
+import 'package:auralive/custom/custom_fetch_user_coin.dart';
 import 'package:auralive/custom/custom_icon_button.dart';
 import 'package:auralive/custom/custom_share.dart';
 import 'package:auralive/main.dart';
@@ -14,6 +15,7 @@ import 'package:auralive/pages/preview_shorts_video_page/controller/preview_shor
 import 'package:auralive/pages/profile_page/controller/profile_controller.dart';
 import 'package:auralive/pages/reels_page/api/reels_like_dislike_api.dart';
 import 'package:auralive/pages/reels_page/api/reels_share_api.dart';
+import 'package:auralive/pages/splash_screen_page/api/send_gift_api.dart';
 import 'package:auralive/routes/app_routes.dart';
 import 'package:auralive/ui/comment_bottom_sheet_ui.dart';
 import 'package:auralive/ui/loading_ui.dart';
@@ -21,12 +23,11 @@ import 'package:auralive/ui/preview_network_image_ui.dart';
 import 'package:auralive/ui/preview_profile_bottom_sheet_ui.dart';
 import 'package:auralive/ui/reels_more_option_bottom_sheet.dart';
 import 'package:auralive/ui/report_bottom_sheet_ui.dart';
-import 'package:auralive/ui/send_gift_on_video_bottom_sheet_ui.dart';
 import 'package:auralive/ui/video_picker_bottom_sheet_ui.dart';
-import 'package:auralive/utils/api.dart';
 import 'package:auralive/utils/asset.dart';
 import 'package:auralive/utils/branch_io_services.dart';
 import 'package:auralive/utils/color.dart';
+import 'package:auralive/size_extension.dart';
 import 'package:auralive/utils/database.dart';
 import 'package:auralive/utils/enums.dart';
 import 'package:auralive/utils/font_style.dart';
@@ -101,7 +102,7 @@ class _PreviewShortsViewState extends State<PreviewShortsView> with SingleTicker
     try {
       String videoPath = controller.mainShorts[widget.index].videoUrl;
 
-      videoPlayerController = VideoPlayerController.networkUrl(Uri.parse(Api.baseUrl + videoPath));
+      videoPlayerController = VideoPlayerController.networkUrl(Uri.parse(videoPath));
 
       await videoPlayerController?.initialize();
 
@@ -389,10 +390,7 @@ class _PreviewShortsViewState extends State<PreviewShortsView> with SingleTicker
                             ),
                           ),
                   ),
-            Align(
-              alignment: Alignment.center,
-              child: SendGiftOnVideoBottomSheetUi.onShowGift(),
-            ),
+
             Obx(
               () => Visibility(
                 visible: isShowLikeAnimation.value,
@@ -495,12 +493,7 @@ class _PreviewShortsViewState extends State<PreviewShortsView> with SingleTicker
                                   Get.back();
                                   Get.toNamed(
                                     AppRoutes.editReelsPage,
-                                    arguments: {
-                                      "video": controller.mainShorts[widget.index].videoUrl,
-                                      "image": Api.baseUrl + controller.mainShorts[widget.index].videoImage,
-                                      "caption": controller.mainShorts[widget.index].caption,
-                                      "videoId": controller.mainShorts[widget.index].videoId
-                                    },
+                                    arguments: {"video": controller.mainShorts[widget.index].videoUrl, "image": controller.mainShorts[widget.index].videoImage, "caption": controller.mainShorts[widget.index].caption, "videoId": controller.mainShorts[widget.index].videoId},
                                   );
                                 });
                           } else {
@@ -534,26 +527,7 @@ class _PreviewShortsViewState extends State<PreviewShortsView> with SingleTicker
                 child: Column(
                   children: [
                     const Spacer(),
-                    GestureDetector(
-                      onTap: () {
-                        Utils.showLog("Video User Id => ${controller.mainShorts[widget.index].userId} => ${Database.loginUserId}");
-                        if (controller.mainShorts[widget.index].userId != Database.loginUserId) {
-                          if (controller.mainShorts[widget.index].isBanned == false) {
-                            isReelsPage.value = false;
-                            SendGiftOnVideoBottomSheetUi.show(
-                              context: context,
-                              videoId: controller.mainShorts[widget.index].videoId,
-                            );
-                          }
-                        } else {
-                          Utils.showToast(EnumLocal.txtYouCantSendGiftOwnVideo.name.tr);
-                        }
-                      },
-                      child: SizedBox(
-                        width: 65,
-                        child: Lottie.asset(AppAsset.lottieGift),
-                      ),
-                    ),
+
                     10.height,
                     Obx(
                       () => SizedBox(

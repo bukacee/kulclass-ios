@@ -54,6 +54,7 @@ class User {
   String? userName;
   String? bio;
   String? gender;
+  String? sub;
   String? image;
   String? countryFlagImage;
   String? country;
@@ -62,13 +63,16 @@ class User {
   bool? isFake;
   bool? isProfileImageBanned;
 
-  User({this.name, this.userName, this.bio, this.gender, this.image, this.countryFlagImage, this.country, this.isVerified, this.isFollow, this.isFake, this.isProfileImageBanned});
+
+  
+  User({this.name, this.userName, this.bio, this.gender, this.sub, this.image, this.countryFlagImage, this.country, this.isVerified, this.isFollow, this.isFake, this.isProfileImageBanned});
 
   User.fromJson(Map<String, dynamic> json) {
     name = json['name'];
     userName = json['userName'];
     bio = json['bio'];
     gender = json['gender'];
+    sub = json['sub']?.toString();
     image = json['image'];
     countryFlagImage = json['countryFlagImage'];
     country = json['country'];
@@ -83,6 +87,7 @@ class User {
     data['name'] = this.name;
     data['userName'] = this.userName;
     data['bio'] = this.bio;
+    data['sub'] = this.sub;
     data['gender'] = this.gender;
     data['image'] = this.image;
     data['countryFlagImage'] = this.countryFlagImage;

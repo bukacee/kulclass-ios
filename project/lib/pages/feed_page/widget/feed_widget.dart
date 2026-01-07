@@ -22,6 +22,7 @@ import 'package:auralive/ui/report_bottom_sheet_ui.dart';
 import 'package:auralive/utils/asset.dart';
 import 'package:auralive/utils/branch_io_services.dart';
 import 'package:auralive/utils/color.dart';
+import 'package:auralive/size_extension.dart';
 import 'package:auralive/utils/constant.dart';
 import 'package:auralive/utils/database.dart';
 import 'package:auralive/utils/enums.dart';

@@ -13,7 +13,10 @@ import 'package:auralive/main.dart';
 import 'package:auralive/pages/go_live_page/controller/go_live_controller.dart';
 import 'package:auralive/utils/asset.dart';
 import 'package:auralive/utils/color.dart';
+import 'package:auralive/size_extension.dart';
 import 'package:auralive/utils/enums.dart';
+
+import '../../../utils/request.dart';
 
 class GoLiveView extends StatelessWidget {
   const GoLiveView({super.key});
@@ -131,7 +134,12 @@ class GoLiveView extends StatelessWidget {
                       fontSize: 18,
                       gradient: AppColor.primaryLinearGradient,
                       title: EnumLocal.txtGoLive.name.tr,
-                      callback: controller.onClickGoLive,
+                      callback: () {
+                        AppRequest.requestLiveStreamingPermissions(onGranted: () {
+                          controller.onClickGoLive();
+                        });
+                      },
+
                     ),
                   ),
                 ),

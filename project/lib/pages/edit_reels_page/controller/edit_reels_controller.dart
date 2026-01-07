@@ -11,6 +11,7 @@ import 'package:auralive/pages/preview_hash_tag_page/api/create_hash_tag_api.dar
 import 'package:auralive/pages/preview_hash_tag_page/api/fetch_hash_tag_api.dart';
 import 'package:auralive/pages/preview_hash_tag_page/model/create_hash_tag_model.dart';
 import 'package:auralive/pages/preview_hash_tag_page/model/fetch_hash_tag_model.dart';
+import 'package:auralive/pages/splash_screen_page/api/upload_file_api.dart';
 import 'package:auralive/ui/image_picker_bottom_sheet_ui.dart';
 import 'package:auralive/ui/loading_ui.dart';
 import 'package:auralive/utils/database.dart';
@@ -192,26 +193,40 @@ class EditReelsController extends GetxController {
 
       Utils.showLog("Hast Tag Id => $hashTagIds");
 
-      editReelsModel = await EditReelsApi.callApi(
-        loginUserId: Database.loginUserId,
-        videoImage: selectedImage,
-        videoId: videoId,
-        hashTag: hashTagIds.map((e) => "$e").join(',').toString(),
-        caption: captionController.text.trim(),
-      );
-
-      if (editReelsModel?.status == true && editReelsModel?.data?.id != null) {
-        Utils.showToast(EnumLocal.txtReelsUploadSuccessfully.name.tr);
-        Get.close(2);
-      } else if (editReelsModel?.status == false && editReelsModel?.message == "your duration of Video greater than decided by the admin.") {
-        Utils.showToast(editReelsModel?.message ?? "");
+      if (selectedImage != null) {
+        final image = await UploadFileApi.callApi(
+          filePath: selectedImage ?? "",
+          fileType: 2,
+          keyName: "${DateTime.now().millisecondsSinceEpoch}.jpg",
+        );
+        await onCallEditApi(hashTag: hashTagIds.map((e) => "$e").join(',').toString(), image: image);
       } else {
-        Utils.showToast(EnumLocal.txtSomeThingWentWrong.name.tr);
+        await onCallEditApi(hashTag: hashTagIds.map((e) => "$e").join(',').toString(), image: selectedImage);
       }
-      Get.back(); // Stop Loading...
     } else {
       Utils.showToast(EnumLocal.txtConnectionLost.name.tr);
       Utils.showLog("Internet Connection Lost !!");
     }
+  }
+
+  Future<void> onCallEditApi({required String hashTag, String? image}) async {
+    editReelsModel = await EditReelsApi.callApi(
+      loginUserId: Database.loginUserId,
+      videoImage: image,
+      videoId: videoId,
+      hashTag: hashTag,
+      caption: captionController.text.trim(),
+    );
+
+    if (editReelsModel?.status == true && editReelsModel?.data?.id != null) {
+      Utils.showToast(EnumLocal.txtReelsUploadSuccessfully.name.tr);
+      Get.close(2);
+    } else if (editReelsModel?.status == false && editReelsModel?.message == "your duration of Video greater than decided by the admin.") {
+      Utils.showToast(editReelsModel?.message ?? "");
+    } else {
+      Utils.showToast(EnumLocal.txtSomeThingWentWrong.name.tr);
+    }
+
+    Get.back(); // Stop Loading...
   }
 }

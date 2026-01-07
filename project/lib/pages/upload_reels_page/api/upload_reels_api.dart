@@ -17,37 +17,38 @@ class UploadReelsApi {
     Utils.showLog("Upload Reels Api Calling...");
 
     try {
-      var headers = {'key': Api.secretKey};
+      final headers = {"key": Api.secretKey, "Content-Type": "application/json"};
 
-      var request = http.MultipartRequest('POST', Uri.parse("${Api.uploadReels}?userId=$loginUserId"));
+      final uri = Uri.parse("${Api.uploadReels}?userId=$loginUserId");
 
-      if (songId != "") {
-        request.fields.addAll({
-          'songId': songId,
-          'caption': caption,
-          'hashTagId': hashTag,
-          'videoTime': videoTime,
-        });
-      } else {
-        request.fields.addAll({
-          'caption': caption,
-          'hashTagId': hashTag,
-          'videoTime': videoTime,
-        });
-      }
+      final body = songId != ""
+          ? json.encode({
+              'songId': songId,
+              'caption': caption,
+              'hashTagId': hashTag,
+              'videoTime': videoTime,
+              'videoImage': videoImage,
+              'videoUrl': videoUrl,
+            })
+          : json.encode({
+              'caption': caption,
+              'hashTagId': hashTag,
+              'videoTime': videoTime,
+              'videoImage': videoImage,
+              'videoUrl': videoUrl,
+            });
 
-      request.files.add(await http.MultipartFile.fromPath('videoImage', videoImage));
+      Utils.showLog("Upload Reels Api Uri => ${uri}");
 
-      request.files.add(await http.MultipartFile.fromPath('videoUrl', videoUrl));
+      Utils.showLog("Upload Reels Api Body => ${body}");
 
-      request.headers.addAll(headers);
-
-      final response = await request.send();
+      final response = await http.post(uri, headers: headers, body: body);
 
       if (response.statusCode == 200) {
-        final responseBody = await response.stream.bytesToString();
-        final jsonResult = jsonDecode(responseBody);
+        final jsonResult = jsonDecode(response.body);
+
         Utils.showLog("Upload Reels Api Response => ${jsonResult}");
+
         return UploadReelsModel.fromJson(jsonResult);
       } else {
         Utils.showLog("Upload Reels Api Response Error");

@@ -6,6 +6,7 @@ import 'package:auralive/pages/on_boarding_page/widget/on_boarding_widget.dart';
 import 'package:auralive/ui/gradient_text_ui.dart';
 import 'package:auralive/utils/asset.dart';
 import 'package:auralive/utils/color.dart';
+import 'package:auralive/size_extension.dart';
 import 'package:auralive/utils/constant.dart';
 import 'package:auralive/utils/enums.dart';
 import 'package:auralive/utils/font_style.dart';

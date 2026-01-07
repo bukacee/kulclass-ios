@@ -14,6 +14,7 @@ import 'package:auralive/ui/preview_network_image_ui.dart';
 import 'package:auralive/ui/simple_app_bar_ui.dart';
 import 'package:auralive/utils/asset.dart';
 import 'package:auralive/utils/color.dart';
+import 'package:auralive/size_extension.dart';
 import 'package:auralive/utils/enums.dart';
 import 'package:auralive/utils/font_style.dart';
 
@@ -241,7 +242,7 @@ class CoinPlanItemUi extends StatelessWidget {
                 ),
                 5.height,
                 Text(
-                  "\$ ${CustomFormatNumber.convert(amount.toInt())}",
+                  "\₦ ${CustomFormatNumber.convert(amount.toInt())}",
                   style: AppFontStyle.styleW800(AppColor.colorTabBar, 20),
                 ),
                 5.height,

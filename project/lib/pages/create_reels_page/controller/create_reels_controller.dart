@@ -3,6 +3,8 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:camera/camera.dart';
 import 'package:deepar_flutter_plus/deepar_flutter_plus.dart';
 import 'package:ffmpeg_kit_flutter_new/ffmpeg_kit.dart';
+
+// import 'package:ffmpeg_kit_flutter/ffmpeg_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:path_provider/path_provider.dart';
@@ -22,7 +24,6 @@ import 'package:auralive/utils/asset.dart';
 import 'package:auralive/utils/database.dart';
 import 'package:auralive/utils/enums.dart';
 import 'package:auralive/utils/utils.dart';
-import 'package:deepar_flutter_plus/deepar_flutter_plus.dart';
 
 class CreateReelsController extends GetxController {
   // >>>>> >>>>> >>>>> Main Variable <<<<< <<<<< <<<<<
@@ -125,29 +126,13 @@ class CreateReelsController extends GetxController {
     super.onInit();
   }
 
-  @override 
+  @override
   void onClose() {
-    // 1. SAFETY: Cancel the timer immediately so it stops ticking
-    if (timer != null && timer!.isActive) {
-      timer!.cancel();
-    }
-
-    // 2. SAFETY: Dispose of the Audio Players to free native resources
-    try {
-      audioPlayer.stop(); // Stop playing
-      audioPlayer.dispose(); // Kill the instance
-      _audioPlayer.dispose(); // Kill the second instance used for duration checks
-    } catch (e) {
-      Utils.showLog("Audio Dispose Error: $e");
-    }
-
-    // 3. Existing Logic
     if (isUseEffects) {
       onDisposeEffect();
     } else {
       onDisposeCamera();
     }
-    
     super.onClose();
   }
 
@@ -339,40 +324,35 @@ class CreateReelsController extends GetxController {
   }
 
   // >>>>> >>>>> >>>>> Effect Controller Method <<<<< <<<<< <<<<<
-Future<void> onInitializeEffect() async {
+
+  Future<void> onInitializeEffect() async {
     try {
       Utils.showLog("Effect Controller Initializing...");
 
-      // 1. Capture the result object (it's no longer just a boolean)
-      var result = await deepArController.initialize(
+      await deepArController.initialize(
         androidLicenseKey: Utils.effectAndroidLicenseKey,
         iosLicenseKey: Utils.effectIosLicenseKey,
         resolution: Resolution.medium,
       );
 
-      // 2. check 'result.success' to get the true/false value
-      isInitializeEffect = result.success ?? false;
+      isFrontCamera = true;
+      update(["onInitializeEffect"]);
 
-      if (isInitializeEffect) {
-        isFrontCamera = true;
-        update(["onInitializeEffect"]);
-        Utils.showLog("Effect Controller Initialize Success");
-      } else {
-        Utils.showLog("Effect Controller Initialize Failed: ${result.message}");
-      }
+      isInitializeEffect = deepArController.isInitialized;
+
+      Utils.showLog("Effect Controller Initialize => $isInitializeEffect");
     } catch (e) {
       Utils.showLog("Effect Controller Initialize Failed => $e");
     }
   }
 
-Future<void> onDisposeEffect() async {
+  Future<void> onDisposeEffect() async {
     deepArController.destroy();
-    // deepArController = DeepArController(); // <--- REMOVE THIS LINE
+    deepArController = DeepArControllerPlus();
     isInitializeEffect = false;
     update(["onInitializeEffect"]);
     Utils.showLog("Effect Controller Dispose Success");
   }
-
 
   Future<void> onSwitchEffectFlash() async {
     if (isFrontCamera == false) {
@@ -383,8 +363,7 @@ Future<void> onDisposeEffect() async {
         isFlashOn = true;
         await deepArController.toggleFlash();
       }
-      // UPDATE THIS LINE to include "onSwitchFlash"
-      update(["onSwitchEffectFlash", "onSwitchFlash"]); 
+      update(["onSwitchEffectFlash"]);
     }
   }
 
@@ -550,10 +529,10 @@ Future<void> onDisposeEffect() async {
   Future<String?> onRemoveAudio(String videoPath) async {
     final String videoWithoutAudioPath = '${(await getTemporaryDirectory()).path}/RM_${DateTime.now().millisecondsSinceEpoch}.mp4';
     final ffmpegRemoveAudioCommand = '-i $videoPath -c copy -an $videoWithoutAudioPath';
-    final sessionRemoveAudio = await FFmpegKit.executeAsync(ffmpegRemoveAudioCommand);
-    final returnCodeRemoveAudio = await sessionRemoveAudio.getReturnCode();
+    // final sessionRemoveAudio = await FFmpegKit.executeAsync(ffmpegRemoveAudioCommand);
+    // final returnCodeRemoveAudio = await sessionRemoveAudio.getReturnCode();
     Utils.showLog("Remove Audio Path => $videoWithoutAudioPath");
-    Utils.showLog("Return Code => $returnCodeRemoveAudio");
+    // Utils.showLog("Return Code => $returnCodeRemoveAudio");
     return videoWithoutAudioPath;
   }
 
@@ -569,11 +548,15 @@ Future<void> onDisposeEffect() async {
 
       final minTime = (videoTime! < soundTime) ? videoTime : soundTime;
 
+      // final command = '-i $videoPath -i $audioPath -t $minTime -c:v copy -c:a aac -strict experimental -map 0:v:0 -map 1:a:0 $path';
+
       final command = '-i $videoPath -i $audioPath -t $minTime -c:v copy -c:a aac -strict experimental -map 0:v:0 -map 1:a:0 $path';
+
       final sessionRemoveAudio = await FFmpegKit.executeAsync(command);
       final returnCodeRemoveAudio = await sessionRemoveAudio.getReturnCode();
-      Utils.showLog("Merge Video Path => $path");
       Utils.showLog("Return Code => $returnCodeRemoveAudio");
+
+      Utils.showLog("Merge Video Path => $path");
       return path;
     } else {
       return null;
@@ -598,34 +581,38 @@ Future<void> onDisposeEffect() async {
       Utils.showLog("Removing Audio From Video...");
 
       Utils.showToast(EnumLocal.txtPleaseWaitSomeTime.name.tr);
-      final removeVideoPath = await onRemoveAudio(videoPath);
-      await 2.seconds.delay();
-      if (removeVideoPath != null) {
-        final mergeVideoPath = await onMergeAudioWithVideo(removeVideoPath, selectedSound?["link"]);
-        await 5.seconds.delay();
-        Get.back(); // Stop Loading...
+      // final removeVideoPath = await onRemoveAudio(videoPath);
+      // await 2.seconds.delay();
+      // if (removeVideoPath != null) {
+      //   Utils.showLog("REMOVE AUDIO PATH => ${removeVideoPath}");
 
-        if (mergeVideoPath != null && videoTime != null && videoImage != null) {
-          Utils.showLog("Video Path => ${mergeVideoPath}");
-          Utils.showLog("Video Image => ${videoImage}");
-          Utils.showLog("Video Time => ${videoTime}");
+      Utils.showLog("SONG => ${selectedSound}");
 
-          Get.offAndToNamed(
-            AppRoutes.previewCreatedReelsPage,
-            arguments: {
-              "video": mergeVideoPath,
-              "image": videoImage,
-              "time": videoTime?.toInt(),
-              "songId": selectedSound?["id"] ?? "",
-            },
-          );
-        } else {
-          Utils.showToast(EnumLocal.txtSomeThingWentWrong.name.tr);
-          Utils.showLog("Get Video Image/Video Time Failed !!");
-        }
+      final mergeVideoPath = await onMergeAudioWithVideo(videoPath, selectedSound?["link"]);
+      await 5.seconds.delay();
+      Get.back(); // Stop Loading...
+
+      if (mergeVideoPath != null && videoTime != null && videoImage != null) {
+        Utils.showLog("Video Path => ${mergeVideoPath}");
+        Utils.showLog("Video Image => ${videoImage}");
+        Utils.showLog("Video Time => ${videoTime}");
+
+        Get.offAndToNamed(
+          AppRoutes.previewCreatedReelsPage,
+          arguments: {
+            "video": mergeVideoPath,
+            "image": videoImage,
+            "time": videoTime?.toInt(),
+            "songId": selectedSound?["id"] ?? "",
+          },
+        );
       } else {
-        Get.back(); // Stop Loading...
+        Utils.showToast(EnumLocal.txtSomeThingWentWrong.name.tr);
+        Utils.showLog("Get Video Image/Video Time Failed !!");
       }
+      // } else {
+      //   Get.back(); // Stop Loading...
+      // }
     } else {
       videoTime = (await CustomVideoTime.onGet(videoPath) ?? 0).toDouble();
       Get.back(); // Stop Loading...

@@ -4,6 +4,7 @@ import 'package:auralive/pages/preview_hash_tag_page/controller/preview_hash_tag
 import 'package:auralive/pages/preview_hash_tag_page/widget/preview_hash_tag_widget.dart';
 
 import 'package:auralive/utils/color.dart';
+import 'package:auralive/size_extension.dart';
 
 class PreviewHashTagView extends StatelessWidget {
   const PreviewHashTagView({super.key});

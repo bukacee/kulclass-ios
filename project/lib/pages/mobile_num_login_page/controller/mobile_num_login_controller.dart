@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import 'package:auralive/routes/app_routes.dart';
 import 'package:auralive/ui/loading_ui.dart';
 import 'package:auralive/utils/color.dart';
+import 'package:auralive/size_extension.dart';
 import 'package:auralive/utils/enums.dart';
 import 'package:auralive/utils/utils.dart';
 

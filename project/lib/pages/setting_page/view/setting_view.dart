@@ -10,6 +10,7 @@ import 'package:auralive/routes/app_routes.dart';
 import 'package:auralive/ui/simple_app_bar_ui.dart';
 import 'package:auralive/utils/asset.dart';
 import 'package:auralive/utils/color.dart';
+import 'package:auralive/size_extension.dart';
 import 'package:auralive/utils/database.dart';
 import 'package:auralive/utils/enums.dart';
 import 'package:auralive/utils/font_style.dart';
@@ -103,13 +104,7 @@ class SettingView extends GetView<SettingController> {
                         Get.toNamed(AppRoutes.languagePage);
                       },
                     ),
-                    ItemsView(
-                      icon: AppAsset.icWallet,
-                      title: EnumLocal.txtMyWallet.name.tr,
-                      callback: () {
-                        Get.toNamed(AppRoutes.myWalletPage);
-                      },
-                    ),
+                     
                     GetBuilder<SettingController>(
                       builder: (controller) => ItemsView(
                         icon: AppAsset.icShare,

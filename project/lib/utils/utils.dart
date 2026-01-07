@@ -1,10 +1,9 @@
 import 'dart:developer';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:get/get.dart';
-import 'package:in_app_purchase_android/in_app_purchase_android.dart';
 import 'package:auralive/utils/color.dart';
+import 'package:auralive/size_extension.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:auralive/pages/splash_screen_page/api/admin_setting_api.dart';
 import 'package:auralive/utils/internet_connection.dart';
@@ -12,8 +11,23 @@ import 'package:zego_express_engine/zego_express_engine.dart';
 
 abstract class Utils {
   static RxBool isAppOpen = false.obs;
+ 
 
-  static void showLog(String text) => log(text);
+  // ===================== LOGGING ENHANCEMENT =====================
+  static List<String> appLogs = [];
+
+  static void showLog(String text) {
+    final logEntry = "${DateTime.now().toIso8601String()} | $text";
+    appLogs.add(logEntry);
+    log(logEntry); // still goes to console for local runs
+  }
+
+  static String getLogs() {
+    return appLogs.join("\n");
+  }
+  // ===============================================================
+
+
 
   static void showToast(String text, [Color? color]) {
     Fluttertoast.showToast(
@@ -53,8 +67,8 @@ abstract class Utils {
 
   static final bool isShowStripePaymentMethod = AdminSettingsApi.adminSettingModel?.data?.stripeSwitch ?? false;
   static final bool isShowRazorPayPaymentMethod = AdminSettingsApi.adminSettingModel?.data?.razorPaySwitch ?? false;
-  static final bool isShowFlutterWavePaymentMethod = AdminSettingsApi.adminSettingModel?.data?.flutterWaveSwitch ?? false;
-  static final bool isShowInAppPurchasePaymentMethod = AdminSettingsApi.adminSettingModel?.data?.googlePlaySwitch ?? false;
+  //static final bool isShowFlutterWavePaymentMethod = AdminSettingsApi.adminSettingModel?.data?.flutterWaveSwitch ?? false;
+  //static final bool isShowInAppPurchasePaymentMethod = AdminSettingsApi.adminSettingModel?.data?.googlePlaySwitch ?? false;
 
   // >>>>> >>>>> Live Streaming Credential <<<<< <<<<<
 
@@ -78,8 +92,8 @@ abstract class Utils {
 
   // >>>>> >>>>> Flutter Wave Credential <<<<< <<<<<
 
-  static String flutterWaveId = AdminSettingsApi.adminSettingModel?.data?.flutterWaveId ?? "";
-  static String flutterWaveCurrencyCode = AdminSettingsApi.adminSettingModel?.data?.currency?.currencyCode ?? "";
+  //static String flutterWaveId = AdminSettingsApi.adminSettingModel?.data?.flutterWaveId ?? "";
+  //static String flutterWaveCurrencyCode = AdminSettingsApi.adminSettingModel?.data?.currency?.currencyCode ?? "";
 
   // >>>>>> >>>>>> Initialize Live Steaming <<<<<< <<<<<<
 
@@ -97,8 +111,7 @@ abstract class Utils {
 
   static Future<void> onInitPayment() async {
     if (InternetConnection.isConnect.value) {
-      Stripe.publishableKey = Utils.stripeTestPublicKey;
-      await Stripe.instance.applySettings(); 
+
     }
   }
 }

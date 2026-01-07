@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
 import 'package:auralive/pages/feed_page/view/feed_view.dart';
 import 'package:auralive/pages/message_page/view/message_view.dart';
 import 'package:auralive/pages/profile_page/view/profile_view.dart';

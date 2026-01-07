@@ -14,6 +14,7 @@ import 'package:auralive/routes/app_routes.dart';
 import 'package:auralive/pages/search_page/controller/search_controller.dart' as controller;
 import 'package:auralive/utils/asset.dart';
 import 'package:auralive/utils/color.dart';
+import 'package:auralive/size_extension.dart';
 import 'package:auralive/utils/enums.dart';
 import 'package:auralive/utils/font_style.dart';
 

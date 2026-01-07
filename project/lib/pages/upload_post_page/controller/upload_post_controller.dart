@@ -7,8 +7,12 @@ import 'package:auralive/pages/preview_hash_tag_page/api/create_hash_tag_api.dar
 import 'package:auralive/pages/preview_hash_tag_page/api/fetch_hash_tag_api.dart';
 import 'package:auralive/pages/preview_hash_tag_page/model/create_hash_tag_model.dart';
 import 'package:auralive/pages/preview_hash_tag_page/model/fetch_hash_tag_model.dart';
+import 'package:auralive/pages/profile_page/api/delete_content_api.dart';
+// Removed UploadMultipleFileApi import as requested
 import 'package:auralive/pages/upload_post_page/api/upload_post_api.dart';
 import 'package:auralive/pages/upload_post_page/model/upload_post_model.dart';
+import 'package:auralive/pages/upload_reels_page/api/fetch_ai_caption_api.dart';
+import 'package:auralive/pages/upload_reels_page/model/fetch_ai_caption_model.dart';
 import 'package:auralive/ui/image_picker_bottom_sheet_ui.dart';
 import 'package:auralive/ui/loading_ui.dart';
 import 'package:auralive/utils/database.dart';
@@ -33,12 +37,26 @@ class UploadPostController extends GetxController {
   TextEditingController captionController = TextEditingController();
   TextEditingController hashTagController = TextEditingController();
 
+  String selectedAutoCaptionImagePath = "";
+  String autoCaptionImageUrl = "";
+  bool isPostUploadSuccess = false;
+
+  FetchAiCaptionModel? fetchAiCaptionModel;
+  bool isLoadingAiCaption = false;
+  bool isAiCaptionSwitchOn = false;
+
   @override
   void onInit() {
     init();
     super.onInit();
 
     Utils.showLog("Upload Post Controller Initialized...");
+  }
+
+  @override
+  void onClose() {
+    onDeleteCancelContent();
+    super.onClose();
   }
 
   Future<void> init() async {
@@ -49,6 +67,10 @@ class UploadPostController extends GetxController {
     }
     onGetHashTag();
     createHashTagModel = null;
+
+    if (selectedImages.isNotEmpty) {
+      onConvertFirstImage(selectedImages[0]);
+    }
   }
 
   void onSelectHashtag(int index) {
@@ -82,12 +104,6 @@ class UploadPostController extends GetxController {
 
     String updatedText = captionController.text;
     List<String> parts = updatedText.split(' ');
-
-    // if (words.last[words.last.length - 1] == "#") {
-    //   words.last[words.last.length - 1]
-    // }
-
-    // List<String> words = text.split(RegExp(r'(\s|(?=#))'));
 
     await 10.milliseconds.delay();
 
@@ -147,7 +163,12 @@ class UploadPostController extends GetxController {
               break;
             }
           }
-          update(["onChangeImages"]);
+
+          update(["onChangeImages", "onChangeAiSwitch"]);
+
+          if (selectedImages.isNotEmpty) {
+            onConvertFirstImage(selectedImages[0]);
+          }
         }
       },
       onClickCamera: () async {
@@ -155,14 +176,81 @@ class UploadPostController extends GetxController {
         if (imagePath != null) {
           selectedImages.add(imagePath);
           update(["onChangeImages"]);
+
+          if (selectedImages.isNotEmpty) {
+            onConvertFirstImage(selectedImages[0]);
+          }
         }
       },
     );
   }
 
+  /// Replaced UploadMultipleFileApi call with local-path assignment
+  void onConvertFirstImage(String path) async {
+    if (selectedAutoCaptionImagePath != path) {
+      selectedAutoCaptionImagePath = path;
+
+      // Instead of uploading, just use the local path as the caption image URL
+      autoCaptionImageUrl = path;
+
+      if (isAiCaptionSwitchOn) onFetchAiCaption();
+    }
+  }
+
+  void onDeleteCancelContent() async {
+    if (isPostUploadSuccess == false && autoCaptionImageUrl.trim().isNotEmpty == true) {
+      await DeleteContentApi.callApi(fileUrl: autoCaptionImageUrl);
+
+      Utils.showLog("Delete Content Url => $autoCaptionImageUrl");
+
+      if (DeleteContentApi.deleteContentModel?.status == true) {
+        selectedAutoCaptionImagePath = "";
+        autoCaptionImageUrl = "";
+      }
+    }
+  }
+
+  void onChangeAiSwitch({bool? value}) async {
+    isAiCaptionSwitchOn = value ?? !isAiCaptionSwitchOn;
+    update(["onChangeAiSwitch"]);
+
+    if (isAiCaptionSwitchOn) {
+      onFetchAiCaption();
+    } else {
+      captionController.clear();
+      update(["onGenerateAiCaption"]);
+    }
+  }
+
+  void onFetchAiCaption() async {
+    if (autoCaptionImageUrl.trim().isNotEmpty == true) {
+      isLoadingAiCaption = true;
+      update(["onGenerateAiCaption"]);
+
+      fetchAiCaptionModel = await FetchAiCaptionApi.callApi(contentUrl: autoCaptionImageUrl);
+
+      captionController.clear();
+
+      captionController.text = ((fetchAiCaptionModel?.caption ?? "") + (fetchAiCaptionModel?.hashtags?.join(" ") ?? ""));
+
+      isLoadingAiCaption = false;
+      update(["onGenerateAiCaption"]);
+    }
+  }
+
   void onCancelImage(int index) {
     selectedImages.removeAt(index);
     update(["onChangeImages"]);
+    if (index == 0) onDeleteCancelContent(); // REMOVE FIRST CONVERT URL
+
+    if (selectedImages.isNotEmpty) {
+      onConvertFirstImage(selectedImages[0]);
+    } else {
+      if (isAiCaptionSwitchOn) captionController.clear();
+      isAiCaptionSwitchOn = false;
+
+      update(["onChangeAiSwitch", "onChangeHashtag"]);
+    }
   }
 
   Future<void> onUploadPost() async {
@@ -204,19 +292,40 @@ class UploadPostController extends GetxController {
 
         Utils.showLog("Hast Tag Id => $hashTagIds");
 
+        // Instead of removing & uploading remainder to server, use local selectedImages list.
+        // Ensure that autoCaptionImageUrl is first image if present (keeps previous behavior)
+        List<String> imagesToSend = List<String>.from(selectedImages);
+
+        if (autoCaptionImageUrl.trim().isNotEmpty) {
+          // ensure the auto-captioned image is at index 0
+          if (imagesToSend.contains(autoCaptionImageUrl)) {
+            // move it to front
+            imagesToSend.remove(autoCaptionImageUrl);
+            imagesToSend.insert(0, autoCaptionImageUrl);
+          } else {
+            // insert it at front
+            imagesToSend.insert(0, autoCaptionImageUrl);
+          }
+        }
+
+        await 200.milliseconds.delay();
+
+        // Directly call UploadPostApi with local image paths
         uploadPostModel = await UploadPostApi.callApi(
           loginUserId: Database.loginUserId,
           hashTag: hashTagIds.map((e) => "$e").join(',').toString(),
           caption: captionController.text.trim(),
-          postImages: selectedImages,
+          postImages: imagesToSend,
         );
 
         if (uploadPostModel?.status == true && uploadPostModel?.post?.id != null) {
+          isPostUploadSuccess = true;
           Utils.showToast(EnumLocal.txtPostUploadSuccessfully.name.tr);
           Get.close(2);
         } else {
           Utils.showToast(EnumLocal.txtSomeThingWentWrong.name.tr);
         }
+
         Get.back(); // Stop Loading...
       } else {
         Utils.showToast(EnumLocal.txtConnectionLost.name.tr);
@@ -238,122 +347,3 @@ class UploadPostController extends GetxController {
 //   }
 // }
 //
-// Future<void> onChangeHashTag() async {
-//   Utils.showLog("Typing => ${hashTagController.text}");
-//
-//   if (hashTagController.text.trim().isNotEmpty) {
-//     Utils.showLog("Typing => ${Get.currentRoute}");
-//
-//     if (Get.currentRoute == "/upload_post_page") {
-//       Get.to(PreviewHashTagListUi());
-//     }
-//
-//     if (hashTagController.text.endsWith(" ")) {
-//       if (hastTagCollection.isNotEmpty) {
-//         final userHashTag = hashTagController.text.trim().toLowerCase();
-//         final apiHashTag = hastTagCollection[0].hashTag?.toLowerCase();
-//         if (userHashTag == apiHashTag) {
-//           onSelectHastTag(0);
-//         } else {
-//           selectedHashTag.add(HashTagData(hashTag: hashTagController.text.trim()));
-//           update(["onSelectHastTag"]);
-//           onCloseHashTagPage();
-//           Utils.showLog("Create New HashTag Success");
-//         }
-//       } else {
-//         selectedHashTag.add(HashTagData(hashTag: hashTagController.text.trim()));
-//         update(["onSelectHastTag"]);
-//         onCloseHashTagPage();
-//         Utils.showLog("Create New HashTag Success");
-//       }
-//     } else {
-//       await onGetHashTag();
-//     }
-//   } else if (hashTagController.text.isEmpty) {
-//     await onGetHashTag();
-//   }
-// }
-//
-// void onSelectHastTag(int index) {
-//   selectedHashTag.add(hastTagCollection[index]);
-//   update(["onSelectHastTag"]);
-//   // onCloseHashTagPage();
-// }
-//
-// void onCloseHashTagPage() async {
-//   hashTagController.clear();
-//   FocusManager.instance.primaryFocus?.unfocus();
-//   if (Get.currentRoute == "/PreviewHashTagListUi") {
-//     Get.back();
-//     await 200.milliseconds.delay();
-//     FocusManager.instance.primaryFocus?.unfocus();
-//   }
-// }
-//
-// void onCancelHashTag(int index) {
-//   selectedHashTag.removeAt(index);
-//   update(["onSelectHastTag"]);
-// }
-//
-
-//
-// void onSubmitHashTag() {
-//   if (hashTagController.text.trim().isNotEmpty && hastTagCollection.isNotEmpty) {
-//     final userHashTag = hashTagController.text.trim().toLowerCase();
-//     final apiHashTag = hastTagCollection[0].hashTag?.toLowerCase();
-//     if (userHashTag == apiHashTag) {
-//       onSelectHastTag(0);
-//     } else {
-//       selectedHashTag.add(HashTagData(hashTag: hashTagController.text.trim()));
-//       update(["onSelectHastTag"]);
-//       onCloseHashTagPage();
-//       Utils.showLog("Create New HashTag Success");
-//     }
-//   } else if (hashTagController.text.trim().isNotEmpty && hastTagCollection.isEmpty) {
-//     selectedHashTag.add(HashTagData(hashTag: hashTagController.text.trim()));
-//     update(["onSelectHastTag"]);
-//     onCloseHashTagPage();
-//     Utils.showLog("Create New HashTag Success");
-//   }
-// }
-
-//---------------------------------------------------------
-// if (selectedHashTag.contains(hastTagCollection[index])) {
-//   selectedHashTag.remove(hastTagCollection[index]);
-//   update(["onSelectHastTag"]);
-// } else {
-//
-// }
-
-//  Future<void> onToggleHashTag(bool value) async {
-//     isShowHashTag = value;
-//     update(["onToggleHashTag"]);
-//
-//     if (value) {
-//       onGetHashTag();
-//       FocusManager.instance.primaryFocus?.unfocus();
-//       Get.to(PreviewHashTagListUi());
-//     }
-//   }
-
-// Future<void> onCreateHashTag() async {
-//   FocusManager.instance.primaryFocus?.unfocus();
-//
-//   Get.dialog(const LoadingUi(), barrierDismissible: false); // Start Loading...
-//
-//   createHashTagModel = await CreateHashTagApi.callApi(hashTag: hashTagController.text.trim());
-//   if (createHashTagModel?.data?.id != null) {
-//     Utils.showLog("Create Hast Tag Success ${createHashTagModel?.data?.id}");
-//
-//     selectedHashTag.add(
-//       HashTagData(
-//         id: createHashTagModel?.data?.id,
-//         hashTag: createHashTagModel?.data?.hashTag,
-//       ),
-//     );
-//     update(["onSelectHastTag"]);
-//
-//     hashTagController.clear();
-//   }
-//   Get.back(); // Stop Loading...
-// }

@@ -9,12 +9,13 @@ import 'package:auralive/ui/no_data_found_ui.dart';
 import 'package:auralive/ui/preview_image_ui.dart';
 import 'package:auralive/ui/preview_network_image_ui.dart';
 import 'package:auralive/ui/report_bottom_sheet_ui.dart';
-import 'package:auralive/utils/api.dart';
 import 'package:auralive/utils/asset.dart';
 import 'package:auralive/utils/color.dart';
+import 'package:auralive/size_extension.dart';
 import 'package:auralive/utils/enums.dart';
-import 'package:auralive/utils/font_style.dart'; 
-import 'package:auralive/widgets/gift_media_widget.dart'; 
+import 'package:auralive/utils/font_style.dart';
+import 'package:flutter_svga/flutter_svga.dart';
+import 'package:auralive/custom/svga_simple_image.dart';
 
 class PreviewUserProfileAppBar extends StatelessWidget implements PreferredSizeWidget {
   const PreviewUserProfileAppBar({super.key});
@@ -61,8 +62,7 @@ class PreviewUserProfileAppBar extends StatelessWidget implements PreferredSizeW
                 GetBuilder<PreviewUserProfileController>(
                   builder: (controller) => GestureDetector(
                     onTap: () {
-                      ReportBottomSheetUi.show(
-                          context: context, eventId: controller.userId, eventType: 3); // User Report...
+                      ReportBottomSheetUi.show(context: context, eventId: controller.userId, eventType: 3); // User Report...
                     },
                     child: Container(
                       height: 35,
@@ -73,9 +73,7 @@ class PreviewUserProfileAppBar extends StatelessWidget implements PreferredSizeW
                         shape: BoxShape.circle,
                         border: Border.all(color: AppColor.colorTextGrey.withOpacity(0.8)),
                       ),
-                      child: Center(
-                          child:
-                              Image.asset(AppAsset.icMore, color: AppColor.colorTextGrey.withOpacity(0.8), width: 22)),
+                      child: Center(child: Image.asset(AppAsset.icMore, color: AppColor.colorTextGrey.withOpacity(0.8), width: 22)),
                     ),
                   ),
                 ),
@@ -186,9 +184,7 @@ class ReelsTabView extends StatelessWidget {
                                   Image.asset(
                                     AppAsset.icLike,
                                     width: 18,
-                                    color: (controller.videoCollection[index].isLike ?? false)
-                                        ? AppColor.colorTextRed
-                                        : AppColor.white,
+                                    color: (controller.videoCollection[index].isLike ?? false) ? AppColor.colorTextRed : AppColor.white,
                                   ),
                                   Text(
                                     " ${CustomFormatNumber.convert(controller.videoCollection[index].totalLikes ?? 0)}",
@@ -342,16 +338,15 @@ class CollectionsTabView extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
                           5.height,
-                          controller.giftCollection[index].giftType == 1 ||
-                                  controller.giftCollection[index].giftType == 2
+                          controller.giftCollection[index].giftType == 1 || controller.giftCollection[index].giftType == 2
                               ? Expanded(
                                   child: PreviewNetworkImageUi(image: controller.giftCollection[index].giftImage ?? ""),
                                 )
                               : controller.giftCollection[index].giftType == 3
                                   ? Expanded(
                                       child: SizedBox(
-                                    child: GiftMediaWidget(
-                                      url: Api.baseUrl + (Api.baseUrl + (controller.giftCollection[index].giftImage ?? ""))),
+                                        width: Get.width,
+                                        child: SVGAImageWrapper(resUrl: controller.giftCollection[index].giftImage ?? ""),
                                       ),
                                     )
                                   : Offstage(),

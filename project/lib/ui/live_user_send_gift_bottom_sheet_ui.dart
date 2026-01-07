@@ -11,11 +11,14 @@ import 'package:auralive/ui/preview_network_image_ui.dart';
 import 'package:auralive/utils/api.dart';
 import 'package:auralive/utils/asset.dart';
 import 'package:auralive/utils/color.dart';
+import 'package:auralive/size_extension.dart';
 import 'package:auralive/utils/enums.dart';
 import 'package:auralive/utils/font_style.dart';
 import 'package:auralive/utils/socket_services.dart';
-import 'package:auralive/utils/utils.dart'; 
-import 'package:auralive/widgets/gift_media_widget.dart'; 
+import 'package:auralive/utils/utils.dart';
+import 'package:flutter_svga/flutter_svga.dart';
+import 'package:auralive/custom/svga_simple_image.dart';
+
 
 class LiveUserSendGiftBottomSheetUi {
   static RxBool isLoading = false.obs;
@@ -27,19 +30,12 @@ class LiveUserSendGiftBottomSheetUi {
   static RxString giftUrl = "".obs;
 
   static Widget onShowGift() {
-    print("TYPE :: ${giftType}");
     return Obx(() {
       return isShowGift.value
           ? giftType.value == 1 || giftType.value == 2
               ? SizedBox(height: 300, width: 300, child: PreviewNetworkImageUi(image: giftUrl.value))
               : giftType.value == 3
-                  ? SizedBox(
-                      height: Get.height,
-                      width: Get.width,
-                      child: GiftMediaWidget(
-                          url: Api.baseUrl + giftUrl.value,
-                      ),
-                    )
+                  ? SizedBox(height: Get.height, width: Get.width, child: SVGAImageWrapper(resUrl: giftUrl.value))
                   : Offstage()
           : Offstage();
     });
@@ -65,8 +61,7 @@ class LiveUserSendGiftBottomSheetUi {
     Get.back();
 
     if ((CustomFetchUserCoin.coin.value == 0 || CustomFetchUserCoin.coin.value < (giftCollection[index].coin ?? 0))) {
-      Utils.showToast(
-          EnumLocal.txtYouDonHaveSufficientCoinsToSendTheGift.name.tr, AppColor.colorTextDarkGrey.withOpacity(0.85));
+      Utils.showToast(EnumLocal.txtYouDonHaveSufficientCoinsToSendTheGift.name.tr, AppColor.colorTextDarkGrey.withOpacity(0.85));
     } else {
       SocketServices.onLiveSendGift(
         coin: giftCollection[index].coin ?? 0,
@@ -209,11 +204,7 @@ class LiveUserSendGiftBottomSheetUi {
                               5.height,
                               giftCollection[index].type == 1 || giftCollection[index].type == 2
                                   ? Expanded(child: PreviewNetworkImageUi(image: giftCollection[index].image ?? ""))
-                                  : Expanded(
-                                      child: GiftMediaWidget(
-                                          url: (giftCollection[index].image) != null
-                                              ? (Api.baseUrl + (giftCollection[index].image ?? ""))
-                                              : "")),
+                                  : Expanded(child: SVGAImageWrapper(resUrl: (giftCollection[index].image) != null ? (Api.baseUrl + (giftCollection[index].image ?? "")) : "")),
                               5.height,
                               Container(
                                 padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 3),

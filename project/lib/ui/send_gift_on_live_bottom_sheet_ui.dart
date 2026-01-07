@@ -12,11 +12,14 @@ import 'package:auralive/ui/preview_network_image_ui.dart';
 import 'package:auralive/utils/api.dart';
 import 'package:auralive/utils/asset.dart';
 import 'package:auralive/utils/color.dart';
+import 'package:auralive/size_extension.dart';
 import 'package:auralive/utils/database.dart';
 import 'package:auralive/utils/enums.dart';
 import 'package:auralive/utils/font_style.dart';
-import 'package:auralive/utils/utils.dart'; 
-import 'package:auralive/widgets/gift_media_widget.dart'; 
+import 'package:auralive/utils/utils.dart';
+import 'package:flutter_svga/flutter_svga.dart';
+import 'package:auralive/custom/svga_simple_image.dart';
+
 
 class SendGiftOnLiveBottomSheetUi {
   static RxBool isLoading = false.obs;
@@ -41,14 +44,11 @@ class SendGiftOnLiveBottomSheetUi {
 
   static Future<void> onSendGift() async {
     if (CustomFetchUserCoin.coin == 0 || CustomFetchUserCoin.coin < (giftCollection[sendGiftIndex.value].coin ?? 0)) {
-      Utils.showToast(
-          EnumLocal.txtYouDonHaveSufficientCoinsToSendTheGift.name.tr, AppColor.colorTextDarkGrey.withOpacity(0.85));
+      Utils.showToast(EnumLocal.txtYouDonHaveSufficientCoinsToSendTheGift.name.tr, AppColor.colorTextDarkGrey.withOpacity(0.85));
     } else {
       Get.back();
       isShowGift.value = true;
-      giftCollection[sendGiftIndex.value].type == 1 || giftCollection[sendGiftIndex.value].type == 2
-          ? await 1500.milliseconds.delay()
-          : await 8000.milliseconds.delay();
+      giftCollection[sendGiftIndex.value].type == 1 || giftCollection[sendGiftIndex.value].type == 2 ? await 1500.milliseconds.delay() : await 8000.milliseconds.delay();
 
       isShowGift.value = false;
       await SendGiftToLiveApi.callApi(
@@ -63,19 +63,14 @@ class SendGiftOnLiveBottomSheetUi {
     return Obx(
       () => isShowGift.value
           ? giftCollection[sendGiftIndex.value].type == 1 || giftCollection[sendGiftIndex.value].type == 2
-              ? SizedBox(
-                  height: 200,
-                  width: 200,
-                  child: PreviewNetworkImageUi(image: giftCollection[sendGiftIndex.value].image ?? ""))
+              ? SizedBox(height: 200, width: 200, child: PreviewNetworkImageUi(image: giftCollection[sendGiftIndex.value].image ?? ""))
               : SizedBox(
                   height: Get.height,
                   width: Get.width,
                   child: SizedBox.expand(
                     child: FittedBox(
                       fit: BoxFit.cover,
-                      child: GiftMediaWidget(
-                          url: Api.baseUrl + (giftCollection[sendGiftIndex.value].image ?? ""),
-                      ),
+                      child: SVGAImageWrapper(resUrl: giftCollection[sendGiftIndex.value].image ?? ""),
                     ),
                   ),
                 )
@@ -204,11 +199,7 @@ class SendGiftOnLiveBottomSheetUi {
                               5.height,
                               giftCollection[index].type == 1 || giftCollection[index].type == 2
                                   ? Expanded(child: PreviewNetworkImageUi(image: giftCollection[index].image ?? ""))
-                                  : Expanded(
-                                      child: GiftMediaWidget(
-                                          url: Api.baseUrl + (giftCollection[index].image ?? "") != null
-                                              ? (Api.baseUrl + (giftCollection[index].image ?? ""))
-                                              : "")),
+                                  : Expanded(child: SVGAImageWrapper(resUrl: (giftCollection[index].image) != null ? (Api.baseUrl + (giftCollection[index].image ?? "")) : "")),
                               5.height,
                               Container(
                                 padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 3),
@@ -217,7 +208,7 @@ class SendGiftOnLiveBottomSheetUi {
                                   borderRadius: BorderRadius.circular(6),
                                 ),
                                 child: Text(
-                                  "${CustomFormatNumber.convert(giftCollection[index].coin ?? 0)} Coins",
+                                  "${CustomFormatNumber.convert(giftCollection[index].coin ?? 0)} USD",
                                   style: AppFontStyle.styleW700(AppColor.primary, 12),
                                 ),
                               ),
@@ -248,65 +239,48 @@ class SendGiftOnLiveBottomSheetUi {
                       ),
               ),
             ),
-            Container(
-              decoration: BoxDecoration(
-                color: AppColor.white,
-                boxShadow: [
-                  BoxShadow(
-                    color: AppColor.colorSecondaryTextGrey.withOpacity(0.2), // Shadow color
-                    spreadRadius: 2,
-                    blurRadius: 10,
-                    offset: Offset(10, 0), // Move shadow to the right
-                  ),
-                ],
-              ),
-              child: Column(
-                children: [
-                  10.height,
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      GestureDetector(
-                        onTap: () {
-                          Get.back();
-                          Get.toNamed(AppRoutes.rechargePage);
-                        },
-                        child: Container(
-                          height: 40,
-                          padding: EdgeInsets.symmetric(horizontal: 10),
-                          decoration: BoxDecoration(
-                            color: AppColor.primary,
-                            borderRadius: BorderRadius.circular(50),
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Container(
-                                  decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    border: Border.all(color: AppColor.white, width: 1.5),
-                                  ),
-                                  child: Image.asset(AppAsset.icCoin, width: 25)),
-                              5.width,
-                              Text(
-                                EnumLocal.txtRecharge.name.tr,
-                                style: AppFontStyle.styleW600(AppColor.white, 15),
-                              ),
-                              5.width,
-                              Image.asset(AppAsset.icArrowRight, width: 15, color: AppColor.white),
-                            ],
-                          ),
+            10.height,
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                GestureDetector(
+                  onTap: () {
+                    Get.back();
+                    Get.toNamed(AppRoutes.rechargePage);
+                  },
+                  child: Container(
+                    height: 40,
+                    padding: EdgeInsets.symmetric(horizontal: 10),
+                    decoration: BoxDecoration(
+                      color: AppColor.primary,
+                      borderRadius: BorderRadius.circular(50),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Container(
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              border: Border.all(color: AppColor.white, width: 1.5),
+                            ),
+                            child: Image.asset(AppAsset.icCoin, width: 25)),
+                        5.width,
+                        Text(
+                          EnumLocal.txtRecharge.name.tr,
+                          style: AppFontStyle.styleW600(AppColor.white, 15),
                         ),
-                      ),
-                      15.width,
-                    ],
+                        5.width,
+                        Image.asset(AppAsset.icArrowRight, width: 15, color: AppColor.white),
+                      ],
+                    ),
                   ),
-                  10.height,
-                ],
-              ),
+                ),
+                15.width,
+              ],
             ),
+            10.height,
           ],
         ),
       ),

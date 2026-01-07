@@ -1,4 +1,3 @@
-import 'package:audioplayers/audioplayers.dart';
 import 'package:blurrycontainer/blurrycontainer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -6,17 +5,17 @@ import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
 import 'package:auralive/custom/custom_format_audio_time.dart';
 import 'package:auralive/custom/custom_format_chat_time.dart';
-
-
-import 'package:auralive/main.dart';
-import 'package:auralive/pages/chat_page/controller/chat_controller.dart';
 import 'package:auralive/ui/loading_ui.dart';
 import 'package:auralive/ui/preview_network_image_ui.dart';
+import 'package:auralive/main.dart';
+import 'package:auralive/pages/chat_page/controller/chat_controller.dart';
 import 'package:auralive/ui/preview_profile_bottom_sheet_ui.dart';
 import 'package:auralive/utils/asset.dart';
 import 'package:auralive/utils/color.dart';
+import 'package:auralive/size_extension.dart';
 import 'package:auralive/utils/enums.dart';
 import 'package:auralive/utils/font_style.dart';
+import 'package:audioplayers/audioplayers.dart';
 import 'package:auralive/utils/utils.dart';
 import 'package:vibration/vibration.dart';
 
@@ -180,8 +179,7 @@ class MessageTextFieldUi extends GetView<ChatController> {
                         decoration: InputDecoration(
                           border: InputBorder.none,
                           contentPadding: const EdgeInsets.only(bottom: 2),
-                          hintText:
-                              controller.isRecordingAudio ? CustomFormatAudioTime.convert(controller.countTime) : EnumLocal.txtTypeSomething.name.tr,
+                          hintText: controller.isRecordingAudio ? CustomFormatAudioTime.convert(controller.countTime) : EnumLocal.txtTypeSomething.name.tr,
                           // hintText: controller.isRecordingAudio ? EnumLocal.txtAudioRecording.name.tr : EnumLocal.txtTypeSomething.name.tr,
                           hintStyle: AppFontStyle.styleW400(controller.isRecordingAudio ? AppColor.primary : AppColor.coloGreyText, 16),
                         ),

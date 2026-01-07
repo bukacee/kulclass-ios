@@ -1,10 +1,28 @@
 abstract class Api {
-  static const baseUrl = "Enter Your Base Url"; // Ex :- http://182.168.19.35:5000/
-  static const secretKey = "Enter Your Secret Key"; // Ex :- ssf45sd1fs5d1sdf1s56165s15sdf1s
+  static const baseUrl = "https://admin.auraapp.site/"; // Ex :- http://182.168.19.35:5000/
+  static const secretKey = "5TIvw5cpc0"; // Ex :- ssf45sd1fs5d1sdf1s56165s15sdf1s
+  static const folderStructurePath = "auralive"; // Ex :- TestApp
+
+  // >>>>> >>>>> File Upload Api <<<<< <<<<<
+
+  static const uploadFile = "${baseUrl}client/file/upload-file";
+  static const uploadMultipleFile = "${baseUrl}client/file/upload_multiple_files";
+
+  // >>>>> >>>>> Folder Structure <<<<< <<<<<
+  static const profileContent = "${folderStructurePath}/client/userImage";
+  static const chatContent = "${folderStructurePath}/client/chatContent";
+  static const postContent = "${folderStructurePath}/client/postImage";
+  static const videoImageContent = "${folderStructurePath}/client/videoImage";
+  static const videoUrlContent = "${folderStructurePath}/client/videoUrl";
+  static const complaintContent = "${folderStructurePath}/client/complaintImage";
+  static const verificationContent = "${folderStructurePath}/client/verificationContent";
+  static const storyContent = "${folderStructurePath}/client/storyContent";
 
   // >>>>> >>>>> Admin Setting Api <<<<< <<<<<
 
   static const adminSetting = "${baseUrl}client/setting/getSetting";
+
+  static const googleAdSetting = "${baseUrl}client/setting/fetchAdSetting"; // *** >>> Google Ad Code <<< ***
 
   // >>>>> >>>>> Login Page Api <<<<< <<<<<
 
@@ -62,7 +80,10 @@ abstract class Api {
 
   // >>>>> >>>>> Connection Page Api <<<<< <<<<<
 
-  static const followUnfollow = "${baseUrl}client/followerFollowing/followUnfollowUser";
+
+  static const followUnfollowOld = "${baseUrl}client/followerFollowing/followUnfollowUser";
+  static const followUnfollow = "${baseUrl}client/followerFollowing/follow";
+
   static const connection = "${baseUrl}client/followerFollowing/followerFollowingList";
 
   // >>>>> >>>>> Search Page Api <<<<< <<<<<
@@ -90,6 +111,7 @@ abstract class Api {
 
   static const createLiveUser = "${baseUrl}client/liveUser/live";
   static const fetchLiveUser = "${baseUrl}client/liveUser/getliveUserList";
+  static const fetchLiveUserListForPk = "${baseUrl}client/liveUser/fetchPkInvitations";
 
   // >>>>> >>>>> Message Page Api <<<<< <<<<<
 
@@ -134,4 +156,25 @@ abstract class Api {
   static const deleteUser = "${baseUrl}client/user/deleteUserAccount";
   static const deletePost = "${baseUrl}client/post/deleteParticularPost";
   static const deleteReels = "${baseUrl}client/video/deleteParticularVideo";
+
+  static const deleteContent = "${baseUrl}client/file/deleteContent";
+
+// >>>>> >>>>> STORY API <<<<< <<<<<
+
+  static const fetchOwnStory = "${baseUrl}client/story/getOwnStories";
+
+  static const fetchReaction = "${baseUrl}client/reaction/retrieveReaction";
+
+  static const viewStory = "${baseUrl}client/story/viewStory";
+  static const deleteStory = "${baseUrl}client/story/deleteStory";
+  static const fetchStories = "${baseUrl}client/story/getFollowedUserStories";
+  static const uploadStory = "${baseUrl}client/story/uploadStory";
+  static const reactionToStory = "${baseUrl}client/story/reactToStory";
+  static const replyToStory = "${baseUrl}client/story/replyToStory";
+  static const fetchStoryViewers = "${baseUrl}client/storyView/getStoryViewers";
+
+  // >>>>> >>>>> AI CAPTION API <<<<< <<<<<
+  static const generateAiCaption = "${baseUrl}client/user/generateMediaTags";
+
+  static const fetchImages = "${baseUrl}client/setting/listProfilePhotos";
 }

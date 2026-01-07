@@ -4,6 +4,7 @@ import 'package:auralive/pages/privacy_policy_page/controller/privacy_policy_con
 import 'package:auralive/ui/loading_ui.dart';
 import 'package:auralive/ui/simple_app_bar_ui.dart';
 import 'package:auralive/utils/color.dart';
+import 'package:auralive/size_extension.dart';
 import 'package:auralive/utils/enums.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 

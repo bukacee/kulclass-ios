@@ -12,6 +12,7 @@ import 'package:auralive/pages/profile_page/model/fetch_profile_model.dart';
 import 'package:auralive/routes/app_routes.dart';
 import 'package:auralive/utils/asset.dart';
 import 'package:auralive/utils/color.dart';
+import 'package:auralive/size_extension.dart';
 import 'package:auralive/utils/database.dart';
 import 'package:auralive/utils/enums.dart';
 import 'package:auralive/utils/font_style.dart';
@@ -42,10 +43,12 @@ class PreviewProfileBottomSheetUi {
     }
   }
 
+
   static void show({
     required String userId,
     required BuildContext context,
   }) {
+
     onGetProfile(userId);
     showModalBottomSheet(
       isScrollControlled: true,
@@ -91,6 +94,7 @@ class PreviewProfileBottomSheetUi {
                     ],
                   ).paddingOnly(left: 50),
                   const Spacer(),
+
                   GestureDetector(
                     onTap: () => Get.back(),
                     child: Container(
@@ -226,40 +230,45 @@ class PreviewProfileBottomSheetUi {
                                   ),
                                 ],
                               ),
-                              15.height,
-                              Row(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  GestureDetector(
-                                    onTap: () => onClickFollow(userId),
-                                    child: Obx(
-                                      () => Container(
-                                        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-                                        decoration: BoxDecoration(
-                                          color: AppColor.colorBorder.withOpacity(0.1),
-                                          borderRadius: BorderRadius.circular(20),
-                                          border: Border.all(color: AppColor.colorBorder.withOpacity(0.6), width: 1),
-                                        ),
-                                        child: Row(
-                                          children: [
-                                            Image.asset(
-                                              isFollow.value ? AppAsset.icFollowing : AppAsset.icFollow,
-                                              height: 18,
-                                              color: AppColor.primary,
-                                            ),
-                                            8.width,
-                                            Text(
-                                              isFollow.value ? EnumLocal.txtFollowing.name.tr : EnumLocal.txtFollow.name.tr,
-                                              style: AppFontStyle.styleW600(AppColor.primary, 16),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
+                              //15.height,
+                              //Row(
+                                //crossAxisAlignment: CrossAxisAlignment.center,
+                                //mainAxisAlignment: MainAxisAlignment.center,
+                                //children: [
+                                  //GestureDetector(
+                                    //onTap: () => onClickFollow(userId),
+                                    //child: Obx(
+                                      //() => Container(
+                                        //padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+                                        //decoration: BoxDecoration(
+                                          //color: AppColor.colorBorder.withOpacity(0.1),
+                                          //borderRadius: BorderRadius.circular(20),
+                                          //border: Border.all(color: AppColor.colorBorder.withOpacity(0.6), width: 1),
+                                        //),
+                                        //child: Row(
+                                        //children: [
+                                        //Image.asset(
+                                        //ctrl.isFollow ? AppAsset.icFollowing : AppAsset.icFollow,
+                                        //height: 18,
+                                        //color: AppColor.primary,
+                                        //),
+                                        //8.width,
+                                        // Show the formatted string using controller values
+                                        //Text(
+                                        //ctrl.isFollow
+                                        //  ? EnumLocal.txtFollowing.name.tr
+                                        //: "Subscribe - \$${ctrl.subAmountUSD.toStringAsFixed(2)} "
+                                        //"(~ ${ctrl.ownerCurrencyCode} ${ctrl.subAmountOwnerCurrency.toStringAsFixed(2)} • "
+                                        //"${ctrl.viewerCurrencyCode} ${ctrl.subAmountViewerCurrency.toStringAsFixed(2)})",
+                                        //style: AppFontStyle.styleW600(AppColor.primary, 16),
+                                        //),
+                                        // ],
+                                        //),
+                                      //),
+                                    //),
+                                  //),
+                                //],
+                              //),
                               20.height,
                               Row(
                                 children: [

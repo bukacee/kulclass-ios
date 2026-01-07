@@ -4,6 +4,7 @@ import 'package:auralive/localization/localizations_delegate.dart';
 import 'package:auralive/pages/language_page/controller/language_controller.dart';
 import 'package:auralive/ui/simple_app_bar_ui.dart';
 import 'package:auralive/utils/color.dart';
+import 'package:auralive/size_extension.dart';
 import 'package:auralive/pages/language_page/widget/language_widget.dart';
 import 'package:auralive/utils/enums.dart';
 

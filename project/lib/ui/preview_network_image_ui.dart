@@ -5,6 +5,7 @@ import 'package:http/http.dart' as http;
 import 'package:auralive/utils/api.dart';
 import 'package:auralive/utils/asset.dart';
 import 'package:auralive/utils/color.dart';
+import 'package:auralive/size_extension.dart';
 import 'package:auralive/utils/database.dart';
 import 'package:auralive/utils/utils.dart';
 
@@ -17,13 +18,10 @@ class PreviewNetworkImageUi extends StatelessWidget {
   Widget build(BuildContext context) {
     return (image != null && image != "")
         ? Database.networkImage(Api.baseUrl + image!) != null
-            ? ClipRRect(
-                borderRadius: BorderRadius.circular(8),
-                child: CachedNetworkImage(
-                  imageUrl: Database.networkImage(Api.baseUrl + image!)!,
-                  fit: BoxFit.cover,
-                  errorWidget: (context, url, error) => Offstage(),
-                ),
+            ? CachedNetworkImage(
+                imageUrl: Database.networkImage(Api.baseUrl + image!)!,
+                fit: BoxFit.cover,
+                errorWidget: (context, url, error) => Offstage(),
               )
             : FutureBuilder(
                 future: _onCheckImage(Api.baseUrl + image!),
@@ -35,13 +33,10 @@ class PreviewNetworkImageUi extends StatelessWidget {
                   } else {
                     if (snapshot.data == true) {
                       Database.onSetNetworkImage(Api.baseUrl + image!);
-                      return ClipRRect(
-                        borderRadius: BorderRadius.circular(8),
-                        child: CachedNetworkImage(
-                          imageUrl: Api.baseUrl + image!,
-                          fit: BoxFit.cover,
-                          errorWidget: (context, url, error) => Offstage(),
-                        ),
+                      return CachedNetworkImage(
+                        imageUrl: Api.baseUrl + image!,
+                        fit: BoxFit.cover,
+                        errorWidget: (context, url, error) => Offstage(),
                       );
                     } else {
                       return Offstage();

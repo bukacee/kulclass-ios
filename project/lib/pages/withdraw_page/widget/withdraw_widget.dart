@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:auralive/pages/splash_screen_page/api/admin_setting_api.dart';
 import 'package:auralive/utils/color.dart';
+import 'package:auralive/size_extension.dart';
 import 'package:get/get.dart';
 import 'package:auralive/custom/custom_capitalize_first_letter.dart';
 import 'package:auralive/main.dart';

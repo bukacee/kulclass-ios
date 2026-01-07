@@ -6,6 +6,7 @@ import 'package:auralive/pages/preview_shorts_video_page/controller/preview_shor
 import 'package:auralive/pages/preview_shorts_video_page/widget/preview_shorts_video_widget.dart';
 import 'package:auralive/shimmer/preview_shorts_video_shimmer_ui.dart';
 import 'package:auralive/utils/color.dart';
+import 'package:auralive/size_extension.dart';
 import 'package:preload_page_view/preload_page_view.dart';
 
 class PreviewShortsVideoView extends GetView<PreviewShortsVideoController> {

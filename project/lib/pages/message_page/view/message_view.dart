@@ -2,12 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:auralive/main.dart';
 import 'package:auralive/pages/bottom_bar_page/controller/bottom_bar_controller.dart';
-import 'package:auralive/pages/message_page/controller/message_controller.dart';
-import 'package:auralive/pages/message_page/widget/message_widget.dart';
-import 'package:auralive/routes/app_routes.dart';
-import 'package:auralive/shimmer/user_list_shimmer_ui.dart';
 import 'package:auralive/ui/no_data_found_ui.dart';
+import 'package:auralive/shimmer/user_list_shimmer_ui.dart';
+import 'package:auralive/pages/message_page/controller/message_controller.dart';
+import 'package:auralive/routes/app_routes.dart';
+import 'package:auralive/pages/message_page/widget/message_widget.dart';
 import 'package:auralive/utils/color.dart';
+import 'package:auralive/size_extension.dart';
 import 'package:auralive/utils/constant.dart';
 import 'package:auralive/utils/enums.dart';
 import 'package:auralive/utils/font_style.dart';
@@ -92,10 +93,8 @@ class MessageView extends GetView<MessageController> {
                                 color: Colors.transparent,
                                 padding: EdgeInsets.symmetric(horizontal: 5, vertical: 2),
                                 child: Text(
-                                  isRequestAvailable
-                                      ? "${EnumLocal.txtRequests.name.tr}(${controller.messageRequestCount})"
-                                      : EnumLocal.txtRequests.name.tr,
-                                  style: AppFontStyle.styleW800(AppColor.primary, 14),
+                                  isRequestAvailable ? "${EnumLocal.txtRequests.name.tr}(${controller.messageRequestCount})" : EnumLocal.txtRequests.name.tr,
+                                  style: AppFontStyle.styleW500(AppColor.primary, 14),
                                 ),
                               ),
                             ),
@@ -167,9 +166,7 @@ class MessageView extends GetView<MessageController> {
                                               final messageUser = controller.messageUsers[index];
                                               return MessageUserUi(
                                                 title: messageUser.name ?? "",
-                                                subTitle: messageUser.message == null || messageUser.message == ""
-                                                    ? (messageUser.userName ?? "")
-                                                    : (messageUser.message ?? ""),
+                                                subTitle: messageUser.message == null || messageUser.message == "" ? (messageUser.userName ?? "") : (messageUser.message ?? ""),
                                                 leading: messageUser.image ?? "",
                                                 messageCount: messageUser.unreadCount,
                                                 dateTime: messageUser.time ?? "",

@@ -5,6 +5,7 @@ import 'package:auralive/main.dart';
 import 'package:auralive/pages/verification_otp_page/controller/verification_otp_controller.dart';
 import 'package:auralive/ui/simple_app_bar_ui.dart';
 import 'package:auralive/utils/color.dart';
+import 'package:auralive/size_extension.dart';
 import 'package:auralive/utils/constant.dart';
 import 'package:auralive/utils/enums.dart';
 import 'package:auralive/utils/font_style.dart';

@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:auralive/main.dart';
 import 'package:auralive/utils/color.dart';
+import 'package:auralive/size_extension.dart';
 
 class HashTagShimmerUi extends StatelessWidget {
   const HashTagShimmerUi({super.key});

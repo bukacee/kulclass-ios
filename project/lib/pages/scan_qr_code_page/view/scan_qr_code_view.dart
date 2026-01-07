@@ -1,4 +1,4 @@
-import 'package:dotted_border/dotted_border.dart' as DB;
+import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
@@ -9,6 +9,7 @@ import 'package:auralive/routes/app_routes.dart';
 import 'package:auralive/ui/simple_app_bar_ui.dart';
 import 'package:auralive/utils/asset.dart';
 import 'package:auralive/utils/color.dart';
+import 'package:auralive/size_extension.dart';
 import 'package:auralive/utils/database.dart';
 import 'package:auralive/utils/enums.dart';
 import 'package:auralive/utils/font_style.dart';
@@ -109,13 +110,14 @@ class GradiantBorderContainer extends StatelessWidget {
         gradient: AppColor.primaryLinearGradient,
         borderRadius: BorderRadius.circular(radius),
       ),
-      child: Container(
-  decoration: BoxDecoration(
-    border: Border.all(color: AppColor.colorScaffold, width: 5), // Solid border fallback
-  ), 
-        child: Padding( // <--- ADD THIS WRAPPER
-          padding: const EdgeInsets.all(1.3),
-          child: Container(
+      child: DottedBorder(
+        // dashPattern: const [3, 6],
+        // borderType: BorderType.RRect,
+        // color: AppColor.colorScaffold,
+        // radius: Radius.circular(radius),
+        // padding: const EdgeInsets.all(1.5),
+        // strokeWidth: 5,
+        child: Container(
           height: height,
           width: width,
           decoration: BoxDecoration(
@@ -124,11 +126,7 @@ class GradiantBorderContainer extends StatelessWidget {
           ),
           child: child,
         ),
-        ),
       ),
     );
   }
-
-
-
 }

@@ -6,6 +6,7 @@ import 'package:auralive/shimmer/stream_shimmer_ui.dart';
 import 'package:auralive/pages/stream_page/controller/stream_controller.dart';
 import 'package:auralive/pages/stream_page/widget/stream_widget.dart';
 import 'package:auralive/utils/color.dart';
+import 'package:auralive/size_extension.dart';
 import 'package:auralive/utils/constant.dart';
 
 class StreamView extends StatelessWidget {

@@ -11,6 +11,7 @@ import 'package:auralive/ui/preview_network_image_ui.dart';
 import 'package:auralive/ui/simple_app_bar_ui.dart';
 import 'package:auralive/utils/asset.dart';
 import 'package:auralive/utils/color.dart';
+import 'package:auralive/size_extension.dart';
 import 'package:auralive/utils/enums.dart';
 import 'package:auralive/utils/font_style.dart';
 import 'package:auralive/pages/withdraw_page/widget/withdraw_widget.dart';
@@ -76,7 +77,7 @@ class WithdrawView extends GetView<WithdrawController> {
                                         ),
                                         Obx(
                                           () => Text(
-                                            CustomFormatNumber.convert(CustomFetchUserCoin.coin.value),
+                                            "\$${CustomFormatNumber.convert(CustomFetchUserCoin.coin.value)} (USD)",
                                             style: AppFontStyle.styleW700(AppColor.white, 30),
                                           ),
                                         ),
@@ -92,16 +93,12 @@ class WithdrawView extends GetView<WithdrawController> {
                                             mainAxisAlignment: MainAxisAlignment.center,
                                             children: [
                                               Text(
-                                                "${AdminSettingsApi.adminSettingModel?.data?.minCoinForCashOut ?? 0} Coin",
+                                                " Withdrawal is in USD",
                                                 style: AppFontStyle.styleW700(AppColor.colorOrange, 13),
                                               ),
                                               8.width,
-                                              Image.asset(AppAsset.icWithdrawCoin, width: 16),
-                                              8.width,
-                                              Text(
-                                                "=  ${AdminSettingsApi.adminSettingModel?.data?.currency?.symbol ?? ""} 1.00",
-                                                style: AppFontStyle.styleW700(AppColor.colorOrange, 13),
-                                              ),
+
+
                                             ],
                                           ),
                                         ),

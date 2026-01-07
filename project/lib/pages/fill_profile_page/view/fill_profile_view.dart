@@ -8,7 +8,7 @@ import 'package:auralive/pages/fill_profile_page/controller/fill_profile_control
 import 'package:auralive/pages/fill_profile_page/widget/fill_profile_widget.dart';
 import 'package:auralive/utils/asset.dart';
 import 'package:auralive/utils/color.dart';
-import 'package:auralive/utils/custom_username.dart';
+import 'package:auralive/size_extension.dart';
 import 'package:auralive/utils/database.dart';
 import 'package:auralive/utils/enums.dart';
 import 'package:auralive/utils/font_style.dart';
@@ -36,82 +36,50 @@ class FillProfileView extends GetView<FillProfileController> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 15.height,
-                GestureDetector(
-                  onTap: () => controller.onPickImage(context),
-                  child: Center(
-                    child: Container(
-                      decoration: const BoxDecoration(
-                        shape: BoxShape.circle,
-                        gradient: AppColor.primaryLinearGradient,
-                      ),
-                      child: Container(
-                        height: 124,
-                        width: 124,
-                        margin: const EdgeInsets.all(2),
-                        padding: EdgeInsets.zero,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: AppColor.white,
-                          border: Border.all(color: AppColor.white, width: 1.5),
-                        ),
-                        child: Stack(
-                          children: [
-                            GetBuilder<FillProfileController>(
-                              id: "onPickImage",
-                              builder: (controller) => Container(
-                                height: 125,
-                                width: 125,
-                                clipBehavior: Clip.antiAlias,
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: AppColor.white,
-                                ),
-                                child: controller.pickImage == null
-                                    ? controller.profileImage != ""
-                                        ? Stack(
-                                            children: [
-                                              AspectRatio(
-                                                aspectRatio: 1,
-                                                child: Image.asset(AppAsset.icProfilePlaceHolder),
-                                              ),
-                                              AspectRatio(
-                                                aspectRatio: 1,
-                                                child: PreviewNetworkImageUi(image: controller.profileImage),
-                                              ),
-                                            ],
-                                          )
-                                        : Image.asset(AppAsset.icProfilePlaceHolder, fit: BoxFit.cover)
-                                    : Image.file(File(controller.pickImage!), fit: BoxFit.cover),
-                              ),
-                            ),
-                            Align(
-                              alignment: Alignment.bottomRight,
-                              child: Container(
-                                height: 36,
-                                width: 36,
-                                padding: const EdgeInsets.all(7),
-                                decoration: BoxDecoration(
-                                  color: AppColor.white,
-                                  shape: BoxShape.circle,
-                                  border: Border.all(color: AppColor.colorBorder, width: 1.5),
-                                ),
-                                alignment: Alignment.center,
-                                child: Image.asset(AppAsset.icCameraGradiant),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
+
+
+                Center(
+  child: Column(
+    children: [
+      Container(
+        height: 124,
+        width: 124,
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          border: Border.all(
+            color: AppColor.colorBorder,
+            width: 1.5,
+          ),
+        ),
+        child: ClipOval(
+          child: controller.profileImage.isNotEmpty
+              ? PreviewNetworkImageUi(image: controller.profileImage)
+              : Image.asset(
+                  AppAsset.icProfilePlaceHolder, // optional local fallback
+                  fit: BoxFit.cover,
                 ),
+        ),
+      ),
+      14.height,
+Text(
+  "New user? Clear the dummy data and enter your details to sign up.\n"
+  "If you already have an account and this is a new device, enter your registered details to log in.\n"
+  "If you have used this device before, simply save your profile.",
+  textAlign: TextAlign.center,
+  style: AppFontStyle.styleW400(
+    AppColor.coloGreyText,
+    13,
+  ),
+),
+
+    ],
+  ),
+),
+
+                
+
                 40.height,
                 FillProfileFieldUi(
-                  onChange: (p0) async {
-                    controller.userNameController.text = await RandomNumberFormatter()
-                        .formatFinalText(controller.fullNameController.text, controller.randomNumber);
-                    controller.onChangeUserName();
-                  },
                   enabled: true,
                   title: EnumLocal.txtFullName.name.tr,
                   maxLines: 1,
@@ -132,10 +100,8 @@ class FillProfileView extends GetView<FillProfileController> {
                   contentPadding: 15,
                   keyboardType: TextInputType.name,
                   controller: controller.userNameController,
-                  title: EnumLocal.txtUserName.name.tr,
+                  title: "Username: (Please do not use symbols eg. @).",
                   maxLines: 1,
-                  textInputFormatter: [RandomNumberFormatter()],
-                  oneditingcomplete: () {},
                   onChange: (p0) => controller.onChangeUserName(),
                   suffixIcon: SizedBox(
                     height: 20,
@@ -159,44 +125,28 @@ class FillProfileView extends GetView<FillProfileController> {
                     ),
                   ),
                 ),
-                // 15.height,
-                // FillProfileFieldUi(
-                //   enabled: false,
-                //   keyboardType: TextInputType.number,
-                //   controller: controller.idCodeController,
-                //   title: EnumLocal.txtIdentificationCode.name.tr,
-                //   maxLines: 1,
-                //   contentTopPadding: 5,
-                // ),
+                
+15.height,
+FillProfileFieldUi(
+  enabled: true, // ✅ required
+  controller: controller.tempPasswordController,
+  keyboardType: TextInputType.visiblePassword,
+  title: "Password (for new devices only)",
+  maxLines: 1,
+  contentTopPadding: 5,
+),
+
+
                 15.height,
-                Text(
-                  EnumLocal.txtGender.name.tr,
-                  style: AppFontStyle.styleW500(AppColor.coloGreyText, 14),
+                FillProfileFieldUi(
+                  enabled: false,
+                  keyboardType: TextInputType.number,
+                  controller: controller.idCodeController,
+                  title: EnumLocal.txtIdentificationCode.name.tr,
+                  maxLines: 1,
+                  contentTopPadding: 5,
                 ),
-                5.height,
-                GetBuilder<FillProfileController>(
-                  id: "onChangeGender",
-                  builder: (logic) => Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      FillProfileRadioItem(
-                        isSelected: logic.selectedGender == "male",
-                        title: EnumLocal.txtMale.name.tr,
-                        callback: () => logic.onChangeGender("male"),
-                      ),
-                      FillProfileRadioItem(
-                        isSelected: logic.selectedGender == "female",
-                        title: EnumLocal.txtFemale.name.tr,
-                        callback: () => logic.onChangeGender("female"),
-                      ),
-                      FillProfileRadioItem(
-                        isSelected: logic.selectedGender == "other",
-                        title: EnumLocal.txtOther.name.tr,
-                        callback: () => logic.onChangeGender("other"),
-                      ),
-                    ],
-                  ),
-                ),
+
                 15.height,
                 GetBuilder<FillProfileController>(
                   id: "onChangeCountry",
@@ -217,6 +167,35 @@ class FillProfileView extends GetView<FillProfileController> {
                   isOptional: true,
                   maxLines: 3,
                 ),
+                15.height,
+   //             Text(
+   //               EnumLocal.txtGender.name.tr,
+   //               style: AppFontStyle.styleW500(AppColor.coloGreyText, 14),
+   //             ),
+  //              5.height,
+  //              GetBuilder<FillProfileController>(
+  //                id: "onChangeGender",
+  //                builder: (logic) => Row(
+  //                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  //                  children: [
+  //                    FillProfileRadioItem(
+  //                      isSelected: logic.selectedGender == "male",
+  //                      title: EnumLocal.txtMale.name.tr,
+  //                      callback: () => logic.onChangeGender("male"),
+  //                    ),
+  //                    FillProfileRadioItem(
+  //                      isSelected: logic.selectedGender == "female",
+  //                      title: EnumLocal.txtFemale.name.tr,
+  //                      callback: () => logic.onChangeGender("female"),
+  //                    ),
+  //                    FillProfileRadioItem(
+  //                      isSelected: logic.selectedGender == "other",
+  //                      title: EnumLocal.txtOther.name.tr,
+  //                      callback: () => logic.onChangeGender("other"),
+  //                    ),
+  //                  ],
+  //                ),
+  //              ),
                 15.height,
               ],
             ),

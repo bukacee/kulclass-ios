@@ -43,7 +43,7 @@ class FakeLiveController extends GetxController {
   }
 
   Future<void> onSwitchCamera() async {
-    Get.dialog(const LoadingUi(), barrierDismissible: false); // Start Loading...
+    Get.dialog(const LoadingUi(), barrierDismissible: false);
     if (isFrontCamera) {
       ZegoExpressEngine.instance.useFrontCamera(isFrontCamera);
       isFrontCamera = !isFrontCamera;
@@ -55,7 +55,7 @@ class FakeLiveController extends GetxController {
       await 200.milliseconds.delay();
       ZegoExpressEngine.instance.useFrontCamera(isFrontCamera);
     }
-    Get.back(); // Stop Loading...
+    Get.back();
   }
 
   @override
@@ -64,7 +64,7 @@ class FakeLiveController extends GetxController {
     super.onInit();
   }
 
-  addFakeComment() {
+  void addFakeComment() {
     log("object::::initState");
     time = Timer.periodic(const Duration(seconds: 3), (Timer timer) {
       log("object::::initState");
@@ -73,21 +73,29 @@ class FakeLiveController extends GetxController {
   }
 
   @override
-  void onClose() {
+  Future<void> onClose() async {
     time?.cancel();
     scrollController.dispose();
-    onDisposeVideoPlayer();
+    commentController.dispose(); // ✅ must be disposed
+    await onDisposeVideoPlayer(); // ✅ await async cleanup
     super.onClose();
   }
 
   Future<void> initializeVideoPlayer() async {
     try {
       log("Video Url =>'${Api.baseUrl + videoUrl}'");
-      videoPlayerController = VideoPlayerController.networkUrl(Uri.parse(Api.baseUrl + videoUrl));
+
+      // clean up before re-initializing
+      await onDisposeVideoPlayer();
+
+      videoPlayerController = VideoPlayerController.networkUrl(
+        Uri.parse(Api.baseUrl + videoUrl),
+      );
 
       await videoPlayerController?.initialize();
 
-      if (videoPlayerController != null && (videoPlayerController?.value.isInitialized ?? false)) {
+      if (videoPlayerController != null &&
+          (videoPlayerController?.value.isInitialized ?? false)) {
         chewieController = ChewieController(
           videoPlayerController: videoPlayerController!,
           looping: true,
@@ -101,17 +109,23 @@ class FakeLiveController extends GetxController {
         update(["initializeVideoPlayer"]);
       }
     } catch (e) {
-      onDisposeVideoPlayer();
-      Utils.showLog("Reels Video Initialization Failed !!! => $e");
+      await onDisposeVideoPlayer();
+      Utils.showLog("FakeLive Video Initialization Failed !!! => $e");
     }
   }
 
-  void onDisposeVideoPlayer() {
+  /// ✅ async disposal
+  Future<void> onDisposeVideoPlayer() async {
     try {
-      videoPlayerController?.dispose();
-      chewieController?.dispose();
-      chewieController = null;
-      videoPlayerController = null;
+      if (videoPlayerController != null) {
+        await videoPlayerController!.dispose();
+        videoPlayerController = null;
+      }
+
+      if (chewieController != null) {
+        chewieController!.dispose();
+        chewieController = null;
+      }
     } catch (e) {
       Utils.showLog(">>>> On Dispose VideoPlayer Error => $e");
     }
@@ -122,17 +136,24 @@ class FakeLiveController extends GetxController {
     log("object::::  1${fakeHostCommentList.first.message}");
 
     fakeHostCommentListBlank.add(fakeHostCommentList.first);
-    scrollController.animateTo(scrollController.position.maxScrollExtent, duration: const Duration(milliseconds: 50), curve: Curves.easeOut);
+    scrollController.animateTo(
+      scrollController.position.maxScrollExtent,
+      duration: const Duration(milliseconds: 50),
+      curve: Curves.easeOut,
+    );
     update();
   }
 
   Future<void> onSendComment() async {
     if (commentController.text.trim().isNotEmpty) {
-      fakeHostCommentListBlank.add(HostComment(
-        message: commentController.text.toString(),
-        user: Database.fetchLoginUserProfileModel?.user?.name ?? "",
-        image: (Api.baseUrl + (Database.fetchLoginUserProfileModel?.user?.image ?? "")) ?? "",
-      ));
+      fakeHostCommentListBlank.add(
+        HostComment(
+          message: commentController.text.toString(),
+          user: Database.fetchLoginUserProfileModel?.user?.name ?? "",
+          image: (Api.baseUrl +
+              (Database.fetchLoginUserProfileModel?.user?.image ?? "")),
+        ),
+      );
     }
     commentController.clear();
   }
@@ -141,7 +162,10 @@ class FakeLiveController extends GetxController {
     if (userId != Database.loginUserId) {
       isFollow = !isFollow;
       update(["onClickFollow"]);
-      await FollowUnfollowApi.callApi(loginUserId: Database.loginUserId, userId: userId);
+      await FollowUnfollowApi.callApi(
+        loginUserId: Database.loginUserId,
+        userId: userId,
+      );
     } else {
       Utils.showToast(EnumLocal.txtYouCantFollowYourOwnAccount.name.tr);
     }
@@ -150,20 +174,18 @@ class FakeLiveController extends GetxController {
   void onChangeTime() {
     isLivePage = true;
 
-    Timer.periodic(
-      const Duration(seconds: 1),
-      (timer) {
-        if (isLivePage) {
-          countTime++;
-          Utils.showLog("Live Streaming Time => ${onConvertSecondToHMS(countTime)}");
-          update(["onChangeTime"]);
-        } else {
-          timer.cancel();
-          countTime = 0;
-          update(["onChangeTime"]);
-        }
-      },
-    );
+    Timer.periodic(const Duration(seconds: 1), (timer) {
+      if (isLivePage) {
+        countTime++;
+        Utils.showLog(
+            "Live Streaming Time => ${onConvertSecondToHMS(countTime)}");
+        update(["onChangeTime"]);
+      } else {
+        timer.cancel();
+        countTime = 0;
+        update(["onChangeTime"]);
+      }
+    });
   }
 
   String onConvertSecondToHMS(int totalSeconds) {
@@ -173,10 +195,8 @@ class FakeLiveController extends GetxController {
     int minutes = duration.inMinutes.remainder(60);
     int seconds = duration.inSeconds.remainder(60);
 
-    String time = '${hours.toString().padLeft(2, '0')}:'
+    return '${hours.toString().padLeft(2, '0')}:'
         '${minutes.toString().padLeft(2, '0')}:'
         '${seconds.toString().padLeft(2, '0')}';
-
-    return time;
   }
 }

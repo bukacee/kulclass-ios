@@ -8,6 +8,7 @@ import 'package:auralive/ui/app_button_ui.dart';
 import 'package:auralive/ui/simple_app_bar_ui.dart';
 import 'package:auralive/utils/asset.dart';
 import 'package:auralive/utils/color.dart';
+import 'package:auralive/size_extension.dart';
 import 'package:auralive/utils/enums.dart';
 import 'package:auralive/utils/font_style.dart';
 
@@ -23,7 +24,7 @@ class EditReelsView extends StatelessWidget {
       appBar: AppBar(
         automaticallyImplyLeading: false,
         backgroundColor: AppColor.white,
-        shadowColor: AppColor.black.withOpacity(0.4),
+        shadowColor: AppColor.black.withValues(alpha: 0.4),
         surfaceTintColor: AppColor.transparent,
         flexibleSpace: SimpleAppBarUi(title: EnumLocal.txtEditReels.name.tr),
       ),

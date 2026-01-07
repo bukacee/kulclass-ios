@@ -4,6 +4,7 @@ import 'package:get/get_rx/src/rx_typedefs/rx_typedefs.dart';
 import 'package:auralive/pages/bottom_bar_page/controller/bottom_bar_controller.dart';
 import 'package:auralive/utils/asset.dart';
 import 'package:auralive/utils/color.dart';
+import 'package:auralive/size_extension.dart';
 import 'package:auralive/utils/constant.dart';
 
 class BottomBarUi extends StatelessWidget {

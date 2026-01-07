@@ -4,15 +4,16 @@ import 'package:get/get.dart';
 import 'package:get/get_rx/src/rx_typedefs/rx_typedefs.dart';
 import 'package:lottie/lottie.dart';
 import 'package:auralive/custom/custom_format_number.dart';
-
-import 'package:auralive/main.dart';
-import 'package:auralive/pages/live_page/controller/live_controller.dart';
 import 'package:auralive/ui/circle_icon_button_ui.dart';
 import 'package:auralive/ui/live_user_send_gift_bottom_sheet_ui.dart';
 import 'package:auralive/ui/preview_network_image_ui.dart';
+import 'package:auralive/main.dart';
+import 'package:auralive/pages/live_page/controller/live_controller.dart';
 import 'package:auralive/ui/stop_live_streaming_dialog_ui.dart';
+
 import 'package:auralive/utils/asset.dart';
 import 'package:auralive/utils/color.dart';
+import 'package:auralive/size_extension.dart';
 import 'package:auralive/utils/database.dart';
 import 'package:auralive/utils/enums.dart';
 import 'package:auralive/utils/font_style.dart';
@@ -34,10 +35,7 @@ class HostLiveUi extends StatelessWidget {
         alignment: Alignment.center,
         children: [
           liveScreen,
-          Align(
-            alignment: Alignment.center,
-            child: LiveUserSendGiftBottomSheetUi.onShowGift(),
-          ),
+          
           Positioned(
             bottom: 0,
             child: Container(
@@ -205,10 +203,7 @@ class UserLiveUi extends StatelessWidget {
     return Stack(
       children: [
         liveScreen,
-        Align(
-          alignment: Alignment.center,
-          child: LiveUserSendGiftBottomSheetUi.onShowGift(),
-        ),
+      
         Positioned(
           top: 40,
           child: SizedBox(
@@ -313,7 +308,7 @@ class UserLiveUi extends StatelessWidget {
                                         width: 40,
                                         decoration: BoxDecoration(
                                           shape: BoxShape.circle,
-                                          gradient: controller.isFollow ? AppColor.grayLinearGradient : AppColor.primaryLinearGradient,
+                                          gradient: AppColor.primaryLinearGradient,
                                         ),
                                         child: Center(
                                           child: Image.asset(
@@ -375,21 +370,7 @@ class UserLiveUi extends StatelessWidget {
                       ),
                     ),
                   ),
-                  15.width,
-                  CircleIconButtonUi(
-                    circleSize: 50,
-                    iconSize: 48,
-                    color: AppColor.black.withOpacity(0.3),
-                    icon: AppAsset.icGift,
-                    callback: () {
-                      LiveUserSendGiftBottomSheetUi.show(
-                        context: context,
-                        liveRoomId: liveRoomId,
-                        senderUserId: Database.loginUserId,
-                        receiverUserId: liveUserId,
-                      );
-                    },
-                  ),
+              
                 ],
               ),
             ),

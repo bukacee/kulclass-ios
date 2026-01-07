@@ -9,6 +9,8 @@ import 'package:auralive/routes/app_routes.dart';
 import 'package:auralive/utils/database.dart';
 import 'package:auralive/utils/enums.dart';
 import 'package:auralive/utils/utils.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
+
 
 class GoLiveController extends GetxController {
   CameraController? cameraController;
@@ -28,27 +30,20 @@ class GoLiveController extends GetxController {
     super.onClose();
   }
 
-  // Future<void> onRequestPermissions() async {
-  //   final status = await [
-  //     Permission.camera,
-  //     Permission.microphone,
-  //     Permission.storage,
-  //   ].request();
-  //
-  //   if (status[Permission.camera]!.isGranted || status[Permission.microphone]!.isGranted || status[Permission.storage]!.isGranted) {
-  //     onInitializeCamera();
-  //   } else {
-  //     Utils.showLog("Please Granted Permission !!");
-  //     Get.back();
-  //   }
-  // }
   Future<void> onRequestPermissions() async {
-    final camera = await Permission.camera.request();
-    final microphone = await Permission.microphone.request();
-    if (camera.isGranted && microphone.isGranted) {
-      onInitializeCamera();
+    // Corrected code: Check if the app is NOT running on the web
+    if (!kIsWeb) {
+      final camera = await Permission.camera.request();
+      final microphone = await Permission.microphone.request();
+      if (camera.isGranted && microphone.isGranted) {
+        onInitializeCamera();
+      } else {
+        Utils.showToast(EnumLocal.txtPleaseAllowPermission.name.tr);
+      }
     } else {
-      Utils.showToast(EnumLocal.txtPleaseAllowPermission.name.tr);
+      // For web, you might still want to initialize the camera
+      // as browser permissions are handled automatically by the Camera package
+      onInitializeCamera();
     }
   }
 

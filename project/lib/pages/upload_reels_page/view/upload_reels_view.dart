@@ -1,13 +1,17 @@
 import 'dart:io';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:auralive/pages/upload_reels_page/widget/upload_reels_widget.dart';
+import 'package:auralive/shimmer/caption_shimmer_ui.dart';
 import 'package:auralive/ui/app_button_ui.dart';
 import 'package:auralive/main.dart';
 import 'package:auralive/pages/upload_reels_page/controller/upload_reels_controller.dart';
+import 'package:auralive/ui/loading_ui.dart';
 import 'package:auralive/ui/simple_app_bar_ui.dart';
 import 'package:auralive/utils/asset.dart';
 import 'package:auralive/utils/color.dart';
+import 'package:auralive/size_extension.dart';
 import 'package:auralive/utils/enums.dart';
 import 'package:auralive/utils/font_style.dart';
 
@@ -82,19 +86,48 @@ class UploadReelsView extends StatelessWidget {
               ),
             ),
             15.height,
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 15),
-              child: RichText(
-                text: TextSpan(
-                  text: EnumLocal.txtCaption.name.tr,
-                  style: AppFontStyle.styleW700(AppColor.black, 15),
-                  children: [
-                    TextSpan(
-                      text: " ${EnumLocal.txtOptionalInBrackets.name.tr}",
-                      style: AppFontStyle.styleW400(AppColor.coloGreyText, 10),
+            Container(
+              color: Colors.transparent,
+              width: Get.width,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 15),
+                    child: RichText(
+                      text: TextSpan(
+                        text: EnumLocal.txtCaption.name.tr,
+                        style: AppFontStyle.styleW700(AppColor.black, 15),
+                        children: [
+                          TextSpan(
+                            text: " ${EnumLocal.txtOptionalInBrackets.name.tr}",
+                            style: AppFontStyle.styleW400(AppColor.coloGreyText, 10),
+                          ),
+                        ],
+                      ),
                     ),
-                  ],
-                ),
+                  ),
+                  Row(
+                    children: [
+                      Text(
+                        "Auto Caption",
+                        style: AppFontStyle.styleW700(AppColor.colorTextGrey, 12),
+                      ),
+                      0.width,
+                      GetBuilder<UploadReelsController>(
+                        id: "onChangeAiSwitch",
+                        builder: (controller) => Transform.scale(
+                          scale: 0.6,
+                          child: CupertinoSwitch(
+                            value: controller.isAiCaptionSwitchOn,
+                            activeColor: AppColor.primary,
+                            onChanged: (value) => controller.onChangeAiSwitch(),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
               ),
             ),
             5.height,
@@ -107,22 +140,60 @@ class UploadReelsView extends StatelessWidget {
                 );
               },
               child: GetBuilder<UploadReelsController>(
-                id: "onChangeHashtag",
-                builder: (controller) => Container(
-                  height: 130,
-                  width: Get.width,
-                  padding: const EdgeInsets.only(left: 15, top: 5),
-                  margin: EdgeInsets.symmetric(horizontal: 15),
-                  decoration: BoxDecoration(
-                    color: AppColor.colorBorder.withOpacity(0.2),
-                    borderRadius: BorderRadius.circular(10),
-                    border: Border.all(color: AppColor.colorBorder.withOpacity(0.8)),
-                  ),
-                  child: SingleChildScrollView(
-                    child: Text(
-                      controller.captionController.text.isEmpty ? EnumLocal.txtEnterYourTextWithHashtag.name.tr : controller.captionController.text,
-                      style: controller.captionController.text.isEmpty ? AppFontStyle.styleW400(AppColor.coloGreyText, 15) : AppFontStyle.styleW600(AppColor.black, 15),
+                id: "onGenerateAiCaption",
+                builder: (controller) => GetBuilder<UploadReelsController>(
+                  id: "onChangeHashtag",
+                  builder: (controller) => Container(
+                    height: 130,
+                    width: Get.width,
+                    padding: const EdgeInsets.only(left: 15, top: 5),
+                    margin: EdgeInsets.symmetric(horizontal: 15),
+                    decoration: BoxDecoration(
+                      color: AppColor.colorBorder.withOpacity(0.2),
+                      borderRadius: BorderRadius.circular(10),
+                      border: Border.all(color: AppColor.colorBorder.withOpacity(0.8)),
                     ),
+                    child: controller.isLoadingAiCaption
+                        ? CaptionShimmerUi()
+                        : Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Expanded(
+                                child: SingleChildScrollView(
+                                  child: controller.captionController.text.isNotEmpty
+                                      ? RichText(
+                                          text: TextSpan(
+                                            children: _buildTextSpans(controller.captionController.text),
+                                          ),
+                                        )
+                                      : Text(
+                                          EnumLocal.txtEnterYourTextWithHashtag.name.tr,
+                                          style: AppFontStyle.styleW400(AppColor.coloGreyText, 15),
+                                        ),
+                                ),
+                              ),
+                              GetBuilder<UploadReelsController>(
+                                id: "onChangeAiSwitch",
+                                builder: (controller) => controller.isAiCaptionSwitchOn
+                                    ? GestureDetector(
+                                        onTap: () => controller.onFetchAiCaption(),
+                                        child: Container(
+                                          height: 30,
+                                          width: 40,
+                                          decoration: BoxDecoration(
+                                            shape: BoxShape.circle,
+                                            color: AppColor.transparent,
+                                          ),
+                                          child: Icon(
+                                            Icons.refresh_outlined,
+                                            weight: 25,
+                                          ),
+                                        ),
+                                      )
+                                    : Offstage(),
+                              ),
+                            ],
+                          ),
                   ),
                 ),
               ),
@@ -140,6 +211,50 @@ class UploadReelsView extends StatelessWidget {
       ).paddingSymmetric(horizontal: Get.width / 6.5, vertical: 25),
     );
   }
+}
+
+List<TextSpan> _buildTextSpans(String text) {
+  List<TextSpan> spans = [];
+  final RegExp hashtagRegex = RegExp(r'(#\w+)');
+  final List<String> parts = text.split(hashtagRegex);
+  final Iterable<RegExpMatch> matches = hashtagRegex.allMatches(text);
+
+  int currentPosition = 0;
+  for (final match in matches) {
+    // Add text before the hashtag
+    if (match.start > currentPosition) {
+      spans.add(TextSpan(
+        text: text.substring(currentPosition, match.start),
+        style: AppFontStyle.styleW600(AppColor.black, 15),
+      ));
+    }
+
+    // Add the hashtag
+    spans.add(TextSpan(
+      text: match.group(0),
+      style: AppFontStyle.styleW700(AppColor.primary, 15),
+    ));
+
+    currentPosition = match.end;
+  }
+
+  // Add remaining text after last hashtag
+  if (currentPosition < text.length) {
+    spans.add(TextSpan(
+      text: text.substring(currentPosition),
+      style: AppFontStyle.styleW600(AppColor.black, 15),
+    ));
+  }
+
+  // If no hashtags, just return the whole text as black
+  if (spans.isEmpty) {
+    spans.add(TextSpan(
+      text: text,
+      style: AppFontStyle.styleW600(AppColor.black, 15),
+    ));
+  }
+
+  return spans;
 }
 
 // >>>>>>>>>>>>>>>>>>>>>>>> Old Hashtag Function <<<<<<<<<<<<<<<<<<<<<<<<<<<<<

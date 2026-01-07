@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:auralive/utils/asset.dart';
 import 'package:auralive/utils/color.dart';
+import 'package:auralive/size_extension.dart';
 
 class OnBoardingScreen_1 extends StatelessWidget {
   const OnBoardingScreen_1({super.key});

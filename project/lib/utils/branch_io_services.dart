@@ -12,27 +12,34 @@ class BranchIoServices {
   static String eventType = "";
 
   // This is Use to Splash Screen...
+
   static void onListenBranchIoLinks() async {
     StreamController<String> streamController = StreamController<String>();
     StreamSubscription<Map>? streamSubscription = FlutterBranchSdk.listSession().listen(
-      (data) {
+          (data) async {
         log('Click To Branch Io Link => $data');
         streamController.sink.add((data.toString()));
 
         if (data.containsKey('+clicked_branch_link') && data['+clicked_branch_link'] == true) {
-          log("Click To Branch Io Link Page Routes => ${data['Video']}");
+          log("Click To Branch Io Link Page Routes => ${data['pageRoutes']}");
 
-          eventId = data["id"];
-          eventType = data['pageRoutes'];
+          // Clear previous data first
+          clearLiveStreamData();
 
-          log("Event Id => ${eventId}");
+          eventId = data["id"] ?? "";
+          eventType = data['pageRoutes'] ?? "";
+
+          // Handle live stream data if available
+
+          log("Event Id => $eventId");
+          log("Event Type => $eventType");
         }
       },
       onError: (error) {
         log('Branch Io Listen Error => ${error.toString()}');
       },
     );
-    log("Stream Subscription => ${streamSubscription}");
+    log("Stream Subscription => $streamSubscription");
   }
 
   static Future<void> onCreateBranchIoLink({
@@ -87,5 +94,10 @@ class BranchIoServices {
       log("Generating Branch Io Link Failed !! => ${response.errorCode} - ${response.errorMessage}");
       return null;
     }
+  }
+  static void clearLiveStreamData() {
+    eventId = "";
+    eventType = "";
+    log("Branch.io live stream data cleared");
   }
 }

@@ -56,7 +56,6 @@ abstract class AppColor {
 
   static const primaryLinearGradientText = LinearGradient(colors: [Color(0xFF6D63FF), Color(0xFFD764FF)]);
   static const primaryLinearGradient = LinearGradient(colors: [AppColor.primary, AppColor.secondary]);
-  static const grayLinearGradient = LinearGradient(colors: [AppColor.colorTextGrey, AppColor.colorTextGrey]);
 
   static const redGradient = LinearGradient(colors: [Color(0xFFF01456), Color(0xFFF20D0D)]);
   static const yellowGradient = LinearGradient(colors: [Color(0xFFFFD31E), Color(0xFFFF9F32)]);

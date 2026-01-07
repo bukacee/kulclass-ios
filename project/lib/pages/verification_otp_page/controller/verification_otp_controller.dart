@@ -10,6 +10,7 @@ import 'package:auralive/pages/splash_screen_page/model/fetch_login_user_profile
 import 'package:auralive/routes/app_routes.dart';
 import 'package:auralive/ui/loading_ui.dart';
 import 'package:auralive/utils/color.dart';
+import 'package:auralive/size_extension.dart';
 import 'package:auralive/utils/database.dart';
 import 'package:auralive/utils/enums.dart';
 import 'package:auralive/utils/internet_connection.dart';

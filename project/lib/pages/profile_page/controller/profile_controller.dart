@@ -24,10 +24,25 @@ import 'package:auralive/ui/loading_ui.dart';
 import 'package:auralive/utils/database.dart';
 import 'package:auralive/utils/enums.dart';
 import 'package:auralive/utils/utils.dart';
+import 'package:auralive/utils/currency_helper.dart';
+import 'package:get_storage/get_storage.dart';
+import 'package:auralive/pages/login_page/controller/login_controller.dart';
 
 class ProfileController extends GetxController with GetTickerProviderStateMixin {
   ScrollController scrollController = ScrollController();
   TabController? tabController;
+
+  late String viewerCountry;
+
+  //touse
+  // Owner's raw amount is treated as USD (per your spec)
+  double coinAmountUSD = 0.0;
+ // Owner-local converted amount & currency code
+  // ProfileController.dart
+  RxDouble coinOwnerCurrency = 0.0.obs;
+  RxString ownerCurrencyCode = 'USD'.obs;
+
+
 
   RxBool isTabBarPinned = false.obs;
 
@@ -70,6 +85,8 @@ class ProfileController extends GetxController with GetTickerProviderStateMixin 
     super.onInit();
   }
 
+
+
   Future<void> init() async {
     tabController?.index = 0;
 
@@ -81,6 +98,9 @@ class ProfileController extends GetxController with GetTickerProviderStateMixin 
     onGetVideo(userId: Database.loginUserId);
     CustomFetchUserCoin.init();
   }
+
+
+
 
   void onScroll() {
     isTabBarPinned.value = scrollController.offset > 75;
@@ -120,12 +140,32 @@ class ProfileController extends GetxController with GetTickerProviderStateMixin 
   Future<void> onGetProfile({required String userId}) async {
     isLoadingProfile = true;
     update(["onGetProfile"]);
-    fetchProfileModel = await FetchProfileApi.callApi(loginUserId: Database.loginUserId, otherUserId: userId);
+
+    fetchProfileModel = await FetchProfileApi.callApi(
+      loginUserId: Database.loginUserId,
+      otherUserId: userId,
+    );
+
     if (fetchProfileModel?.userProfileData?.user?.name != null) {
       isLoadingProfile = false;
       update(["onGetProfile"]);
+
+      // Raw amount in USD
+      coinAmountUSD = double.tryParse(CustomFetchUserCoin.coin.value.toString()) ?? 0.0;
+
+      // Detect owner currency
+      final ownerCountryRaw = fetchProfileModel?.userProfileData?.user?.country ?? '';
+      ownerCurrencyCode.value = CurrencyHelper.getCurrencyCodeFromCountry(ownerCountryRaw);
+
+      // Convert USD -> owner's currency
+      coinOwnerCurrency.value = await CurrencyHelper.convert(
+        coinAmountUSD,
+        'USD',
+        ownerCurrencyCode.value, // ✅ use .value to get the String
+      );
     }
   }
+
 
   Future<void> onGetVideo({required String userId}) async {
     isLoadingVideo = true;

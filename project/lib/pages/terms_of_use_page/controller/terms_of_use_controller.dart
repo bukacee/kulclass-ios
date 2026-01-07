@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:auralive/utils/color.dart';
+import 'package:auralive/size_extension.dart';
 import 'package:auralive/utils/utils.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 

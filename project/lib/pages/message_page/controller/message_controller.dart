@@ -1,8 +1,6 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
 import 'package:auralive/pages/message_page/api/fetch_message_user_api.dart';
 import 'package:auralive/pages/message_page/api/search_message_user_api.dart';
 import 'package:auralive/pages/message_page/model/fetch_message_user_model.dart';
@@ -12,7 +10,7 @@ import 'package:auralive/utils/utils.dart';
 
 class MessageController extends GetxController {
   bool isLoading = false;
-  List<Data> messageUsers = [];
+   List<Data> messageUsers = [];
   FetchMessageUserModel? fetchMessageUserModel;
 
   bool isPaginationLoading = false;
@@ -46,6 +44,7 @@ class MessageController extends GetxController {
       if (FetchMessageUserApi.startPagination == 1) {
         messageUsers.clear();
       }
+
 
       messageUsers.addAll(paginationData);
 

@@ -28,24 +28,23 @@
 	<key>CFBundleSignature</key>
 	<string>APPL</string>
 
-	<key>NSUserTrackingUsageDescription</key>
-<string>This identifier is used to ensure the security of your account and prevent fraud.</string>
-
 	<key>CFBundleURLTypes</key>
-    <array>
-        <dict>
-            <key>CFBundleTypeRole</key>
-            <string>Editor</string>
-            <key>CFBundleURLName</key>
-            <string>com.auraapp.live</string>
-            <key>CFBundleURLSchemes</key>
-            <array>
-                <string>auraapplive</string>
-                
-                <string>com.googleusercontent.apps.1016864985057-dqrr4j0qa11bnk2enrov2fdg3a9ne5u6</string>
-            </array>
-        </dict>
-    </array>
+	<array>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLName</key>
+			<string>com.auraapp.live</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>com.auraapp.live</string>
+				<string>com.googleusercontent.apps.1016864985057-dqrr4j0qa11bnk2enrov2fdg3a9ne5u6</string>
+				<string>fw4rft.app.link</string>
+				<string>auraapplive</string>
+				<string>app-1-1016864985057-ios-5202335dfb941abac38ca0</string>
+			</array>
+		</dict>
+	</array>
 
 	<key>CFBundleVersion</key>
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
@@ -93,19 +92,19 @@
 
 	<!-- ✅ Branch.io Configuration -->
 	<key>branch_key</key>
-    <dict>
-        <key>live</key>
-        <string>key_live_aujUQf8L63TShEgHjKEl8jcnsAi9Svo2</string>
-        </dict>
+	<dict>
+		<key>live</key>
+		<string>key_live_aujUQf8L63TShEgHjKEl8jcnsAi9Svo2</string>
+		<key>test</key>
+		<string>secret_live_h3CB7Bv0i3jXnAuQYAySONSI6aNinWpu</string>
+	</dict>
 
-    <key>branch_universal_link_domains</key>
-    <array>
-        <string>auraapplive.app.link</string>
-        <string>auraapplive-alternate.app.link</string>
-    </array>
-
-    <key>DYLD_PRINT_TO_CONSOLE</key>
-	<string>1</string>
+	<key>branch_universal_link_domains</key>
+	<array>
+		<string>auraapplive.app.link</string>
+		<string>auraapplive-alternate.app.link</string>
+		<string>8406c.test.app.link</string>
+	</array>
 
 	<!-- ✅ Google AdMob -->
 	<key>GADApplicationIdentifier</key>

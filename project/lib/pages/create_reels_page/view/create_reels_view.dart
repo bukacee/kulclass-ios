@@ -1,307 +1,852 @@
-// FILE: lib/pages/create_reels_page/view/create_reels_view.dart
+import 'dart:developer';
 
 import 'package:camera/camera.dart';
 import 'package:deepar_flutter_plus/deepar_flutter_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-
-// Your Controller
-import 'package:auralive/pages/create_reels_page/controller/create_reels_controller.dart';
-// Your Widgets
-import 'package:auralive/pages/create_reels_page/widget/create_reels_widget.dart';
-
+import 'package:auralive/ui/circle_icon_button_ui.dart';
+import 'package:auralive/ui/preview_network_image_ui.dart';
 import 'package:auralive/ui/loading_ui.dart';
+import 'package:auralive/main.dart';
+import 'package:auralive/pages/create_reels_page/controller/create_reels_controller.dart';
+import 'package:auralive/pages/create_reels_page/widget/create_reels_widget.dart';
 import 'package:auralive/utils/asset.dart';
 import 'package:auralive/utils/color.dart';
+import 'package:auralive/size_extension.dart';
 import 'package:auralive/utils/enums.dart';
+import 'package:auralive/utils/font_style.dart';
 
 class CreateReelsView extends GetView<CreateReelsController> {
   const CreateReelsView({super.key});
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setSystemUIOverlayStyle(
+      SystemUiOverlayStyle(
+        statusBarColor: AppColor.transparent,
+        statusBarIconBrightness: Brightness.light,
+      ),
+    );
     return Scaffold(
-      backgroundColor: Colors.black,
-      body: SafeArea(
-        child: GetBuilder<CreateReelsController>(
-          id: "onInitializeCamera",
-          builder: (logic) {
-            return Stack(
-              children: [
-                _buildCameraPreview(logic),
-                Positioned(
-                  top: 10, left: 15, right: 15,
-                  child: _buildTopBar(context, logic),
-                ),
-                Positioned(
-                  top: 100, right: 15,
-                  child: _buildRightSideTools(logic),
-                ),
-                Positioned(
-                  bottom: 20, left: 0, right: 0,
-                  child: _buildBottomControls(context, logic),
-                ),
-                if (logic.cameraController == null && !logic.isInitializeEffect)
-                  const Center(child: LoadingUi()),
-              ],
-            );
-          },
-        ),
-      ),
+      body: controller.isUseEffects ? EffectUi() : WithOutEffectUi(),
     );
   }
+}
 
-  Widget _buildCameraPreview(CreateReelsController logic) {
-    if (logic.isUseEffects) {
-      return GetBuilder<CreateReelsController>(
-        id: "onInitializeEffect",
-        builder: (logic) {
-          if (logic.isInitializeEffect) {
-            // *** FIX 1: Use DeepArPreviewPlus ***
-            return DeepArPreviewPlus(logic.deepArController);
-          } else {
-            return Container(color: Colors.black);
-          }
-        },
-      );
-    } else {
-      if (logic.cameraController != null && logic.cameraController!.value.isInitialized) {
-        return SizedBox.expand(child: CameraPreview(logic.cameraController!));
-      } else {
-        return Container(color: Colors.black);
-      }
-    }
-  }
+class EffectUi extends GetView<CreateReelsController> {
+  const EffectUi({super.key});
 
-  Widget _buildTopBar(BuildContext context, CreateReelsController logic) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        GestureDetector(
-          onTap: () => Get.back(),
-          child: Container(
-            padding: const EdgeInsets.all(8),
-            decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.black.withOpacity(0.3)),
-            child: const Icon(Icons.close, color: Colors.white, size: 24),
-          ),
-        ),
-        GestureDetector(
-          onTap: () => AddMusicBottomSheet.show(context: context),
-          child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 8),
-            decoration: BoxDecoration(
-              color: Colors.black.withOpacity(0.5),
-              borderRadius: BorderRadius.circular(20),
-            ),
-            child: Row(
-              children: [
-                const Icon(Icons.music_note, color: Colors.white, size: 18),
-                const SizedBox(width: 5),
-                GetBuilder<CreateReelsController>(
-                  id: "onChangeSound",
-                  builder: (logic) {
-                    return ConstrainedBox(
-                      constraints: const BoxConstraints(maxWidth: 120),
-                      child: Text(
-                        logic.selectedSound != null ? logic.selectedSound!['name'] : EnumLocal.txtAddMusic.name.tr,
-                        overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.w600),
-                      ),
-                    );
-                  },
-                ),
-              ],
-            ),
-          ),
-        ),
-        GetBuilder<CreateReelsController>(
-          id: "onSwitchFlash", 
-          builder: (logic) {
-            return GestureDetector(
-              onTap: logic.isUseEffects ? logic.onSwitchEffectFlash : logic.onSwitchFlash,
-              child: Container(
-                padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.black.withOpacity(0.3)),
-                child: Icon(
-                  logic.isFlashOn ? Icons.flash_on : Icons.flash_off,
-                  color: Colors.white, size: 24,
-                ),
-              ),
-            );
-          },
-        ),
-      ],
-    );
-  }
-
-  Widget _buildRightSideTools(CreateReelsController logic) {
-    return Column(
-      children: [
-        _buildSideToolItem(
-          icon: Icons.flip_camera_ios_outlined, label: "Flip",
-          onTap: logic.isUseEffects ? logic.onSwitchEffectCamera : logic.onSwitchCamera,
-        ),
-        const SizedBox(height: 20),
-        if (logic.isUseEffects) ...[
-          _buildSideToolItem(
-            icon: Icons.face, label: "Effects",
-            onTap: logic.onToggleEffect,
-          ),
-          const SizedBox(height: 20),
-        ],
-        GetBuilder<CreateReelsController>(
-          id: "onChangeRecordingDuration",
-          builder: (logic) {
-            return GestureDetector(
-              onTap: () {
-                int currentIndex = logic.recordingDurations.indexOf(logic.selectedDuration);
-                int nextIndex = (currentIndex + 1) % logic.recordingDurations.length;
-                logic.onChangeRecordingDuration(nextIndex);
-              },
-              child: Column(
-                children: [
-                  Container(
-                    height: 35, width: 35,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      border: Border.all(color: Colors.white, width: 1.5),
-                      color: Colors.black.withOpacity(0.3),
-                    ),
-                    child: Center(
-                      child: Text("${logic.selectedDuration}s", style: const TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.bold)),
-                    ),
-                  ),
-                  const SizedBox(height: 5),
-                  const Text("Timer", style: TextStyle(color: Colors.white, fontSize: 10))
-                ],
-              ),
-            );
-          },
-        ),
-      ],
-    );
-  }
-
-  Widget _buildSideToolItem({required IconData icon, required String label, required VoidCallback onTap}) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Column(
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: Get.height,
+      width: Get.width,
+      color: AppColor.colorGreyBg,
+      child: Stack(
+        alignment: Alignment.center,
         children: [
-          Icon(icon, color: Colors.white, size: 28),
-          const SizedBox(height: 5),
-          Text(label, style: const TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.w500)),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildBottomControls(BuildContext context, CreateReelsController logic) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        GetBuilder<CreateReelsController>(
-          id: "onChangeTimer",
-          builder: (logic) {
-             if (logic.countTime > 0) {
-               return Container(
-                 margin: const EdgeInsets.only(bottom: 10),
-                 padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                 decoration: BoxDecoration(color: Colors.red, borderRadius: BorderRadius.circular(5)),
-                 child: Text("00:${logic.countTime.toString().padLeft(2, '0')}", style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
-               );
-             }
-             return const SizedBox.shrink();
-          },
-        ),
-        GetBuilder<CreateReelsController>(
-          id: "onToggleEffect",
-          builder: (logic) {
-            if (!logic.isShowEffects || !logic.isUseEffects) return const SizedBox.shrink();
-            return Container(
-              height: 100,
-              margin: const EdgeInsets.only(bottom: 15),
-              child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                itemCount: logic.effectsCollection.length,
-                padding: const EdgeInsets.symmetric(horizontal: 15),
-                itemBuilder: (context, index) {
-                  bool isSelected = logic.selectedEffectIndex == index;
-                  return GestureDetector(
-                    onTap: () => index == 0 ? logic.onClearEffect(index) : logic.onChangeEffect(index),
-                    child: Container(
-                      width: 70, margin: const EdgeInsets.only(right: 10),
-                      child: Column(
-                        children: [
-                          Container(
-                            height: 60, width: 60,
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              border: isSelected ? Border.all(color: AppColor.primary, width: 2) : null,
-                              image: index == 0 ? null : DecorationImage(image: AssetImage(logic.effectImages[index]), fit: BoxFit.cover),
-                            ),
-                            child: index == 0 ? const Center(child: Icon(Icons.block, color: Colors.white)) : null,
-                          ),
-                          const SizedBox(height: 5),
-                          Text(logic.effectNames[index], maxLines: 1, overflow: TextOverflow.ellipsis, style: TextStyle(color: isSelected ? AppColor.primary : Colors.white, fontSize: 10))
-                        ],
-                      ),
+          GetBuilder<CreateReelsController>(
+            id: "onInitializeEffect",
+            builder: (controller) => controller.isInitializeEffect
+                ? Container(
+                    height: Get.height,
+                    width: Get.width,
+                    color: AppColor.transparent,
+                    child: Transform.scale(
+                      scale: (Get.width / Get.height) * 4,
+                      child: DeepArPreviewPlus(controller.deepArController),
                     ),
-                  );
-                },
+                  )
+                : Container(
+                    height: Get.height,
+                    width: Get.width,
+                    color: AppColor.black,
+                    child: const LoadingUi(),
+                  ),
+          ),
+          Positioned(
+            top: 0,
+            child: Container(
+              height: 100,
+              width: Get.width,
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [AppColor.black.withOpacity(0.7), AppColor.transparent],
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                ),
               ),
-            );
-          },
-        ),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 30),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              const SizedBox(width: 40, child: Icon(Icons.photo_library, color: Colors.white)),
-              GestureDetector(
-                onTap: logic.onClickRecordingButton,
-                onLongPressStart: logic.isUseEffects ? logic.onLongPressStart : null,
-                onLongPressEnd: logic.isUseEffects ? logic.onLongPressEnd : null,
-                child: GetBuilder<CreateReelsController>(
-                  id: "onChangeRecordingEvent",
-                  builder: (logic) {
-                    bool isRecording = logic.isRecording == "start";
-                    return AnimatedContainer(
-                      duration: const Duration(milliseconds: 300),
-                      height: isRecording ? 85 : 70, width: isRecording ? 85 : 70,
-                      decoration: BoxDecoration(shape: BoxShape.circle, border: Border.all(color: Colors.white, width: 4), color: Colors.transparent),
-                      child: Center(
+            ),
+          ),
+          Positioned(
+            bottom: 0,
+            child: Container(
+              height: 350,
+              width: Get.width,
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [AppColor.transparent, AppColor.black.withOpacity(0.6), AppColor.black.withOpacity(0.8)],
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                ),
+              ),
+            ),
+          ),
+          Positioned(
+            top: 35,
+            child: GetBuilder<CreateReelsController>(
+              id: "onChangeRecordingEvent",
+              builder: (controller) => Visibility(
+                visible: controller.isRecording != "stop",
+                child: SizedBox(
+                  width: Get.width,
+                  child: GetBuilder<CreateReelsController>(
+                    id: "onChangeTimer",
+                    builder: (controller) => Container(
+                      height: 6,
+                      width: Get.width,
+                      margin: EdgeInsets.symmetric(horizontal: 15),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        color: AppColor.white.withOpacity(0.6),
+                      ),
+                      child: Align(
+                        alignment: Alignment.centerLeft,
                         child: AnimatedContainer(
-                          duration: const Duration(milliseconds: 300),
-                          height: isRecording ? 30 : 55, width: isRecording ? 30 : 55,
-                          decoration: BoxDecoration(color: AppColor.primary, borderRadius: BorderRadius.circular(isRecording ? 5 : 100)),
+                          duration: Duration(seconds: 1),
+                          height: 6,
+                          width: controller.countTime * ((Get.width - 30) / controller.selectedDuration),
+                          child: Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              gradient: AppColor.primaryLinearGradient,
+                            ),
+                          ),
                         ),
                       ),
-                    );
-                  },
+                    ),
+                  ),
                 ),
               ),
-              GestureDetector(
-                onTap: logic.onClickPreviewButton,
-                child: SizedBox(
-                  width: 40, 
-                  child: GetBuilder<CreateReelsController>(
-                    id: "onChangeRecordingEvent",
-                    builder: (logic) {
-                       if (logic.isRecording == "pause" || (logic.isRecording == "stop" && logic.countTime > 0)) {
-                         return Container(height: 35, width: 35, decoration: const BoxDecoration(color: Colors.white, shape: BoxShape.circle), child: const Icon(Icons.check, color: Colors.black, size: 20));
-                       }
-                       return const SizedBox.shrink();
-                    },
-                  )
-                ),
-              ),
-            ],
+            ),
           ),
-        ),
-        const SizedBox(height: 20),
-      ],
+          Positioned(
+            top: 60,
+            child: GetBuilder<CreateReelsController>(
+              id: "onChangeSound",
+              builder: (controller) => Visibility(
+                visible: controller.selectedSound != null,
+                child: SizedBox(
+                  width: Get.width / 2,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(
+                        height: 35,
+                        width: 35,
+                        clipBehavior: Clip.antiAlias,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(6),
+                          color: AppColor.white,
+                        ),
+                        child: Stack(
+                          alignment: Alignment.center,
+                          children: [
+                            Image.asset(AppAsset.icImagePlaceHolder, height: 25),
+                            AspectRatio(
+                              aspectRatio: 1,
+                              child: PreviewNetworkImageUi(image: controller.selectedSound?["image"]),
+                            ),
+                          ],
+                        ),
+                      ),
+                      10.width,
+                      Flexible(
+                        fit: FlexFit.loose,
+                        child: Text(
+                          controller.selectedSound?["name"] ?? "",
+                          maxLines: 2,
+                          style: AppFontStyle.styleW500(AppColor.white, 12),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+          Positioned(
+            top: 65,
+            child: SizedBox(
+              width: Get.width,
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 15),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    CircleIconButtonUi(
+                      circleSize: 40,
+                      iconSize: 20,
+                      color: AppColor.white.withOpacity(0.15),
+                      icon: AppAsset.icClose,
+                      iconColor: AppColor.white,
+                      callback: () {
+                        Get.back();
+                      },
+                    ),
+                    20.height,
+                    GetBuilder<CreateReelsController>(
+                      id: "onSwitchEffectFlash",
+                      builder: (controller) => CircleIconButtonUi(
+                        circleSize: 40,
+                        iconSize: 20,
+                        gradient: AppColor.primaryLinearGradient,
+                        icon: controller.isFlashOn ? AppAsset.icFlashOn : AppAsset.icFlashOff,
+                        iconColor: AppColor.white,
+                        callback: controller.onSwitchEffectFlash,
+                      ),
+                    ),
+                    20.height,
+                    GetBuilder<CreateReelsController>(
+                      builder: (controller) => CircleIconButtonUi(
+                        circleSize: 40,
+                        iconSize: 20,
+                        gradient: AppColor.primaryLinearGradient,
+                        icon: AppAsset.icRotateCamera,
+                        iconColor: AppColor.white,
+                        callback: controller.onSwitchEffectCamera,
+                      ),
+                    ),
+                    20.height,
+                    CircleIconButtonUi(
+                      circleSize: 40,
+                      iconSize: 17,
+                      gradient: AppColor.primaryLinearGradient,
+                      padding: const EdgeInsets.only(right: 2),
+                      icon: AppAsset.icMusic,
+                      iconColor: AppColor.white,
+                      callback: () {
+                        AddMusicBottomSheet.show(context: context);
+                      },
+                    ),
+                    20.height,
+                    GetBuilder<CreateReelsController>(
+                      builder: (controller) => CircleIconButtonUi(
+                        circleSize: 40,
+                        iconSize: 20,
+                        gradient: AppColor.primaryLinearGradient,
+                        icon: AppAsset.icEffect,
+                        iconColor: AppColor.white,
+                        callback: () {
+                          controller.onToggleEffect();
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+          Positioned(
+            bottom: 185,
+            child: GetBuilder<CreateReelsController>(
+              id: "onToggleEffect",
+              builder: (controller) => Visibility(
+                visible: controller.isShowEffects,
+                child: Container(
+                  height: 100,
+                  width: Get.width,
+                  color: AppColor.transparent,
+                  child: Center(
+                    child: GetBuilder<CreateReelsController>(
+                      builder: (logic) => SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        padding: const EdgeInsets.only(left: 15),
+                        child: ListView.builder(
+                          shrinkWrap: true,
+                          scrollDirection: Axis.horizontal,
+                          itemCount: controller.effectsCollection.length,
+                          padding: const EdgeInsets.symmetric(vertical: 0),
+                          itemBuilder: (context, index) => Padding(
+                            padding: const EdgeInsets.only(right: 12),
+                            child: GetBuilder<CreateReelsController>(
+                              id: "onChangeEffect",
+                              builder: (controller) => index == 0
+                                  ? GestureDetector(
+                                      onTap: () => controller.onClearEffect(index),
+                                      child: SizedBox(
+                                        width: 90,
+                                        child: Column(
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          crossAxisAlignment: CrossAxisAlignment.center,
+                                          children: [
+                                            Container(
+                                              padding: EdgeInsets.all(1.2),
+                                              decoration: BoxDecoration(
+                                                shape: BoxShape.circle,
+                                                color: AppColor.transparent,
+                                                border: Border.all(color: controller.selectedEffectIndex == index ? AppColor.primary : AppColor.white, width: 1),
+                                              ),
+                                              child: Container(
+                                                height: 60,
+                                                alignment: Alignment.center,
+                                                clipBehavior: Clip.antiAlias,
+                                                decoration: BoxDecoration(
+                                                  shape: BoxShape.circle,
+                                                  color: AppColor.black,
+                                                ),
+                                                child: Image.asset(AppAsset.icNone, color: AppColor.white, width: 30),
+                                              ),
+                                            ),
+                                            8.height,
+                                            SizedBox(
+                                              width: 90,
+                                              child: Text(
+                                                EnumLocal.txtNone.name.tr,
+                                                maxLines: 1,
+                                                textAlign: TextAlign.center,
+                                                overflow: TextOverflow.clip,
+                                                style: AppFontStyle.styleW400(controller.selectedEffectIndex == index ? AppColor.primary : AppColor.white, 14.5),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    )
+                                  : GestureDetector(
+                                      onTap: () => controller.onChangeEffect(index),
+                                      child: SizedBox(
+                                        width: 90,
+                                        child: Column(
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          crossAxisAlignment: CrossAxisAlignment.center,
+                                          children: [
+                                            Container(
+                                              padding: EdgeInsets.all(2),
+                                              decoration: BoxDecoration(
+                                                shape: BoxShape.circle,
+                                                color: AppColor.transparent,
+                                                border: Border.all(color: controller.selectedEffectIndex == index ? AppColor.primary : AppColor.white, width: 1),
+                                              ),
+                                              child: Container(
+                                                height: 60,
+                                                alignment: Alignment.center,
+                                                clipBehavior: Clip.antiAlias,
+                                                decoration: BoxDecoration(
+                                                  shape: BoxShape.circle,
+                                                  color: AppColor.transparent,
+                                                ),
+                                                child: Image.asset(controller.effectImages[index], fit: BoxFit.cover),
+                                              ),
+                                            ),
+                                            8.height,
+                                            SizedBox(
+                                              width: 90,
+                                              child: Text(
+                                                controller.effectNames[index],
+                                                maxLines: 1,
+                                                textAlign: TextAlign.center,
+                                                overflow: TextOverflow.clip,
+                                                style: AppFontStyle.styleW400(
+                                                  controller.selectedEffectIndex == index ? AppColor.primary : AppColor.white,
+                                                  14.5,
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+          Positioned(
+            bottom: 125,
+            child: GetBuilder<CreateReelsController>(
+              id: "onChangeRecordingEvent",
+              builder: (controller) => Visibility(
+                visible: controller.isRecording == "stop",
+                child: Container(
+                  height: 43,
+                  width: Get.width,
+                  color: AppColor.transparent,
+                  child: Center(
+                    child: GetBuilder<CreateReelsController>(
+                      id: "onChangeRecordingDuration",
+                      builder: (logic) => SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        padding: const EdgeInsets.only(left: 15),
+                        child: ListView.builder(
+                          shrinkWrap: true,
+                          scrollDirection: Axis.horizontal,
+                          itemCount: logic.recordingDurations.length,
+                          padding: const EdgeInsets.symmetric(vertical: 6),
+                          itemBuilder: (context, index) => Padding(
+                              padding: const EdgeInsets.only(right: 15),
+                              child: GestureDetector(
+                                onTap: () => logic.onChangeRecordingDuration(index),
+                                child: Container(
+                                  height: 20,
+                                  width: 65,
+                                  decoration: BoxDecoration(
+                                    color: logic.selectedDuration == logic.recordingDurations[index] ? null : AppColor.white.withOpacity(0.1),
+                                    gradient: logic.selectedDuration == logic.recordingDurations[index] ? AppColor.primaryLinearGradient : null,
+                                    borderRadius: BorderRadius.circular(100),
+                                  ),
+                                  child: Center(
+                                    child: Text(
+                                      "${logic.recordingDurations[index]}s",
+                                      style: AppFontStyle.styleW500(AppColor.white, 14.5),
+                                    ),
+                                  ),
+                                ),
+                              )),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+          Positioned(
+            bottom: 20,
+            child: Container(
+              width: Get.width,
+              color: AppColor.transparent,
+              padding: EdgeInsets.symmetric(horizontal: 15),
+              child: Row(
+                children: [
+                  const Expanded(child: Offstage()),
+                  Expanded(
+                    child: GestureDetector(
+                      onLongPressStart: controller.onLongPressStart,
+                      onLongPressEnd: controller.onLongPressEnd,
+                      child: Container(
+                        height: 100,
+                        width: 100,
+                        color: AppColor.transparent,
+                        child: Center(
+                          child: GetBuilder<CreateReelsController>(
+                            id: "onChangeRecordingEvent",
+                            builder: (controller) => Stack(
+                              alignment: Alignment.center,
+                              children: [
+                                SizedBox(
+                                  height: 73,
+                                  width: 73,
+                                  child: CircularProgressIndicator(
+                                    value: controller.isRecording == "stop" ? 1 : controller.countTime * (1 / controller.selectedDuration),
+                                    backgroundColor: AppColor.white.withOpacity(0.2),
+                                    color: controller.isRecording == "stop" ? AppColor.white : AppColor.colorTabBar,
+                                    strokeWidth: 8,
+                                    strokeCap: StrokeCap.round,
+                                  ),
+                                ),
+                                Container(
+                                  height: 65,
+                                  width: 65,
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: AppColor.white,
+                                    gradient: controller.isRecording == "stop" ? AppColor.primaryLinearGradient : null,
+                                  ),
+                                  child: Center(
+                                    child: Image.asset(
+                                      AppAsset.icPause,
+                                      height: 30,
+                                      width: 30,
+                                      color: AppColor.transparent,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  Expanded(child: Offstage()),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
     );
+  }
+}
+
+class WithOutEffectUi extends StatelessWidget {
+  const WithOutEffectUi({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: Get.height,
+      width: Get.width,
+      color: AppColor.colorGreyBg,
+      child: Stack(
+        children: [
+          GetBuilder<CreateReelsController>(
+              id: "onInitializeCamera",
+              builder: (controller) {
+                if (controller.cameraController != null && (controller.cameraController?.value.isInitialized ?? false)) {
+                  final mediaSize = MediaQuery.of(context).size;
+                  final scale = 1 / (controller.cameraController!.value.aspectRatio * mediaSize.aspectRatio);
+                  return ClipRect(
+                    clipper: _MediaSizeClipper(mediaSize),
+                    child: Transform.scale(
+                      scale: scale,
+                      alignment: Alignment.topCenter,
+                      child: CameraPreview(controller.cameraController!),
+                    ),
+                  );
+                } else {
+                  return const LoadingUi();
+                }
+              }),
+          Positioned(
+            top: 0,
+            child: Container(
+              height: 100,
+              width: Get.width,
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [AppColor.black.withOpacity(0.7), AppColor.transparent],
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                ),
+              ),
+            ),
+          ),
+          Positioned(
+            bottom: 0,
+            child: Container(
+              height: 350,
+              width: Get.width,
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [AppColor.transparent, AppColor.black.withOpacity(0.6), AppColor.black.withOpacity(0.8)],
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                ),
+              ),
+            ),
+          ),
+          Positioned(
+            top: 35,
+            child: GetBuilder<CreateReelsController>(
+              id: "onChangeRecordingEvent",
+              builder: (controller) => Visibility(
+                visible: controller.isRecording != "stop",
+                child: SizedBox(
+                  width: Get.width,
+                  child: GetBuilder<CreateReelsController>(
+                    id: "onChangeTimer",
+                    builder: (controller) => Container(
+                      height: 6,
+                      width: Get.width,
+                      margin: EdgeInsets.symmetric(horizontal: 15),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        color: AppColor.white.withOpacity(0.6),
+                      ),
+                      child: Align(
+                        alignment: Alignment.centerLeft,
+                        child: Container(
+                          height: 6,
+                          width: controller.countTime * ((Get.width - 30) / controller.selectedDuration),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            gradient: AppColor.primaryLinearGradient,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+          Positioned(
+            top: 60,
+            child: GetBuilder<CreateReelsController>(
+              id: "onChangeSound",
+              builder: (controller) => Visibility(
+                visible: controller.selectedSound != null,
+                child: SizedBox(
+                  width: Get.width,
+                  child: SizedBox(
+                    width: Get.width / 2,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Container(
+                          height: 35,
+                          width: 35,
+                          clipBehavior: Clip.antiAlias,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(6),
+                            color: AppColor.white,
+                          ),
+                          child: Stack(
+                            alignment: Alignment.center,
+                            children: [
+                              Image.asset(AppAsset.icImagePlaceHolder, height: 25),
+                              AspectRatio(
+                                aspectRatio: 1,
+                                child: PreviewNetworkImageUi(image: controller.selectedSound?["image"]),
+                              ),
+                            ],
+                          ),
+                        ),
+                        10.width,
+                        Flexible(
+                          fit: FlexFit.loose,
+                          child: Text(
+                            controller.selectedSound?["name"] ?? "",
+                            maxLines: 2,
+                            style: AppFontStyle.styleW500(AppColor.white, 12),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+          Positioned(
+            top: 65,
+            child: SizedBox(
+              width: Get.width,
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 15),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    CircleIconButtonUi(
+                      circleSize: 40,
+                      iconSize: 20,
+                      color: AppColor.white.withOpacity(0.15),
+                      icon: AppAsset.icClose,
+                      iconColor: AppColor.white,
+                      callback: () {
+                        Get.back();
+                      },
+                    ),
+                    20.height,
+                    GetBuilder<CreateReelsController>(
+                      id: "onSwitchFlash",
+                      builder: (controller) => CircleIconButtonUi(
+                        circleSize: 40,
+                        iconSize: 20,
+                        gradient: AppColor.primaryLinearGradient,
+                        icon: controller.isFlashOn ? AppAsset.icFlashOn : AppAsset.icFlashOff,
+                        iconColor: AppColor.white,
+                        callback: controller.onSwitchFlash,
+                      ),
+                    ),
+                    20.height,
+                    GetBuilder<CreateReelsController>(
+                      builder: (controller) => CircleIconButtonUi(
+                        circleSize: 40,
+                        iconSize: 20,
+                        gradient: AppColor.primaryLinearGradient,
+                        icon: AppAsset.icRotateCamera,
+                        iconColor: AppColor.white,
+                        callback: controller.onSwitchCamera,
+                      ),
+                    ),
+                    20.height,
+                    CircleIconButtonUi(
+                      circleSize: 40,
+                      iconSize: 17,
+                      gradient: AppColor.primaryLinearGradient,
+                      padding: const EdgeInsets.only(right: 2),
+                      icon: AppAsset.icMusic,
+                      iconColor: AppColor.white,
+                      callback: () {
+                        AddMusicBottomSheet.show(context: context);
+                      },
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+          Positioned(
+            bottom: 125,
+            child: GetBuilder<CreateReelsController>(
+              id: "onChangeRecordingEvent",
+              builder: (controller) => Visibility(
+                visible: controller.isRecording == "stop",
+                child: Container(
+                  height: 43,
+                  width: Get.width,
+                  color: AppColor.transparent,
+                  child: Center(
+                    child: GetBuilder<CreateReelsController>(
+                      id: "onChangeRecordingDuration",
+                      builder: (logic) => SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        padding: const EdgeInsets.only(left: 15),
+                        child: ListView.builder(
+                          shrinkWrap: true,
+                          scrollDirection: Axis.horizontal,
+                          itemCount: logic.recordingDurations.length,
+                          padding: const EdgeInsets.symmetric(vertical: 6),
+                          itemBuilder: (context, index) => Padding(
+                            padding: const EdgeInsets.only(right: 15),
+                            child: GestureDetector(
+                              onTap: () => logic.onChangeRecordingDuration(index),
+                              child: Container(
+                                height: 20,
+                                width: 65,
+                                decoration: BoxDecoration(
+                                  gradient: logic.selectedDuration == logic.recordingDurations[index] ? AppColor.primaryLinearGradient : null,
+                                  color: logic.selectedDuration == logic.recordingDurations[index] ? null : AppColor.white.withOpacity(0.1),
+                                  borderRadius: BorderRadius.circular(100),
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    "${logic.recordingDurations[index]}s",
+                                    style: AppFontStyle.styleW500(AppColor.white, 14.5),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+          Positioned(
+            bottom: 20,
+            child: Container(
+              width: Get.width,
+              color: AppColor.transparent,
+              padding: EdgeInsets.symmetric(horizontal: 15),
+              child: Row(
+                children: [
+                  const Expanded(child: Offstage()),
+                  Expanded(
+                    child: Container(
+                      height: 100,
+                      width: 100,
+                      color: AppColor.transparent,
+                      child: Center(
+                        child: GetBuilder<CreateReelsController>(
+                          id: "onChangeRecordingEvent",
+                          builder: (controller) => Stack(
+                            alignment: Alignment.center,
+                            children: [
+                              SizedBox(
+                                height: 73,
+                                width: 73,
+                                child: CircularProgressIndicator(
+                                  value: controller.isRecording == "stop" ? 1 : controller.countTime * (1 / controller.selectedDuration),
+                                  backgroundColor: AppColor.white.withOpacity(0.2),
+                                  color: controller.isRecording == "stop" ? AppColor.white : AppColor.colorTabBar,
+                                  strokeWidth: 8,
+                                  strokeCap: StrokeCap.round,
+                                ),
+                              ),
+                              controller.isRecording == "start"
+                                  ? CircleIconButtonUi(
+                                      circleSize: 65,
+                                      icon: AppAsset.icPause,
+                                      iconSize: 35,
+                                      color: AppColor.white,
+                                      callback: () => controller.onClickRecordingButton(),
+                                    )
+                                  : controller.isRecording == "pause"
+                                      ? CircleIconButtonUi(
+                                          circleSize: 65,
+                                          padding: const EdgeInsets.only(left: 2),
+                                          icon: AppAsset.icPlay,
+                                          iconSize: 30,
+                                          color: AppColor.white,
+                                          callback: () => controller.onClickRecordingButton(),
+                                        )
+                                      : CircleIconButtonUi(
+                                          circleSize: 65,
+                                          padding: const EdgeInsets.only(left: 2),
+                                          icon: AppAsset.icPlay,
+                                          iconColor: AppColor.transparent,
+                                          iconSize: 30,
+                                          gradient: AppColor.primaryLinearGradient,
+                                          color: AppColor.white,
+                                          callback: () => controller.onClickRecordingButton(),
+                                        ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    child: GetBuilder<CreateReelsController>(
+                      id: "onChangeRecordingEvent",
+                      builder: (controller) => Visibility(
+                        visible: controller.isRecording != "stop",
+                        child: Align(
+                          alignment: Alignment.centerRight,
+                          child: GestureDetector(
+                            onTap: () => controller.onClickPreviewButton(),
+                            child: Container(
+                              height: 43,
+                              width: 111,
+                              decoration: BoxDecoration(
+                                gradient: AppColor.primaryLinearGradient,
+                                borderRadius: BorderRadius.circular(100),
+                              ),
+                              child: Center(
+                                child: Text(
+                                  EnumLocal.txtPreview.name.tr,
+                                  style: AppFontStyle.styleW600(AppColor.white, 16),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _MediaSizeClipper extends CustomClipper<Rect> {
+  final Size mediaSize;
+  const _MediaSizeClipper(this.mediaSize);
+  @override
+  Rect getClip(Size size) {
+    return Rect.fromLTWH(0, 0, mediaSize.width, mediaSize.height);
+  }
+
+  @override
+  bool shouldReclip(CustomClipper<Rect> oldClipper) {
+    return true;
   }
 }

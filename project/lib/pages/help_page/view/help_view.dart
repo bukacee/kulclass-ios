@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:dotted_border/dotted_border.dart' as DB;
+import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -11,6 +11,7 @@ import 'package:auralive/pages/help_page/widget/help_widget.dart';
 import 'package:auralive/ui/simple_app_bar_ui.dart';
 import 'package:auralive/utils/asset.dart';
 import 'package:auralive/utils/color.dart';
+import 'package:auralive/size_extension.dart';
 import 'package:auralive/utils/enums.dart';
 import 'package:auralive/utils/font_style.dart';
 
@@ -25,7 +26,7 @@ class HelpView extends GetView<HelpController> {
         child: AppBar(
           automaticallyImplyLeading: false,
           backgroundColor: AppColor.white,
-          shadowColor: AppColor.black.withOpacity(0.4),
+          shadowColor: AppColor.black.withValues(alpha: 0.4),
           flexibleSpace: SimpleAppBarUi(title: EnumLocal.txtHelp.name.tr),
         ),
       ),
@@ -80,7 +81,7 @@ class HelpView extends GetView<HelpController> {
                         width: 1.5,
                         height: 25,
                         decoration: BoxDecoration(
-                          color: AppColor.colorUnselectedIcon.withOpacity(0.3),
+                          color: AppColor.colorUnselectedIcon.withValues(alpha: 0.3),
                           borderRadius: BorderRadius.circular(10),
                         ),
                       ),
@@ -179,12 +180,13 @@ class GradiantBorderContainer extends StatelessWidget {
         gradient: AppColor.primaryLinearGradient,
         borderRadius: BorderRadius.circular(radius),
       ),
-      child: Container(
-  decoration: BoxDecoration(
-    border: Border.all(color: AppColor.colorScaffold, width: 5), // Solid border fallback
-  ),
-      child: Padding( // <--- ADD THIS WRAPPER
-          padding: const EdgeInsets.all(1.3),
+      child: DottedBorder(
+        // dashPattern: const [3, 6],
+        // borderType: BorderType.RRect,
+        // color: AppColor.colorScaffold,
+        // radius: Radius.circular(radius),
+        // padding: const EdgeInsets.all(1.3),
+        // strokeWidth: 5,
         child: Container(
           height: height,
           width: width,
@@ -194,10 +196,7 @@ class GradiantBorderContainer extends StatelessWidget {
           ),
           child: child,
         ),
-        ),
       ),
     );
   }
-
-
 }

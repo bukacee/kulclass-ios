@@ -9,6 +9,7 @@ import 'package:auralive/pages/trim_video_page/controller/trim_video_controller.
 import 'package:auralive/ui/loading_ui.dart';
 import 'package:auralive/utils/asset.dart';
 import 'package:auralive/utils/color.dart';
+import 'package:auralive/size_extension.dart';
 import 'package:auralive/utils/font_style.dart';
 import 'package:video_trimmer/video_trimmer.dart';
 

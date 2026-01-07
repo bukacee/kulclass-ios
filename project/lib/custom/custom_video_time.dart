@@ -8,13 +8,19 @@ class CustomVideoTime {
 
   static Future<int?> onGet(String videoPath) async {
     try {
-      _videoPlayerController?.dispose();
-      _videoPlayerController = null;
+      // Dispose safely
+      if (_videoPlayerController != null) {
+        final oldController = _videoPlayerController;
+        _videoPlayerController = null;
+        await oldController?.dispose();
+      }
 
-      _videoPlayerController = VideoPlayerController.file(File(videoPath));
-      await _videoPlayerController?.initialize();
-      if (_videoPlayerController!.value.isInitialized) {
-        final videoTime = _videoPlayerController?.value.duration.inSeconds;
+      final controller = VideoPlayerController.file(File(videoPath));
+      await controller.initialize();
+
+      if (controller.value.isInitialized) {
+        _videoPlayerController = controller;
+        final videoTime = controller.value.duration.inSeconds;
         Utils.showLog("Get Video Time => $videoTime");
         return videoTime;
       } else {

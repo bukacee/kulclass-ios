@@ -6,6 +6,7 @@ import 'package:auralive/pages/fake_chat_page/controller/fake_chat_controller.da
 import 'package:auralive/pages/fake_chat_page/widget/fake_chat_widget.dart';
 import 'package:auralive/utils/asset.dart';
 import 'package:auralive/utils/color.dart';
+import 'package:auralive/size_extension.dart';
 import 'package:auralive/utils/database.dart';
 import 'package:auralive/utils/font_style.dart';
 import 'package:auralive/ui/loading_ui.dart';

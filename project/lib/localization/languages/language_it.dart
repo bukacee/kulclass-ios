@@ -1,7 +1,7 @@
 import 'package:auralive/utils/enums.dart';
 
 final Map<String, String> itIn = {
-  EnumLocal.txtAppName.name: "Shortie",
+  EnumLocal.txtAppName.name: "Kul Class",
   EnumLocal.txtSkip.name: "Saltare",
   EnumLocal.txtOnBoardingTitle_1.name: "La migliore app di social media del secolo",
   EnumLocal.txtOnBoardingTitle_2.name: "Connettiamoci con tutti nel mondo",

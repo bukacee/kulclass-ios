@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:auralive/custom/custom_image_picker.dart';
 import 'package:auralive/custom/custom_multi_image_picker.dart';
-
 import 'package:auralive/pages/feed_page/api/fetch_post_api.dart';
 import 'package:auralive/pages/feed_page/model/fetch_post_model.dart';
 import 'package:auralive/routes/app_routes.dart';

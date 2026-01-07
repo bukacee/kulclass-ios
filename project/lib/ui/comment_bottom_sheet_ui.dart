@@ -13,6 +13,7 @@ import 'package:auralive/pages/splash_screen_page/api/fetch_comment_api.dart';
 import 'package:auralive/pages/splash_screen_page/model/comment_model.dart';
 import 'package:auralive/utils/asset.dart';
 import 'package:auralive/utils/color.dart';
+import 'package:auralive/size_extension.dart';
 import 'package:auralive/utils/database.dart';
 import 'package:auralive/utils/enums.dart';
 import 'package:auralive/utils/font_style.dart';

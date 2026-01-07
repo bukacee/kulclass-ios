@@ -106,4 +106,25 @@ class AppRequest {
       return true;
     }
   }
+
+  static Future<void> requestLiveStreamingPermissions({Callback? onGranted}) async {
+    bool mic = await microphonePermission();
+    if (!mic) return;
+
+    bool cam = false;
+    await cameraPermission(callback: () {
+      cam = true;
+    });
+    if (!cam) return;
+
+    bool audio = await audioPermission();
+    if (!audio) return;
+
+    // Optional: storage or phone, depending on your use case
+    // bool store = await storagePermission();
+    // if (!store) return;
+
+    onGranted?.call(); // ✅ All required permissions granted
+  }
+
 }
