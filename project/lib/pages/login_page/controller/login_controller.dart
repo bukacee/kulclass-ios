@@ -15,6 +15,8 @@ import 'package:auralive/utils/enums.dart';
 import 'package:auralive/utils/internet_connection.dart';
 import 'package:auralive/utils/utils.dart';
 
+import 'package:firebase_messaging/firebase_messaging.dart';
+
 class LoginController extends GetxController {
   LoginModel? loginModel;
   FetchLoginUserProfileModel? fetchLoginUserProfileModel;
