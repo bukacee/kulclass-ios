@@ -152,20 +152,31 @@ class LoginController extends GetxController {
   }
 
   static Future<UserCredential?> signInWithGoogle() async {
-    try {
-      final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
-      final GoogleSignInAuthentication? googleAuth = await googleUser?.authentication;
-      final credential = GoogleAuthProvider.credential(accessToken: googleAuth?.accessToken, idToken: googleAuth?.idToken);
-      final result = await FirebaseAuth.instance.signInWithCredential(credential);
-
-      Utils.showLog("Google Login Email => ${result.user?.email}");
-
-      Utils.showLog("Google Login isNewUser => ${result.additionalUserInfo?.isNewUser}");
-
-      return result;
-    } catch (error) {
-      Utils.showLog("Google Login Error => $error");
+  try {
+    final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+    
+    // Check if user cancelled the dialog
+    if (googleUser == null) {
+      Utils.showToast("Google Sign In Cancelled");
+      return null;
     }
-    return null;
+
+    final GoogleSignInAuthentication? googleAuth = await googleUser.authentication;
+    final credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth?.accessToken, 
+        idToken: googleAuth?.idToken
+    );
+    
+    final result = await FirebaseAuth.instance.signInWithCredential(credential);
+    return result;
+
+  } catch (error) {
+    // ⚠️ SHOW THE REAL ERROR ON SCREEN TO DEBUG ⚠️
+    Utils.showToast("Auth Error: $error");
+    Utils.showLog("Google Login Error => $error");
   }
+  return null;
+}
+
+
 }
