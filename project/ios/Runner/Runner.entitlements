@@ -6,6 +6,9 @@
 	<string>development</string>
 	<key>com.apple.developer.associated-domains</key>
 	<array>
+		
+		<string>auraapplive.app.link</string>
+		<string>auraapplive-alternate.app.link</string>
 		<string>applinks:8406c.app.link</string>
 		<string>applinks:8406c-alternate.app.link</string>
 		<string>applinks:8406c.test.app.link</string>

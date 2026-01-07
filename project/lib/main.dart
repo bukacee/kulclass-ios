@@ -23,33 +23,20 @@ import 'package:auralive/utils/platform_device_id.dart';
 import 'package:auralive/utils/utils.dart';
 
 void main() async {
+  // 1. Initialize Bindings ONLY
   WidgetsFlutterBinding.ensureInitialized();
-
+  
+  // 2. Init Storage (Fast)
   await GetStorage.init();
-
-  InternetConnection.init();
-
+  
+  // 3. Init Firebase (Required before app runs, usually fast enough)
   await Firebase.initializeApp();
-  await onInitializeCrashlytics();
+  
+  // 4. Setup Crashlytics (Fast)
+  FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
 
-  await onInitializeBranchIo();
-
-  final identity = await PlatformDeviceId.getDeviceId;
-  final fcmToken = await FirebaseMessaging.instance.getToken();
-
-  Utils.showLog("Device Id => $identity");
-  Utils.showLog("FCM Token => $fcmToken");
-  print("FCM Token => $fcmToken");
-  print("identity => $identity");
-
-  if (identity != null && fcmToken != null) {
-    await Database.init(identity, fcmToken);
-  }
-
-  NotificationServices.init();
-  NotificationServices.firebaseInit();
-  FirebaseMessaging.onBackgroundMessage(NotificationServices.onShowBackgroundNotification);
-
+  // 5. DO NOT wait for Device ID or FCM Token here.
+  // Just launch the app. The Splash Screen will handle the rest.
   runApp(const MyApp());
 }
 

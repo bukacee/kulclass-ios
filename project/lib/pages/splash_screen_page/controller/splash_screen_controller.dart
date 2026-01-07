@@ -13,13 +13,18 @@ import 'package:auralive/utils/utils.dart';
 class SplashScreenController extends GetxController {
   @override
   void onInit() {
-    init();
     super.onInit();
+    init();
   }
 
   Future<void> init() async {
+    // 1. Initialize standard stuff
     await AppRequest.notificationPermission();
+    
+    // 2. MOVE THE MAIN.DART LOGIC HERE
+    await _initializeDeviceAndPush();
 
+    // 3. Proceed with your existing Admin/API checks
     if (InternetConnection.isConnect.value) {
       await AdminSettingsApi.callApi(); // Get Admin Setting Data...
       if (AdminSettingsApi.adminSettingModel?.data != null) {
@@ -35,6 +40,26 @@ class SplashScreenController extends GetxController {
     } else {
       Utils.showToast(EnumLocal.txtConnectionLost.name.tr);
       Utils.showLog("Internet Connection Lost !!");
+    }
+  }
+
+
+  Future<void> _initializeDeviceAndPush() async {
+    try {
+      // Get Device ID safely
+      String? identity = await PlatformDeviceId.getDeviceId;
+      
+      // Get FCM Token
+      String? fcmToken = await FirebaseMessaging.instance.getToken();
+      
+      Utils.showLog("Device Id => $identity");
+      
+      if (identity != null) {
+        // Now init your DB
+        await Database.init(identity, fcmToken ?? "");
+      }
+    } catch (e) {
+      Utils.showLog("Error initializing device/push: $e");
     }
   }
 
