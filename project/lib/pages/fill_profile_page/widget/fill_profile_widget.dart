@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:auralive/main.dart';
 import 'package:auralive/pages/fill_profile_page/controller/fill_profile_controller.dart';
 import 'package:auralive/utils/asset.dart';
 import 'package:auralive/utils/color.dart';
-import 'package:auralive/size_extension.dart';
+import 'package:auralive/utils/custom_username.dart';
 import 'package:auralive/utils/database.dart';
 import 'package:auralive/utils/enums.dart';
 import 'package:auralive/utils/font_style.dart';
@@ -64,6 +65,7 @@ class FillProfileFieldUi extends StatelessWidget {
     required this.enabled,
     required this.contentTopPadding,
     this.isOptional,
+    this.onChange,
   });
 
   final String title;
@@ -75,6 +77,7 @@ class FillProfileFieldUi extends StatelessWidget {
   final double? height;
   final double contentTopPadding;
   final Widget? suffixIcon;
+  final Function(String)? onChange;
 
   @override
   Widget build(BuildContext context) {
@@ -122,6 +125,7 @@ class FillProfileFieldUi extends StatelessWidget {
               contentPadding: EdgeInsets.only(top: contentTopPadding),
               hintStyle: AppFontStyle.styleW500(AppColor.coloGreyText, 15),
             ),
+            onChanged: onChange,
           ),
         ),
       ],
@@ -163,7 +167,8 @@ class FillProfileRadioItem extends StatelessWidget {
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   color: isSelected ? null : AppColor.colorGreyBg,
-                  border: Border.all(color: isSelected ? AppColor.white : AppColor.primary.withOpacity(0.3), width: 1.5),
+                  border:
+                      Border.all(color: isSelected ? AppColor.white : AppColor.primary.withOpacity(0.3), width: 1.5),
                 ),
               ),
             ),
@@ -278,10 +283,12 @@ class UserNameFieldUi extends StatelessWidget {
     required this.keyboardType,
     this.suffixIcon,
     this.height,
+    this.textInputFormatter,
     required this.enabled,
     required this.contentPadding,
     this.isOptional,
     required this.onChange,
+    this.oneditingcomplete,
   });
 
   final String title;
@@ -294,6 +301,8 @@ class UserNameFieldUi extends StatelessWidget {
   final Widget? suffixIcon;
   final double contentPadding;
   final Function(String) onChange;
+  final Function()? oneditingcomplete;
+  final List<TextInputFormatter>? textInputFormatter;
 
   @override
   Widget build(BuildContext context) {
@@ -337,12 +346,14 @@ class UserNameFieldUi extends StatelessWidget {
             cursorColor: AppColor.colorTextGrey,
             style: AppFontStyle.styleW600(AppColor.black, 15),
             onChanged: onChange,
+            onEditingComplete: oneditingcomplete,
             decoration: InputDecoration(
               border: InputBorder.none,
               suffixIcon: suffixIcon,
               contentPadding: EdgeInsets.only(top: contentPadding),
               hintStyle: AppFontStyle.styleW500(AppColor.coloGreyText, 15),
             ),
+            inputFormatters: textInputFormatter == null || textInputFormatter!.isEmpty ? null : textInputFormatter,
           ),
         ),
       ],

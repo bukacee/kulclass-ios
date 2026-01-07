@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:get/get.dart';
-import 'package:http/http.dart' as http; 
+import 'package:http/http.dart' as http;
 import 'package:auralive/utils/api.dart';
 import 'package:auralive/utils/enums.dart';
 import 'package:auralive/utils/internet_connection.dart';
@@ -23,9 +23,7 @@ class CheckUserExistApi {
           final jsonResponse = json.decode(response.body);
           return jsonResponse["isLogin"];
         } else {
-          Utils.showLog(">>>>> Check User Exist Api StateCode Error: ${response.statusCode} <<<<<");
-          // If API fails with non-200, return null so the Controller uses the '?? false' fallback.
-          return null; 
+          Utils.showLog(">>>>> Check User Exist Api StateCode Error <<<<<");
         }
       } else {
         Utils.showToast(EnumLocal.txtConnectionLost.name.tr);
