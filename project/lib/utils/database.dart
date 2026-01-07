@@ -15,14 +15,19 @@ class Database {
 
   static Future<void> init(String identity, String fcmToken) async {
     Utils.showLog("Local Database Initialize....");
+    Utils.showLog("Setting Identity: $identity"); // <--- Add this log
 
-    onSetFcmToken(fcmToken);
-    onSetIdentity(identity);
+    // ✅ FIX: Add 'await' so we ensure data is saved before moving on
+    await onSetFcmToken(fcmToken);
+    await onSetIdentity(identity);
 
     Utils.showLog("Is New User => $isNewUser");
 
     if (isNewUser == false) {
-      fetchLoginUserProfileModel = await FetchLoginUserProfileApi.callApi(loginUserId: loginUserId);
+      // Safe to verify loginUserId is not null before using it
+      if (loginUserId.isNotEmpty) {
+          fetchLoginUserProfileModel = await FetchLoginUserProfileApi.callApi(loginUserId: loginUserId);
+      }
     }
   }
 
