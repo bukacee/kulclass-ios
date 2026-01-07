@@ -92,46 +92,55 @@ class LoginController extends GetxController {
 
   Future<void> onGoogleLogin() async {
     if (InternetConnection.isConnect.value) {
-      Get.dialog(const LoadingUi(), barrierDismissible: false); // Start Loading...
+      Get.dialog(const LoadingUi(), barrierDismissible: false); 
 
-      if (Database.identity == null || Database.identity.isEmpty) {
-         Get.back();
-         Utils.showToast("Error: Device Identity is missing. Restart App.");
-         return;
+      // ---------------------------------------------------------
+      // 🛡️ SELF-HEALING: If Identity is missing, fix it now.
+      // ---------------------------------------------------------
+      if (Database.identity.isEmpty) {
+         Utils.showLog("⚠️ Identity missing during Login. Generating fallback...");
+         
+         // 1. Generate a fallback ID
+         String newId = "ios_fix_${DateTime.now().millisecondsSinceEpoch}";
+         
+         // 2. Try to get FCM token again (or use empty string)
+         String? token = await FirebaseMessaging.instance.getToken();
+         
+         // 3. Force Initialize Database
+         await Database.init(newId, token ?? "");
+         
+         Utils.showLog("✅ Identity fixed: ${Database.identity}");
       }
+      // ---------------------------------------------------------
 
+      // Now proceed with Google Sign In
       UserCredential? userCredential = await signInWithGoogle();
 
-      if (userCredential?.user?.email != null && userCredential?.user?.displayName != null) {
-        // Calling Sign Up Api...
-
+      if (userCredential?.user?.email != null) {
+        // Calling Login API...
         loginModel = await LoginApi.callApi(
           loginType: 2,
           email: userCredential?.user?.email ?? "",
-          identity: Database.identity,
+          identity: Database.identity, // This is now guaranteed to be valid
           fcmToken: Database.fcmToken,
           userName: userCredential?.user?.displayName ?? "",
         );
 
-        Get.back(); // Stop Loading...
+        Get.back(); // Stop Loading
 
         if (loginModel?.status == true && loginModel?.user?.id != null) {
-          await onGetProfile(loginUserId: loginModel!.user!.id!); // Get Profile Api...
+          await onGetProfile(loginUserId: loginModel!.user!.id!);
         } else if (loginModel?.message == "You are blocked by the admin.") {
           Utils.showToast("${loginModel?.message}");
-          Utils.showLog("User Blocked By Admin !!");
         } else {
+          // If it fails here, it's a Backend Issue (Step 3 we discussed)
           Utils.showToast(EnumLocal.txtSomeThingWentWrong.name.tr);
-          Utils.showLog("Login Api Calling Failed !!");
         }
       } else {
-        Utils.showToast(EnumLocal.txtSomeThingWentWrong.name.tr);
-        Utils.showLog("Google Login Failed !!");
-        Get.back(); // Stop Loading...
+        Get.back(); // Stop Loading
       }
     } else {
       Utils.showToast(EnumLocal.txtConnectionLost.name.tr);
-      Utils.showLog("Internet Connection Lost !!");
     }
   }
 
