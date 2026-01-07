@@ -5,6 +5,7 @@ import 'package:auralive/main.dart';
 import 'package:auralive/pages/login_page/controller/login_controller.dart';
 import 'package:auralive/routes/app_routes.dart';
 import 'package:auralive/utils/asset.dart';
+import 'package:auralive/utils/size_extension.dart';
 import 'package:auralive/utils/color.dart';
 import 'package:auralive/utils/constant.dart';
 import 'package:auralive/utils/enums.dart';

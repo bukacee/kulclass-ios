@@ -9,6 +9,7 @@ import 'package:auralive/pages/fill_profile_page/widget/fill_profile_widget.dart
 import 'package:auralive/utils/asset.dart';
 import 'package:auralive/utils/color.dart';
 import 'package:auralive/utils/custom_username.dart';
+import 'package:auralive/utils/size_extension.dart';
 import 'package:auralive/utils/database.dart';
 import 'package:auralive/utils/enums.dart';
 import 'package:auralive/utils/font_style.dart';

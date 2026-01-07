@@ -13,6 +13,7 @@ import 'package:auralive/pages/edit_profile_page/model/edit_profile_model.dart';
 import 'package:auralive/pages/splash_screen_page/api/fetch_login_user_profile_api.dart';
 import 'package:auralive/routes/app_routes.dart';
 import 'package:auralive/utils/custom_username.dart';
+import 'package:auralive/utils/size_extension.dart';
 import 'package:auralive/utils/database.dart';
 import 'package:auralive/utils/enums.dart';
 import 'package:auralive/utils/internet_connection.dart';

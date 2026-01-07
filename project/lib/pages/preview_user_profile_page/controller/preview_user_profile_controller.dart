@@ -14,25 +14,9 @@ import 'package:auralive/routes/app_routes.dart';
 import 'package:auralive/utils/database.dart';
 import 'package:auralive/utils/enums.dart';
 import 'package:auralive/utils/utils.dart';
-import 'package:auralive/utils/currency_helper.dart';
-import 'package:get_storage/get_storage.dart';
-import 'package:auralive/pages/login_page/controller/login_controller.dart';
 
 class PreviewUserProfileController extends GetxController with GetTickerProviderStateMixin {
   TabController? tabController;
-//touse
-  late String viewerCountry;
-
-  // Owner's raw amount is treated as USD (per your spec)
-  double subAmountUSD = 0.0;
-
-  // Owner-local converted amount & currency code
-  double subAmountOwnerCurrency = 0.0;
-  String ownerCurrencyCode = 'USD';
-
-  // Viewer-local converted amount & currency code
-  double subAmountViewerCurrency = 0.0;
-  String viewerCurrencyCode = 'USD';
 
   // >>>>> Get Other User Profile...
   FetchProfileModel? fetchProfileModel;
@@ -54,10 +38,7 @@ class PreviewUserProfileController extends GetxController with GetTickerProvider
   FetchProfileCollectionModel? fetchProfileCollectionModel;
   List<ProfileCollectionData> giftCollection = [];
 
-  String userId = ""; // Other User Id...
-
-  // For local persistence / viewer country attempts
-  final _storage = GetStorage();
+  String userId = ""; //  Other User Id...
 
   @override
   Future<void> onInit() async {
@@ -69,9 +50,6 @@ class PreviewUserProfileController extends GetxController with GetTickerProvider
     }
     init();
     super.onInit();
-    //touse
-    final loginController = Get.find<LoginController>();
-    viewerCountry = loginController.viewerCountry; // 👈 logged-in user's country
   }
 
   @override
@@ -88,14 +66,6 @@ class PreviewUserProfileController extends GetxController with GetTickerProvider
 
     onGetProfile(userId: userId);
     onGetVideo(userId: userId);
-
-      final profile = Database.fetchLoginUserProfileModel?.user;
-
-
-
-      Utils.countryController = TextEditingController(text: (profile?.country == null || profile?.country == "") ? "India" : profile!.country!);
-
-
   }
 
   bool isChangingTab = false; // This is use to fixing two time api calling bug...
@@ -129,65 +99,14 @@ class PreviewUserProfileController extends GetxController with GetTickerProvider
     }
   }
 
-
-
-
-
-
-  /// Attempt to get viewer country from several places:
-  /// 1) Database.selectedCountryCode (this returns a country code in your Database class)
-  /// 2) GetStorage key 'country' (if you store the viewer country there)
-  /// 3) fallback to 'US'
-  /// touse
-  String _getViewerCountryRaw() {
-    try {
-      // Database.selectedCountryCode returns a country code like 'US' in your Database implementation
-      final dbCode = viewerCountry;
-      if (dbCode.isNotEmpty) return dbCode;
-    } catch (_) {}
-
-    final stored = Utils.countryController;
-    if (stored != null && stored.text.trim().isNotEmpty) {
-      return stored.text; // ✅ use .text, not cast
-    }
-
-    // fallback
-    return 'United States';
-  }
-
   Future<void> onGetProfile({required String userId}) async {
     isLoadingProfile = true;
     update(["onGetProfile"]);
-
-    fetchProfileModel = await FetchProfileApi.callApi(
-        loginUserId: Database.loginUserId, otherUserId: userId);
-
-    final user = fetchProfileModel?.userProfileData?.user;
-
-    if (user?.name != null) {
+    fetchProfileModel = await FetchProfileApi.callApi(loginUserId: Database.loginUserId, otherUserId: userId);
+    if (fetchProfileModel?.userProfileData?.user?.name != null) {
       isLoadingProfile = false;
-      isFollow = user?.isFollow ?? false;
-
-      //touse
-      // --- RAW owner amount (per your spec owner's raw value is USD)
-      // If the backend actually stores owner value in owner's currency instead, you must change this flow.
-      subAmountUSD = double.tryParse(user?.sub?.toString() ?? '0') ?? 0.0;
-
-      // --- Owner currency code detection (from owner's country)
-      final ownerCountryRaw = user?.country ?? '';
-      ownerCurrencyCode = CurrencyHelper.getCurrencyCodeFromCountry(ownerCountryRaw);
-
-      // Convert USD -> owner's currency
-      subAmountOwnerCurrency = await CurrencyHelper.convert(subAmountUSD, 'USD', ownerCurrencyCode);
-
-      // --- Viewer country & currency
-      final viewerRaw = _getViewerCountryRaw();
-      viewerCurrencyCode = CurrencyHelper.getCurrencyCodeFromCountry(viewerRaw);
-
-      // Convert USD -> viewer currency
-      subAmountViewerCurrency = await CurrencyHelper.convert(subAmountUSD, 'USD', viewerCurrencyCode);
-
-      update(["onClickFollow", "onGetProfile"]);
+      isFollow = fetchProfileModel?.userProfileData?.user?.isFollow ?? false;
+      update(["onGetProfile"]);
     }
   }
 

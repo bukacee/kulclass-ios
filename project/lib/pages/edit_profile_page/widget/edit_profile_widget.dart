@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:auralive/main.dart';
 import 'package:auralive/utils/asset.dart';
 import 'package:auralive/utils/color.dart';
-import 'package:auralive/size_extension.dart';
 import 'package:auralive/utils/enums.dart';
 import 'package:auralive/utils/font_style.dart';
 import 'package:country_picker/country_picker.dart';
@@ -92,8 +91,7 @@ class EditProfileFieldUi extends StatelessWidget {
 class UserNameFieldUi extends StatelessWidget {
   const UserNameFieldUi({
     super.key,
-    this.title,
-    this.titleWidget, // New optional widget
+    required this.title,
     required this.maxLines,
     required this.controller,
     required this.keyboardType,
@@ -105,8 +103,7 @@ class UserNameFieldUi extends StatelessWidget {
     required this.onChange,
   });
 
-  final String? title;
-  final Widget? titleWidget; // optional widget
+  final String title;
   final int? maxLines;
   final TextEditingController controller;
   final TextInputType keyboardType;
@@ -122,32 +119,30 @@ class UserNameFieldUi extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Use titleWidget if provided, else fallback to title
-        if (titleWidget != null)
-          titleWidget!
-        else if (isOptional ?? false)
-          RichText(
-            text: TextSpan(
-              text: title ?? '',
-              style: AppFontStyle.styleW500(AppColor.coloGreyText, 14),
-              children: [
-                TextSpan(
-                  text: " ${EnumLocal.txtOptionalInBrackets.name.tr}",
-                  style: AppFontStyle.styleW400(AppColor.coloGreyText, 12),
+        (isOptional ?? false)
+            ? RichText(
+                text: TextSpan(
+                  text: title,
+                  style: AppFontStyle.styleW500(AppColor.coloGreyText, 14),
+                  children: [
+                    TextSpan(
+                      text: " ${EnumLocal.txtOptionalInBrackets.name.tr}",
+                      style: AppFontStyle.styleW400(AppColor.coloGreyText, 12),
+                    ),
+                  ],
                 ),
-              ],
-            ),
-          )
-        else
-          Text(
-            title ?? '',
-            style: AppFontStyle.styleW500(AppColor.coloGreyText, 14),
-          ),
+              )
+            : Text(
+                title,
+                style: AppFontStyle.styleW500(AppColor.coloGreyText, 14),
+              ),
         5.height,
         Container(
           height: height ?? 55,
           width: Get.width,
           padding: const EdgeInsets.only(left: 15),
+          // alignment: height == null ? Alignment.center : null,
+
           decoration: BoxDecoration(
             color: AppColor.colorBorder.withOpacity(0.2),
             borderRadius: BorderRadius.circular(10),
@@ -173,7 +168,6 @@ class UserNameFieldUi extends StatelessWidget {
     );
   }
 }
-
 
 class RadioItem extends StatelessWidget {
   const RadioItem({super.key, required this.isSelected, required this.title, required this.callback});
