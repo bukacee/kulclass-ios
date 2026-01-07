@@ -9,6 +9,9 @@ import 'package:auralive/utils/enums.dart';
 import 'package:auralive/utils/internet_connection.dart';
 import 'package:auralive/utils/request.dart';
 import 'package:auralive/utils/utils.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter_branch_sdk/flutter_branch_sdk.dart';
+import 'package:auralive/utils/platform_device_id.dart';
 
 class SplashScreenController extends GetxController {
   @override
