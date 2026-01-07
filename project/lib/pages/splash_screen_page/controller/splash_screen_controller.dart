@@ -24,28 +24,50 @@ class SplashScreenController extends GetxController {
     // 1. Initialize standard stuff
     await AppRequest.notificationPermission();
     
-    // 2. MOVE THE MAIN.DART LOGIC HERE
+    // 2. Initialize Device ID & Push (Safe)
     await _initializeDeviceAndPush();
 
-    // 3. Proceed with your existing Admin/API checks
+    // 3. Start the "Connectivity Check Loop"
+    // Instead of checking once and failing, this will keep checking until it succeeds.
+    _checkConnectionAndProceed();
+  }
+
+  // ✅ NEW: Recursive function to handle connection retries
+  Future<void> _checkConnectionAndProceed() async {
     if (InternetConnection.isConnect.value) {
-      await AdminSettingsApi.callApi(); // Get Admin Setting Data...
-      if (AdminSettingsApi.adminSettingModel?.data != null) {
-        await Utils.onInitCreateEngine(); // Init Live...
-
-        await Utils.onInitPayment(); // Init Payment...
-
-        await splashScreen();
-      } else {
-        Utils.showToast(EnumLocal.txtSomeThingWentWrong.name.tr);
-        Utils.showLog("Admin Setting Api Calling Failed !!");
-      }
+      // We have internet! Proceed to API calls.
+      await _fetchAdminSettings();
     } else {
+      // No internet. Show toast and retry.
       Utils.showToast(EnumLocal.txtConnectionLost.name.tr);
-      Utils.showLog("Internet Connection Lost !!");
+      Utils.showLog("Internet Connection Lost !! Retrying in 2 seconds...");
+
+      // WAIT 2 SECONDS AND TRY AGAIN
+      await Future.delayed(const Duration(seconds: 2));
+      _checkConnectionAndProceed(); // <--- This line creates the loop
     }
   }
 
+  // ✅ NEW: Extracted API logic for cleaner code
+  Future<void> _fetchAdminSettings() async {
+    await AdminSettingsApi.callApi(); // Get Admin Setting Data...
+
+    if (AdminSettingsApi.adminSettingModel?.data != null) {
+      await Utils.onInitCreateEngine(); // Init Live...
+      await Utils.onInitPayment(); // Init Payment...
+
+      await splashScreen();
+    } else {
+      // API Failed. Show error.
+      // OPTIONAL: You could also add a retry here if you want.
+      Utils.showToast(EnumLocal.txtSomeThingWentWrong.name.tr);
+      Utils.showLog("Admin Setting Api Calling Failed !!");
+      
+      // If the API fails completely, you might want to retry this step too:
+      // await Future.delayed(Duration(seconds: 3));
+      // _fetchAdminSettings();
+    }
+  }
 
   Future<void> _initializeDeviceAndPush() async {
     try {
@@ -61,6 +83,10 @@ class SplashScreenController extends GetxController {
         // Now init your DB
         await Database.init(identity, fcmToken ?? "");
       }
+      
+      // Init Branch (Safe here)
+      await FlutterBranchSdk.init();
+
     } catch (e) {
       Utils.showLog("Error initializing device/push: $e");
     }
@@ -68,7 +94,7 @@ class SplashScreenController extends GetxController {
 
   Future<void> splashScreen() async {
     Timer(
-      Duration(milliseconds: 100),
+      const Duration(milliseconds: 100),
       () {
         // Check User Is Login Or Not...
         if (Database.isNewUser == false && Database.fetchLoginUserProfileModel?.user?.id != null) {
