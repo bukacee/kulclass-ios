@@ -27,7 +27,7 @@ import 'package:auralive/utils/utils.dart';
 import 'package:auralive/utils/currency_helper.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:auralive/pages/login_page/controller/login_controller.dart';
-import 'package:auralive/pages/create_report_page/api/create_report_api.dart'; // ⚠️ Import API
+import 'package:auralive/pages/splash_screen_page/api/create_report_api.dart';
 
 class ProfileController extends GetxController with GetTickerProviderStateMixin {
   ScrollController scrollController = ScrollController();
@@ -35,24 +35,34 @@ class ProfileController extends GetxController with GetTickerProviderStateMixin 
 
   late String viewerCountry;
 
+  //touse
+  // Owner's raw amount is treated as USD (per your spec)
   double coinAmountUSD = 0.0;
+ // Owner-local converted amount & currency code
+  // ProfileController.dart
   RxDouble coinOwnerCurrency = 0.0.obs;
   RxString ownerCurrencyCode = 'USD'.obs;
 
+
+
   RxBool isTabBarPinned = false.obs;
 
+  // >>>>> Get Personal User Profile...
   FetchProfileModel? fetchProfileModel;
   bool isLoadingProfile = false;
   bool isFollow = false;
 
+  // >>>>> Get Personal User Video...
   bool isLoadingVideo = true;
   FetchProfileVideoModel? fetchProfileVideoModel;
   List<ProfileVideoData> videoCollection = [];
 
+  // >>>>> Get Personal User Post...
   bool isLoadingPost = true;
   FetchProfilePostModel? fetchProfilePostModel;
   List<ProfilePostData> postCollection = [];
 
+  // >>>>> Get Personal User Collection(Gift)...
   bool isLoadingCollection = true;
   FetchProfileCollectionModel? fetchProfileCollectionModel;
   List<ProfileCollectionData> giftCollection = [];
@@ -76,6 +86,8 @@ class ProfileController extends GetxController with GetTickerProviderStateMixin 
     super.onInit();
   }
 
+
+
   Future<void> init() async {
     tabController?.index = 0;
 
@@ -88,11 +100,14 @@ class ProfileController extends GetxController with GetTickerProviderStateMixin 
     CustomFetchUserCoin.init();
   }
 
+
+
+
   void onScroll() {
     isTabBarPinned.value = scrollController.offset > 75;
   }
 
-  bool isChangingTab = false;
+  bool isChangingTab = false; // This is use to fixing two time api calling...
 
   Future<void> onChangeTabBar() async {
     isChangingTab = true;
@@ -136,17 +151,22 @@ class ProfileController extends GetxController with GetTickerProviderStateMixin 
       isLoadingProfile = false;
       update(["onGetProfile"]);
 
+      // Raw amount in USD
       coinAmountUSD = double.tryParse(CustomFetchUserCoin.coin.value.toString()) ?? 0.0;
+
+      // Detect owner currency
       final ownerCountryRaw = fetchProfileModel?.userProfileData?.user?.country ?? '';
       ownerCurrencyCode.value = CurrencyHelper.getCurrencyCodeFromCountry(ownerCountryRaw);
 
+      // Convert USD -> owner's currency
       coinOwnerCurrency.value = await CurrencyHelper.convert(
         coinAmountUSD,
         'USD',
-        ownerCurrencyCode.value,
+        ownerCurrencyCode.value, // ✅ use .value to get the String
       );
     }
   }
+
 
   Future<void> onGetVideo({required String userId}) async {
     isLoadingVideo = true;
@@ -205,7 +225,7 @@ class ProfileController extends GetxController with GetTickerProviderStateMixin 
         "userName": fetchProfileModel?.userProfileData?.user?.userName ?? "",
         "image": fetchProfileModel?.userProfileData?.user?.image ?? "",
         "isProfileImageBanned": fetchProfileModel?.userProfileData?.user?.isProfileImageBanned ?? "",
-        "type": 0,
+        "type": 0, // Arguments Type => Following..
       },
     );
   }
@@ -219,7 +239,7 @@ class ProfileController extends GetxController with GetTickerProviderStateMixin 
         "userName": fetchProfileModel?.userProfileData?.user?.userName ?? "",
         "image": fetchProfileModel?.userProfileData?.user?.image ?? "",
         "isProfileImageBanned": fetchProfileModel?.userProfileData?.user?.isProfileImageBanned ?? "",
-        "type": 1,
+        "type": 1, // Arguments Type => Followers
       },
     );
   }
@@ -251,21 +271,19 @@ class ProfileController extends GetxController with GetTickerProviderStateMixin 
     Get.toNamed(AppRoutes.previewShortsVideoPage, arguments: {"index": index, "video": mainShorts, "previousPageIsAudioWiseVideoPage": false});
   }
 
-  // --- DELETE LOGIC ---
-
   void onClickDeleteReels({required String videoId}) {
     DeleteReelsDialogUi.onShow(callBack: () => onDeleteReels(videoId: videoId));
   }
 
   Future<void> onDeleteReels({required String videoId}) async {
     try {
-      Get.dialog(LoadingUi(), barrierDismissible: false);
+      Get.dialog(LoadingUi(), barrierDismissible: false); // Start Loading...
       deleteReelsModel = await DeleteReelsApi.callApi(videoId: videoId);
-      Get.close(3);
+      Get.close(3); // Stop Loading...
       Utils.showToast(deleteReelsModel?.message ?? "");
       init();
     } catch (e) {
-      Get.close(2);
+      Get.close(2); // Stop Loading...
       Utils.showToast(EnumLocal.txtSomeThingWentWrong.name.tr);
     }
   }
@@ -276,62 +294,14 @@ class ProfileController extends GetxController with GetTickerProviderStateMixin 
 
   Future<void> onDeletePost({required String postId}) async {
     try {
-      Get.dialog(LoadingUi(), barrierDismissible: false);
+      Get.dialog(LoadingUi(), barrierDismissible: false); // Start Loading...
       deletePostModel = await DeletePostApi.callApi(postId: postId);
-      Get.close(3);
+      Get.close(3); // Stop Loading...
       Utils.showToast(deletePostModel?.message ?? "");
       init();
     } catch (e) {
-      Get.close(2);
+      Get.close(2); // Stop Loading...
       Utils.showToast(EnumLocal.txtSomeThingWentWrong.name.tr);
-    }
-  }
-
-  // -----------------------------------------------------------------------
-  // ✅ ADDED: REPORT FUNCTIONS (Hide Immediately)
-  // -----------------------------------------------------------------------
-  
-  // 1. Report Video (Hide from collection)
-  Future<void> onReportVideo(String videoId, String reason) async {
-    bool? success = await CreateReportApi.callApi(
-      loginUserId: Database.loginUserId,
-      reportReason: reason,
-      eventType: 1, // 1 = Video
-      eventId: videoId,
-    );
-    if (success == true) {
-      videoCollection.removeWhere((item) => item.id == videoId);
-      update(["onGetVideo"]);
-      Utils.showToast("Video reported and hidden.");
-    }
-  }
-
-  // 2. Report Post (Hide from collection)
-  Future<void> onReportPost(String postId, String reason) async {
-    bool? success = await CreateReportApi.callApi(
-      loginUserId: Database.loginUserId,
-      reportReason: reason,
-      eventType: 2, // 2 = Post
-      eventId: postId,
-    );
-    if (success == true) {
-      postCollection.removeWhere((item) => item.id == postId);
-      update(["onGetPost"]);
-      Utils.showToast("Post reported and hidden.");
-    }
-  }
-
-  // 3. Report User (Navigate back to avoid seeing them)
-  Future<void> onReportUser(String userId, String reason) async {
-    bool? success = await CreateReportApi.callApi(
-      loginUserId: Database.loginUserId,
-      reportReason: reason,
-      eventType: 3, // 3 = User
-      eventId: userId,
-    );
-    if (success == true) {
-      Utils.showToast("User reported.");
-      Get.back(); // Leave the profile page
     }
   }
 }
