@@ -1,3 +1,4 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -10,9 +11,15 @@ import 'package:auralive/utils/color.dart';
 import 'package:auralive/utils/constant.dart';
 import 'package:auralive/utils/enums.dart';
 import 'package:auralive/utils/font_style.dart';
+import 'package:auralive/utils/utils.dart'; // Ensure Utils is imported for showToast
+import 'package:url_launcher/url_launcher.dart'; 
 
 class LoginView extends GetView<LoginController> {
   LoginView({super.key});
+
+  // ✅ 1. Local State for the Checkbox
+  final RxBool isAgreed = false.obs;
+
   @override
   Widget build(BuildContext context) {
     Future.delayed(
@@ -76,11 +83,83 @@ class LoginView extends GetView<LoginController> {
                     textAlign: TextAlign.center,
                     style: AppFontStyle.styleW400(AppColor.white, 14),
                   ),
-                  20.height,
                   
+                  // -------------------------------------------------------------
+                  // ✅ 2. Terms & Conditions Checkbox Area
+                  // -------------------------------------------------------------
+                  20.height,
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Obx(
+                        () => SizedBox(
+                          height: 24,
+                          width: 24,
+                          child: Checkbox(
+                            value: isAgreed.value,
+                            activeColor: AppColor.primary,
+                            side: BorderSide(color: AppColor.white, width: 2),
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+                            onChanged: (value) {
+                              isAgreed.value = value ?? false;
+                            },
+                          ),
+                        ),
+                      ),
+                      10.width,
+                      Expanded(
+                        child: RichText(
+                          text: TextSpan(
+                            text: "I agree to the ",
+                            style: AppFontStyle.styleW400(AppColor.white.withOpacity(0.8), 12),
+                            children: [
+                              TextSpan(
+                                text: "Terms of Service",
+                                style: AppFontStyle.styleW600(AppColor.primary, 12).copyWith(decoration: TextDecoration.underline),
+                                recognizer: TapGestureRecognizer()
+                                  ..onTap = () {
+                                    final Uri url = Uri.parse("https://kulclass.com/terms");
+      if (!await launchUrl(url)) {
+        Utils.showToast("Could not launch Terms URL");
+      }
+                                  },
+                              ),
+                              TextSpan(
+                                text: " and ",
+                                style: AppFontStyle.styleW400(AppColor.white.withOpacity(0.8), 12),
+                              ),
+                              TextSpan(
+                                text: "Privacy Policy",
+                                style: AppFontStyle.styleW600(AppColor.primary, 12).copyWith(decoration: TextDecoration.underline),
+                                recognizer: TapGestureRecognizer()
+                                  ..onTap = () {
+                                    // Open Privacy URL
+                                    final Uri url = Uri.parse("https://kulclass.com/terms");
+      if (!await launchUrl(url)) {
+        Utils.showToast("Could not launch Terms URL");
+      }
+                                  },
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  // -------------------------------------------------------------
+
+                  20.height,
+
                   // --- Quick Login Button ---
                   GestureDetector(
-                    onTap: controller.onQuickLogin,
+                    onTap: () {
+                      // ✅ Check Agreement before Logging in
+                      if (isAgreed.value) {
+                        controller.onQuickLogin();
+                      } else {
+                        Utils.showToast("Please agree to the Terms & Guidelines first.");
+                      }
+                    },
                     child: Container(
                       height: 56,
                       width: Get.width,
@@ -112,9 +191,9 @@ class LoginView extends GetView<LoginController> {
                       ),
                     ),
                   ),
-                  
+
                   15.height,
-                  
+
                   // --- Divider ---
                   Row(
                     children: [
@@ -128,16 +207,23 @@ class LoginView extends GetView<LoginController> {
                       Expanded(child: Divider(color: AppColor.white.withOpacity(0.15))),
                     ],
                   ),
-                  
+
                   15.height,
-                  
-                  // --- Google Login Button (Now Full Width) ---
+
+                  // --- Google Login Button ---
                   GestureDetector(
-                    onTap: controller.onGoogleLogin,
+                    onTap: () {
+                      // ✅ Check Agreement before Logging in
+                      if (isAgreed.value) {
+                        controller.onGoogleLogin();
+                      } else {
+                        Utils.showToast("Please agree to the Terms & Guidelines first.");
+                      }
+                    },
                     child: Container(
                       height: 56,
-                      width: Get.width, // Set to full width like Quick Login
-                      padding: EdgeInsets.only(left: 6, right: 52), // Same padding
+                      width: Get.width,
+                      padding: EdgeInsets.only(left: 6, right: 52),
                       decoration: BoxDecoration(
                         color: AppColor.colorDarkPink,
                         borderRadius: BorderRadius.circular(30),
