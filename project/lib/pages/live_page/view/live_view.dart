@@ -99,6 +99,7 @@ class _LiveViewState extends State<LiveView> {
                 liveScreen: remoteView ?? LoadingUi(),
                 liveRoomId: roomID,
                 liveUserId: controller.userId,
+                // Ensure UserLiveUi doesn't have a 'onGiftClick' callback or similar here
               ),
       ),
     );

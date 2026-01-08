@@ -178,12 +178,16 @@ class EditProfileView extends GetView<EditProfileController> {
                 maxLines: 1,
               ),
               15.height,
+              
+              // ✅ Country Field (Visible)
               CountyField(
                 title: EnumLocal.txtCountry.name.tr,
                 flag: "",
                 country: "",
               ),
               15.height,
+              
+              // ✅ Bio Field (Visible)
               EditProfileFieldUi(
                 enabled: true,
                 contentPadding: 10,
@@ -195,35 +199,50 @@ class EditProfileView extends GetView<EditProfileController> {
                 maxLines: 3,
               ),
               15.height,
-              Text(
-                EnumLocal.txtGender.name.tr,
-                style: AppFontStyle.styleW500(AppColor.coloGreyText, 14),
-              ),
-              5.height,
-              GetBuilder<EditProfileController>(
-                id: "onChangeGender",
-                builder: (logic) => Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+
+              // -------------------------------------------------------------
+              // ❌ HIDDEN SECTION: Gender
+              // Only the Gender section is wrapped in Visibility(visible: false)
+              // -------------------------------------------------------------
+              Visibility(
+                visible: false,
+                maintainState: true,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    RadioItem(
-                      isSelected: logic.selectedGender == "male",
-                      title: EnumLocal.txtMale.name.tr,
-                      callback: () => logic.onChangeGender("male"),
+                    Text(
+                      EnumLocal.txtGender.name.tr,
+                      style: AppFontStyle.styleW500(AppColor.coloGreyText, 14),
                     ),
-                    RadioItem(
-                      isSelected: logic.selectedGender == "female",
-                      title: EnumLocal.txtFemale.name.tr,
-                      callback: () => logic.onChangeGender("female"),
+                    5.height,
+                    GetBuilder<EditProfileController>(
+                      id: "onChangeGender",
+                      builder: (logic) => Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          RadioItem(
+                            isSelected: logic.selectedGender == "male",
+                            title: EnumLocal.txtMale.name.tr,
+                            callback: () => logic.onChangeGender("male"),
+                          ),
+                          RadioItem(
+                            isSelected: logic.selectedGender == "female",
+                            title: EnumLocal.txtFemale.name.tr,
+                            callback: () => logic.onChangeGender("female"),
+                          ),
+                          RadioItem(
+                            isSelected: logic.selectedGender == "other",
+                            title: EnumLocal.txtOther.name.tr,
+                            callback: () => logic.onChangeGender("other"),
+                          ),
+                        ],
+                      ),
                     ),
-                    RadioItem(
-                      isSelected: logic.selectedGender == "other",
-                      title: EnumLocal.txtOther.name.tr,
-                      callback: () => logic.onChangeGender("other"),
-                    ),
+                    15.height, // Add spacing inside if needed, though hidden
                   ],
                 ),
               ),
-              15.height,
+              // -------------------------------------------------------------
             ],
           ),
         ),

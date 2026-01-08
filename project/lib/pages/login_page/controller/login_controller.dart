@@ -65,8 +65,7 @@ class LoginController extends GetxController {
          // Use dummy token to pass Backend validation
          // (Backend rejects empty tokens)
          await Database.init(newId, "pending_fcm_token"); 
-         
-         Utils.showLog("✅ Identity fixed: ${Database.identity}");
+          
       }
       // ---------------------------------------------------------
 
@@ -115,8 +114,7 @@ class LoginController extends GetxController {
   if (InternetConnection.isConnect.value) {
     Get.dialog(const LoadingUi(), barrierDismissible: false);
 
-    // [DEBUG] Checkpoint 1
-    Utils.showToast("1. Checking Identity...");
+  
     
     // Self-Healing Identity Logic
     if (Database.identity.isEmpty) {
@@ -125,19 +123,16 @@ class LoginController extends GetxController {
        // ❌ REMOVE THIS LINE (It causes the hang):
        // String? token = await FirebaseMessaging.instance.getToken();
        
-       // ✅ USE THIS INSTEAD (Pass empty string to unblock):
-       Utils.showLog("Skipping token fetch to prevent hang...");
+       
        await Database.init(newId, "pending_fcm_token"); 
     }
 
-    // [DEBUG] Checkpoint 2
-    Utils.showToast("2. Opening Google Dialog...");
+   
     
     UserCredential? userCredential = await signInWithGoogle();
 
     if (userCredential?.user?.email != null) {
-      // [DEBUG] Checkpoint 4 (Only if Step 3 finished)
-      Utils.showToast("4. Calling Backend API...");
+      
       
       loginModel = await LoginApi.callApi(
         loginType: 2,
@@ -150,10 +145,10 @@ class LoginController extends GetxController {
       Get.back(); // Stop Loading
 
       if (loginModel?.status == true) {
-         Utils.showToast("5. Login Success!");
+         Utils.showToast("Welcome to KulClass!");
          await onGetProfile(loginUserId: loginModel!.user!.id!);
       } else {
-         Utils.showToast("API Error: ${loginModel?.message}");
+         Utils.showToast("Login Failed");
       }
     } else {
       Get.back();
@@ -198,8 +193,6 @@ class LoginController extends GetxController {
         idToken: googleAuth?.idToken
     );
     
-    // [DEBUG] Checkpoint 3 - THE DANGER ZONE
-    Utils.showToast("3. Verifying with Firebase (This might hang)...");
     
     // This line sends the Silent Push. If APNs is broken, it hangs here.
     final result = await FirebaseAuth.instance.signInWithCredential(credential);

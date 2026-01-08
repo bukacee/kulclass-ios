@@ -3,15 +3,26 @@ import 'package:auralive/utils/enums.dart';
 final Map<String, String> enUS = {
   EnumLocal.txtAppName.name: "Kul Class",
   EnumLocal.txtSkip.name: "Skip",
-  EnumLocal.txtOnBoardingTitle_1.name: "With Kul Class Turn Livestreams Into Education",
-  EnumLocal.txtOnBoardingTitle_2.name: "Go Live to Teach and Share What You Love",
-  EnumLocal.txtOnBoardingTitle_3.name: "Learn New Skills, Join Live Classes, Earn",
-  EnumLocal.txtOnBoardingSubTitle_1.name: "Get paid through subscriptions and virtual gifts. Your content has value — start turning passion into income.",
-  EnumLocal.txtOnBoardingSubTitle_2.name: "Share your knowledge, skills, or talent with a global audience. Whether it’s academics, DIYs, or entertainment — your stage is live!",
-  EnumLocal.txtOnBoardingSubTitle_3.name: "Explore live classes, join skill-based competitions, and grow with a vibrant, interactive community of learners and creators.",
-  EnumLocal.txtLoginTitle.name: "Step In — Let the World See You Shine",
-  EnumLocal.txtLoginSubTitle.name: "Sign in or join instantly to teach, learn, compete, and earn — all in one powerful live streaming platform.",
-  EnumLocal.txtQuickLogIn.name: "Enter",
+  EnumLocal.txtOnBoardingTitle_1.name: "Turn Livestreams Into Interactive Learning",
+EnumLocal.txtOnBoardingTitle_2.name: "Go Live to Teach and Share What You Love",
+EnumLocal.txtOnBoardingTitle_3.name: "Learn New Skills and Join Live Classes",
+
+EnumLocal.txtOnBoardingSubTitle_1.name: 
+  "Host live sessions, connect with learners in real time, and create meaningful learning experiences through streaming.",
+
+EnumLocal.txtOnBoardingSubTitle_2.name: 
+  "Share your knowledge, skills, or talent with a global audience. From academics to creativity — your classroom is live.",
+
+EnumLocal.txtOnBoardingSubTitle_3.name: 
+  "Discover live classes, take part in skill-based activities, and grow within an engaging community of learners and creators.",
+
+EnumLocal.txtLoginTitle.name: 
+  "Welcome — Your Learning Journey Starts Here",
+
+EnumLocal.txtLoginSubTitle.name: 
+  "Sign in or join instantly to teach, learn, and connect through live interactive experiences."
+
+  EnumLocal.txtQuickLogIn.name: "Login As Guest",
   EnumLocal.txtContinueWithGoogle.name: "Continue with Google",
   EnumLocal.txtFillProfile.name: "Fill Profile",
   EnumLocal.txtEditProfile.name: "Edit Profile",
@@ -26,6 +37,7 @@ final Map<String, String> enUS = {
   EnumLocal.txtFemale.name: "Female",
   EnumLocal.txtOther.name: "Other",
   EnumLocal.txtSaveProfile.name: "Save Profile",
+  EnumLocal.txtSaveProfile2.name: "Continue",
   EnumLocal.txtSendGift.name: "Send Gift",
   EnumLocal.txtSend.name: "Send",
   EnumLocal.txtCoins.name: "Coins",
@@ -56,7 +68,8 @@ final Map<String, String> enUS = {
   EnumLocal.txtFeeds.name: "Feeds",
   EnumLocal.txtCreate.name: "Create",
   EnumLocal.txtSayHi.name: "Say “Hi”",
-  EnumLocal.txtReport.name: "Report",
+  EnumLocal.txtReport.name: "Report/Block",
+  EnumLocal.txtReport.name2: "Report & Block User",
   EnumLocal.txtCancel.name: "Cancel",
   EnumLocal.txtItIsSpam.name: "It is spam",
   EnumLocal.txtNudityOrSexualActivity.name: "Nudity or sexual activity",
@@ -150,8 +163,8 @@ final Map<String, String> enUS = {
   EnumLocal.txtProfileUpdateSuccessfully.name: "Profile update successfully",
   EnumLocal.txtReelsUploadSuccessfully.name: "Reels upload successfully",
   EnumLocal.txtYouCantFollowYourOwnAccount.name: "You can't subscribe to your own account",
-  EnumLocal.txtReportSending.name: "Report sending...",
-  EnumLocal.txtReportSendSuccess.name: "Report send success",
+  EnumLocal.txtReportSending.name: "Request Processing",
+  EnumLocal.txtReportSendSuccess.name: "Your report and block request have been received. The changes will be completed within 24 hours.",
   EnumLocal.txtYouCanSelectMaximumFiveImages.name: "You can select maximum 5 images !!",
   EnumLocal.txtPostUploading.name: "Post Uploading...",
   EnumLocal.txtPostUploadSuccessfully.name: "Post uploaded successfully",
@@ -227,7 +240,7 @@ final Map<String, String> enUS = {
   EnumLocal.txtDeleteVideo.name: "Delete Video",
   EnumLocal.txtDeletePostVideoContent.name: "Are you certain you want to proceed with deleting this item? Once deleted, this action cannot be undone, and the item will be permanently removed from your records. Please make sure you have reviewed your decision carefully before proceeding.",
   EnumLocal.txtMobile.name: "Mobile",
-  EnumLocal.txtGoogle.name: "Apple SignIn",
+  EnumLocal.txtGoogle.name: "SignUp/Login with Google",
   EnumLocal.txtOr.name: "or",
   EnumLocal.txtUseAudio.name: "Use audio",
   EnumLocal.txtAudio.name: "Audio",

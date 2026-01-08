@@ -77,6 +77,8 @@ class LoginView extends GetView<LoginController> {
                     style: AppFontStyle.styleW400(AppColor.white, 14),
                   ),
                   20.height,
+                  
+                  // --- Quick Login Button ---
                   GestureDetector(
                     onTap: controller.onQuickLogin,
                     child: Container(
@@ -110,7 +112,10 @@ class LoginView extends GetView<LoginController> {
                       ),
                     ),
                   ),
+                  
                   15.height,
+                  
+                  // --- Divider ---
                   Row(
                     children: [
                       Expanded(child: Divider(color: AppColor.white.withOpacity(0.15))),
@@ -123,74 +128,42 @@ class LoginView extends GetView<LoginController> {
                       Expanded(child: Divider(color: AppColor.white.withOpacity(0.15))),
                     ],
                   ),
+                  
                   15.height,
-                  Row(
-                    children: [
-                      Expanded(
-                        child: GestureDetector(
-                          onTap: controller.onGoogleLogin,
-                          child: Container(
-                            height: 56,
-                            padding: EdgeInsets.only(left: 6, right: 52),
+                  
+                  // --- Google Login Button (Now Full Width) ---
+                  GestureDetector(
+                    onTap: controller.onGoogleLogin,
+                    child: Container(
+                      height: 56,
+                      width: Get.width, // Set to full width like Quick Login
+                      padding: EdgeInsets.only(left: 6, right: 52), // Same padding
+                      decoration: BoxDecoration(
+                        color: AppColor.colorDarkPink,
+                        borderRadius: BorderRadius.circular(30),
+                      ),
+                      child: Row(
+                        children: [
+                          Container(
+                            height: 46,
+                            width: 46,
                             decoration: BoxDecoration(
-                              color: AppColor.colorDarkPink,
-                              borderRadius: BorderRadius.circular(30),
+                              color: AppColor.white,
+                              shape: BoxShape.circle,
                             ),
-                            child: Row(
-                              children: [
-                                Container(
-                                  height: 46,
-                                  width: 46,
-                                  decoration: BoxDecoration(
-                                    color: AppColor.white,
-                                    shape: BoxShape.circle,
-                                  ),
-                                  child: Center(child: Image.asset(AppAsset.icGoogleLogo, width: 32)),
-                                ),
-                                Spacer(),
-                                Text(
-                                  EnumLocal.txtGoogle.name.tr,
-                                  style: AppFontStyle.styleW600(AppColor.white, 16),
-                                ),
-                              ],
+                            child: Center(child: Image.asset(AppAsset.icGoogleLogo, width: 32)),
+                          ),
+                          Expanded(
+                            child: Center(
+                              child: Text(
+                                EnumLocal.txtGoogle.name.tr,
+                                style: AppFontStyle.styleW600(AppColor.white, 16),
+                              ),
                             ),
                           ),
-                        ),
+                        ],
                       ),
-                      15.width,
-                      Expanded(
-                        child: GestureDetector(
-                          onTap: () => Get.toNamed(AppRoutes.mobileNumLoginPage),
-                          child: Container(
-                            height: 56,
-                            padding: EdgeInsets.only(left: 6, right: 52),
-                            decoration: BoxDecoration(
-                              color: AppColor.colorBlue,
-                              borderRadius: BorderRadius.circular(30),
-                            ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                Container(
-                                  height: 46,
-                                  width: 46,
-                                  decoration: BoxDecoration(
-                                    color: AppColor.white,
-                                    shape: BoxShape.circle,
-                                  ),
-                                  child: Center(child: Image.asset(AppAsset.icMobile, width: 32)),
-                                ),
-                                Spacer(),
-                                Text(
-                                  EnumLocal.txtMobile.name.tr,
-                                  style: AppFontStyle.styleW600(AppColor.white, 16),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
+                    ),
                   ),
                   10.height,
                 ],

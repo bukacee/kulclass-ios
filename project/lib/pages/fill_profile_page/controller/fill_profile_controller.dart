@@ -25,7 +25,10 @@ class FillProfileController extends GetxController {
   TextEditingController idCodeController = TextEditingController();
   TextEditingController bioDetailsController = TextEditingController();
 
-  Map<String, String> selectedCountry = {"flag": "🇮🇳", "name": "India"};
+  
+
+Map<String, String> selectedCountry = {"flag": "🇺🇸", "name": "United States"};
+
 
   String selectedGender = "male";
 

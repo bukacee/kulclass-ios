@@ -99,7 +99,7 @@ class ReportBottomSheetUi {
                       ),
                       10.height,
                       Text(
-                        EnumLocal.txtReport.name.tr,
+                        EnumLocal.txtReport.name2.tr,
                         style: AppFontStyle.styleW700(AppColor.black, 17),
                       ),
                     ],

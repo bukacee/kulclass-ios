@@ -160,65 +160,72 @@ class FillProfileView extends GetView<FillProfileController> {
                     ),
                   ),
                 ),
-                // 15.height,
-                // FillProfileFieldUi(
-                //   enabled: false,
-                //   keyboardType: TextInputType.number,
-                //   controller: controller.idCodeController,
-                //   title: EnumLocal.txtIdentificationCode.name.tr,
-                //   maxLines: 1,
-                //   contentTopPadding: 5,
-                // ),
-                15.height,
-                Text(
-                  EnumLocal.txtGender.name.tr,
-                  style: AppFontStyle.styleW500(AppColor.coloGreyText, 14),
-                ),
-                5.height,
-                GetBuilder<FillProfileController>(
-                  id: "onChangeGender",
-                  builder: (logic) => Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+
+                // -------------------------------------------------------------
+                // ✅ HIDDEN SECTIONS (Gender, Country, Bio)
+                // Wrapped in Visibility(visible: false) so they are hidden
+                // but the code remains intact for the Controller.
+                // -------------------------------------------------------------
+                Visibility(
+                  visible: false, // Set to true if you ever want to show them again
+                  maintainState: true, // Ensures the widgets stay alive in memory
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      FillProfileRadioItem(
-                        isSelected: logic.selectedGender == "male",
-                        title: EnumLocal.txtMale.name.tr,
-                        callback: () => logic.onChangeGender("male"),
+                      15.height,
+                      Text(
+                        EnumLocal.txtGender.name.tr,
+                        style: AppFontStyle.styleW500(AppColor.coloGreyText, 14),
                       ),
-                      FillProfileRadioItem(
-                        isSelected: logic.selectedGender == "female",
-                        title: EnumLocal.txtFemale.name.tr,
-                        callback: () => logic.onChangeGender("female"),
+                      5.height,
+                      GetBuilder<FillProfileController>(
+                        id: "onChangeGender",
+                        builder: (logic) => Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            FillProfileRadioItem(
+                              isSelected: logic.selectedGender == "male",
+                              title: EnumLocal.txtMale.name.tr,
+                              callback: () => logic.onChangeGender("male"),
+                            ),
+                            FillProfileRadioItem(
+                              isSelected: logic.selectedGender == "female",
+                              title: EnumLocal.txtFemale.name.tr,
+                              callback: () => logic.onChangeGender("female"),
+                            ),
+                            FillProfileRadioItem(
+                              isSelected: logic.selectedGender == "other",
+                              title: EnumLocal.txtOther.name.tr,
+                              callback: () => logic.onChangeGender("other"),
+                            ),
+                          ],
+                        ),
                       ),
-                      FillProfileRadioItem(
-                        isSelected: logic.selectedGender == "other",
-                        title: EnumLocal.txtOther.name.tr,
-                        callback: () => logic.onChangeGender("other"),
+                      15.height,
+                      GetBuilder<FillProfileController>(
+                        id: "onChangeCountry",
+                        builder: (controller) => FillProfileCountyFieldUi(
+                          title: EnumLocal.txtCountry.name.tr,
+                          flag: controller.selectedCountry["flag"] ?? "🇺🇸",
+                          country: controller.selectedCountry["name"] ?? "United States",
+                        ),
                       ),
+                      15.height,
+                      FillProfileFieldUi(
+                        enabled: true,
+                        keyboardType: TextInputType.text,
+                        controller: controller.bioDetailsController,
+                        title: EnumLocal.txtBioDetails.name.tr,
+                        contentTopPadding: 5,
+                        height: 100,
+                        isOptional: true,
+                        maxLines: 3,
+                      ),
+                      15.height,
                     ],
                   ),
                 ),
-                15.height,
-                GetBuilder<FillProfileController>(
-                  id: "onChangeCountry",
-                  builder: (controller) => FillProfileCountyFieldUi(
-                    title: EnumLocal.txtCountry.name.tr,
-                    flag: controller.selectedCountry["flag"]!,
-                    country: controller.selectedCountry["name"]!,
-                  ),
-                ),
-                15.height,
-                FillProfileFieldUi(
-                  enabled: true,
-                  keyboardType: TextInputType.text,
-                  controller: controller.bioDetailsController,
-                  title: EnumLocal.txtBioDetails.name.tr,
-                  contentTopPadding: 5,
-                  height: 100,
-                  isOptional: true,
-                  maxLines: 3,
-                ),
-                15.height,
+                // -------------------------------------------------------------
               ],
             ),
           ),
@@ -228,7 +235,7 @@ class FillProfileView extends GetView<FillProfileController> {
           child: AppButtonUi(
             height: 56,
             color: AppColor.primary,
-            title: EnumLocal.txtSaveProfile.name.tr,
+            title: EnumLocal.txtSaveProfile2.name.tr,
             gradient: AppColor.primaryLinearGradient,
             fontSize: 18,
             callback: controller.onSaveProfile,
