@@ -392,15 +392,7 @@ class _PreviewReelsViewState extends State<PreviewReelsView> with SingleTickerPr
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    CustomIconButton(
-                      circleSize: 40,
-                      iconSize: 25,
-                      icon: AppAsset.icCreate,
-                      callback: () {
-                        isReelsPage.value = false;
-                        VideoPickerBottomSheetUi.show(context: context);
-                      },
-                    ),
+                    
                     5.width,
                     GestureDetector(
                       onTap: () {

@@ -7,6 +7,8 @@ import 'package:auralive/pages/reels_page/model/fetch_reels_model.dart';
 import 'package:auralive/routes/app_routes.dart';
 import 'package:auralive/utils/branch_io_services.dart';
 import 'package:auralive/utils/database.dart';
+import 'package:auralive/utils/utils.dart'; // Ensure Utils is imported
+import 'package:auralive/pages/create_report_page/api/create_report_api.dart'; // ⚠️ Import your API here
 
 import '../../bottom_bar_page/controller/bottom_bar_controller.dart';
 
@@ -18,8 +20,7 @@ class ReelsController extends GetxController {
 
   bool isPaginationLoading = false;
 
-  List mainReels = []; // *** >>> Google Ad Code <<< ***
-  // List<Data> mainReels = [];
+  List mainReels = []; 
 
   int currentPageIndex = 0;
   final quickAction = QuickActions();
@@ -27,34 +28,17 @@ class ReelsController extends GetxController {
 
   @override
   void onInit() {
-    // TODO: implement onInit
     super.onInit();
 
     quickAction.setShortcutItems([
-      ShortcutItem(
-        type: 'reel',
-        localizedTitle: 'Reel',
-        icon: "reel",
-      ),
-      ShortcutItem(
-        type: 'chat',
-        localizedTitle: 'Chat',
-        icon: "message",
-      ),
-      ShortcutItem(
-        type: 'feeds',
-        localizedTitle: 'Feeds',
-        icon: "feed",
-      ),
-      ShortcutItem(
-        type: 'search',
-        localizedTitle: 'Search',
-        icon: "search",
-      ),
+      ShortcutItem(type: 'reel', localizedTitle: 'Reel', icon: "reel"),
+      ShortcutItem(type: 'chat', localizedTitle: 'Chat', icon: "message"),
+      ShortcutItem(type: 'feeds', localizedTitle: 'Feeds', icon: "feed"),
+      ShortcutItem(type: 'search', localizedTitle: 'Search', icon: "search"),
     ]);
 
     quickAction.initialize(
-          (type) {
+      (type) {
         if (type == 'reel') {
           controller.onChangeBottomBar(0);
         } else if (type == 'chat') {
@@ -62,7 +46,6 @@ class ReelsController extends GetxController {
         } else if (type == 'feeds') {
           controller.onChangeBottomBar(2);
         } else if (type == 'search') {
-          // controller.onChangeBottomBar(0);
           Get.toNamed(AppRoutes.searchPage);
         }
       },
@@ -104,7 +87,6 @@ class ReelsController extends GetxController {
       if (fetchReelsModel!.data!.isNotEmpty) {
         final paginationData = fetchReelsModel?.data ?? [];
 
-        // <<< Code Start *** >>> Google Ad Code <<< ***
         if (GoogleAdServices.isShowFullNativeAdReels) {
           for (int i = 0; i < paginationData.length; i++) {
             if (i != 0 && i % GoogleAdServices.adShowIndex == 0) {
@@ -117,15 +99,37 @@ class ReelsController extends GetxController {
         } else {
           mainReels.addAll(paginationData);
         }
-        // *** >>> Google Ad Code <<< *** Code End >>>
-
-        // mainReels.addAll(paginationData);
-
         update(["onGetReels"]);
       }
     }
     if (mainReels.isEmpty) {
       update(["onGetReels"]);
+    }
+  }
+
+  // -----------------------------------------------------------------------
+  // ✅ ADDED: Function to Report and Hide Reel Immediately
+  // -----------------------------------------------------------------------
+  Future<void> onReportReel({required String reelId, required String reason}) async {
+    // 1. Call API
+    bool? isSuccess = await CreateReportApi.callApi(
+      loginUserId: Database.loginUserId,
+      reportReason: reason,
+      eventType: 1, // 1 = Video Report
+      eventId: reelId,
+    );
+
+    // 2. Hide Locally on Success
+    if (isSuccess == true) {
+      // Remove the item from the list where ID matches
+      // Note: We check 'item != null' because ads are null
+      mainReels.removeWhere((item) => item != null && item.id == reelId);
+      
+      // Update UI
+      update(["onGetReels"]);
+      Utils.showToast("Reel reported and hidden.");
+    } else {
+      Utils.showToast("Failed to report.");
     }
   }
 }
