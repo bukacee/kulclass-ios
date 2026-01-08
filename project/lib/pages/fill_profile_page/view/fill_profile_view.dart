@@ -235,7 +235,7 @@ class FillProfileView extends GetView<FillProfileController> {
           child: AppButtonUi(
             height: 56,
             color: AppColor.primary,
-            title: EnumLocal.txtSaveProfile2.name.tr,
+            title: EnumLocal.txtSaveProfile.name.tr,
             gradient: AppColor.primaryLinearGradient,
             fontSize: 18,
             callback: controller.onSaveProfile,

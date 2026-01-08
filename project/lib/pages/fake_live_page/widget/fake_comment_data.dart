@@ -33,12 +33,11 @@ List<String> usrLevel = [
   "Isabella",
 ];
  List<HostComment> fakeHostCommentList = [
-  HostComment(message: "I love this", user: usrLevel[0], image: commentUser[0]),"
+  HostComment(message: "I love this", user: usrLevel[0], image: commentUser[0]),
   HostComment(
     message: "Hello Dear",
     user: usrLevel[0],
-    image: commentUser[1],
-  ),
+    image: commentUser[1]),
   HostComment(message: "Joined the class", user: usrLevel[1], image: commentUser[2]),
   HostComment(message: "Excited to learn from this session", user: usrLevel[2], image: commentUser[3]),
   HostComment(message: "Great explanation so far", user: usrLevel[3], image: commentUser[4]),

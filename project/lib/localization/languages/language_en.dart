@@ -20,7 +20,7 @@ EnumLocal.txtLoginTitle.name:
   "Welcome — Your Learning Journey Starts Here",
 
 EnumLocal.txtLoginSubTitle.name: 
-  "Sign in or join instantly to teach, learn, and connect through live interactive experiences."
+  "Sign in or join instantly to teach, learn, and connect through live interactive experiences.",
 
   EnumLocal.txtQuickLogIn.name: "Login As Guest",
   EnumLocal.txtContinueWithGoogle.name: "Continue with Google",
@@ -36,8 +36,7 @@ EnumLocal.txtLoginSubTitle.name:
   EnumLocal.txtMale.name: "Male",
   EnumLocal.txtFemale.name: "Female",
   EnumLocal.txtOther.name: "Other",
-  EnumLocal.txtSaveProfile.name: "Save Profile",
-  EnumLocal.txtSaveProfile2.name: "Continue",
+  EnumLocal.txtSaveProfile.name: "Save Profile", 
   EnumLocal.txtSendGift.name: "Send Gift",
   EnumLocal.txtSend.name: "Send",
   EnumLocal.txtCoins.name: "Coins",
@@ -68,8 +67,7 @@ EnumLocal.txtLoginSubTitle.name:
   EnumLocal.txtFeeds.name: "Feeds",
   EnumLocal.txtCreate.name: "Create",
   EnumLocal.txtSayHi.name: "Say “Hi”",
-  EnumLocal.txtReport.name: "Report/Block",
-  EnumLocal.txtReport.name2: "Report & Block User",
+  EnumLocal.txtReport.name: "Report/Block", 
   EnumLocal.txtCancel.name: "Cancel",
   EnumLocal.txtItIsSpam.name: "It is spam",
   EnumLocal.txtNudityOrSexualActivity.name: "Nudity or sexual activity",

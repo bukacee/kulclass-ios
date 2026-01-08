@@ -614,7 +614,7 @@ class ChatController extends GetxController {
       id: "20",
       chatTopicId: "210",
       senderUserId: "receiver010",
-      message: "Yes, I just finished it."
+      message: "Yes, I just finished it.",
       image: "",
       audio: "",
       isRead: false,
