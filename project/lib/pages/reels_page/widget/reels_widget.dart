@@ -70,6 +70,9 @@ class _PreviewReelsViewState extends State<PreviewReelsView> with SingleTickerPr
   AnimationController? _controller;
   late Animation<double> _animation;
 
+  // ✅ 1. ADD THIS VARIABLE
+  String? currentVideoUrl;
+
   RxBool isReadMore = false.obs;
 
   @override
@@ -85,6 +88,35 @@ class _PreviewReelsViewState extends State<PreviewReelsView> with SingleTickerPr
     initializeVideoPlayer();
     customSetting();
     super.initState();
+  }
+
+  @override
+  void didUpdateWidget(covariant PreviewReelsView oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    // Check if the list still has data at this index
+    if (widget.index < controller.mainReels.length && 
+        controller.mainReels[widget.index] != null) {
+      
+      String newUrl = controller.mainReels[widget.index].videoUrl ?? "";
+
+      // If the URL at this index is different from what we are currently playing...
+      if (newUrl != currentVideoUrl) {
+        Utils.showLog("Reel Changed at index ${widget.index}. Reloading Video...");
+        
+        // 1. Stop and Dispose the old video
+        onDisposeVideoPlayer();
+        
+        // 2. Reset UI states
+        isVideoLoading.value = true;
+        isLike.value = controller.mainReels[widget.index].isLike ?? false;
+        customChanges["like"] = controller.mainReels[widget.index].totalLikes ?? 0;
+        customChanges["comment"] = controller.mainReels[widget.index].totalComments ?? 0;
+
+        // 3. Load the new video
+        initializeVideoPlayer();
+      }
+    }
   }
 
   @override
@@ -108,7 +140,14 @@ class _PreviewReelsViewState extends State<PreviewReelsView> with SingleTickerPr
 
   Future<void> initializeVideoPlayer() async {
     try {
+      
+      // Safety check for Ads (null values)
+      if (controller.mainReels[widget.index] == null) return;
+
       String videoPath = controller.mainReels[widget.index].videoUrl!;
+
+      // ✅ 3. UPDATE CURRENT URL TRACKER
+      currentVideoUrl = videoPath;
 
       videoPlayerController = VideoPlayerController.networkUrl(Uri.parse(Api.baseUrl + videoPath));
 
@@ -127,7 +166,8 @@ class _PreviewReelsViewState extends State<PreviewReelsView> with SingleTickerPr
 
         if (chewieController != null) {
           isVideoLoading.value = false;
-          (widget.index == widget.currentPageIndex && isReelsPage.value) ? onPlayVideo() : null; // Use => First Time Video Playing...
+          // Only auto-play if this is the active page
+          (widget.index == widget.currentPageIndex && isReelsPage.value) ? onPlayVideo() : null; 
         } else {
           isVideoLoading.value = true;
         }
