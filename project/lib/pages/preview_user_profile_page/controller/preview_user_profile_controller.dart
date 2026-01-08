@@ -204,4 +204,3 @@ Future<void> onReportUser({required String userId, required String reason}) asyn
     }
   }
 }
-}

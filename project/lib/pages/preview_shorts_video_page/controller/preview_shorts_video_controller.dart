@@ -3,6 +3,8 @@ import 'package:preload_page_view/preload_page_view.dart';
 import 'package:auralive/pages/preview_shorts_video_page/model/preview_shorts_video_model.dart';
 // ... inside PreviewShortsVideoController ...
 import 'package:auralive/pages/splash_screen_page/api/create_report_api.dart'; // Import API
+import 'package:auralive/utils/utils.dart';       // ✅ ADD THIS
+import 'package:auralive/utils/database.dart';    // ✅ ADD THIS
 
 
 
@@ -52,5 +54,5 @@ class PreviewShortsVideoController extends GetxController {
       Get.back(); // Close preview
     }
   }
-  
+
 }

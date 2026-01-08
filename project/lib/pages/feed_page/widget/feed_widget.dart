@@ -476,6 +476,9 @@ class _PostViewState extends State<PostView> {
                     GestureDetector(
                       onTap: () {
                        
+                       final FeedController controller = Get.find<FeedController>();
+
+
                        ReportBottomSheetUi.show(
   context: context,
   onReport: (reason) {

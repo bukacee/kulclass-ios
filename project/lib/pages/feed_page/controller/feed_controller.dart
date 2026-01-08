@@ -9,6 +9,7 @@ import 'package:auralive/routes/app_routes.dart';
 import 'package:auralive/ui/image_picker_bottom_sheet_ui.dart';
 import 'package:auralive/utils/branch_io_services.dart';
 import 'package:auralive/utils/database.dart';
+import 'package:auralive/utils/utils.dart'; // ✅ ADD THIS
 // ... inside FeedController ...
 import 'package:auralive/pages/splash_screen_page/api/create_report_api.dart'; // Import API
 
