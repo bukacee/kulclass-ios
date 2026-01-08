@@ -16,6 +16,7 @@ import 'package:auralive/utils/enums.dart';
 import 'package:auralive/utils/font_style.dart'; 
 import 'package:auralive/widgets/gift_media_widget.dart'; 
 
+
 class PreviewUserProfileAppBar extends StatelessWidget implements PreferredSizeWidget {
   const PreviewUserProfileAppBar({super.key});
 
@@ -61,9 +62,17 @@ class PreviewUserProfileAppBar extends StatelessWidget implements PreferredSizeW
                 GetBuilder<PreviewUserProfileController>(
                   builder: (controller) => GestureDetector(
                     onTap: () {
-                      ReportBottomSheetUi.show(
-                          context: context, eventId: controller.userId, eventType: 3); // User Report...
+                  ReportBottomSheetUi.show(
+                    context: context,
+                    onReport: (reason) {
+                      // ✅ Call Controller to Report User & Exit Page
+                      controller.onReportUser(
+                        userId: controller.userId,
+                        reason: reason,
+                      );
                     },
+                  );
+                },
                     child: Container(
                       height: 35,
                       width: 35,

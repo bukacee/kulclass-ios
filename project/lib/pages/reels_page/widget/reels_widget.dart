@@ -395,10 +395,20 @@ class _PreviewReelsViewState extends State<PreviewReelsView> with SingleTickerPr
                     
                     5.width,
                     GestureDetector(
-                      onTap: () {
-                        isReelsPage.value = false;
-                        ReportBottomSheetUi.show(context: context, eventId: controller.mainReels[widget.index].id ?? "", eventType: 1);
-                      },
+                     onTap: () {
+  isReelsPage.value = false;
+
+  ReportBottomSheetUi.show(
+    context: context,
+    onReport: (reason) {
+      // ✅ Call Controller to Report & Hide
+      controller.onReportReel(
+        reelId: controller.mainReels[widget.index].id ?? "",
+        reason: reason,
+      );
+    },
+  );
+},
                       child: Container(
                         height: 40,
                         width: 40,

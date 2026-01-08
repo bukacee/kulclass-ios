@@ -2,45 +2,23 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:auralive/main.dart';
-import 'package:auralive/pages/splash_screen_page/api/create_report_api.dart';
+// ❌ REMOVED: CreateReportApi import (Controller handles it now)
 import 'package:auralive/pages/splash_screen_page/api/fetch_report_api.dart';
 import 'package:auralive/pages/splash_screen_page/model/fetch_report_model.dart';
 import 'package:auralive/shimmer/report_bottom_sheet_shimmer_ui.dart';
 import 'package:auralive/utils/asset.dart';
 import 'package:auralive/utils/color.dart';
 import 'package:auralive/size_extension.dart';
-import 'package:auralive/utils/database.dart';
 import 'package:auralive/utils/enums.dart';
 import 'package:auralive/utils/font_style.dart';
-import 'package:auralive/utils/utils.dart';
 
 class ReportBottomSheetUi {
   static RxInt selectedReportType = 0.obs;
-
   static RxBool isLoading = false.obs;
-
   static FetchReportModel? fetchReportModel;
-
   static List<Data> reportTypes = [];
 
-  static Future<void> onSendReport({required String eventId, required int eventType}) async {
-    Utils.showToast(EnumLocal.txtReportSending.name.tr);
-    Get.back();
-
-    final response = await CreateReportApi.callApi(
-      loginUserId: Database.loginUserId,
-      reportReason: reportTypes[selectedReportType.value].title ?? "",
-      eventType: eventType,
-      eventId: eventId,
-    );
-
-    if (response != null && response) {
-      Utils.showToast(EnumLocal.txtReportSendSuccess.name.tr);
-    } else {
-      Utils.showToast(EnumLocal.txtSomeThingWentWrong.name.tr);
-    }
-  }
-
+  // ✅ FETCH REASONS (Kept this logic)
   static Future<void> onGetReports() async {
     if (reportTypes.isEmpty) {
       isLoading.value = true;
@@ -53,10 +31,10 @@ class ReportBottomSheetUi {
     }
   }
 
+  // ✅ UPDATED SHOW METHOD
   static void show({
     required BuildContext context,
-    required String eventId,
-    required int eventType,
+    required Function(String reason) onReport, // <--- THE NEW CALLBACK
   }) async {
     onGetReports();
 
@@ -168,6 +146,7 @@ class ReportBottomSheetUi {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
+                      // CANCEL BUTTON
                       GestureDetector(
                         onTap: () => Get.back(),
                         child: Container(
@@ -183,9 +162,21 @@ class ReportBottomSheetUi {
                         ),
                       ),
                       15.width,
+                      
+                      // ✅ REPORT BUTTON (Now calls the callback)
                       GestureDetector(
-                        onTap: () async {
-                          await onSendReport(eventId: eventId, eventType: eventType);
+                        onTap: () {
+                          // 1. Close the sheet
+                          Get.back(); 
+                          
+                          // 2. Get the reason string
+                          String reason = "";
+                          if (reportTypes.isNotEmpty && selectedReportType.value < reportTypes.length) {
+                             reason = reportTypes[selectedReportType.value].title ?? "";
+                          }
+                          
+                          // 3. Pass reason to the Controller to handle API + Hiding
+                          onReport(reason); 
                         },
                         child: Container(
                           padding: const EdgeInsets.symmetric(horizontal: 35, vertical: 12),
@@ -245,23 +236,3 @@ class ReportRadioButtonUi extends StatelessWidget {
     );
   }
 }
-
-// TODO => Static Reports Types With Multi Language...
-
-//   static List reportTypes = [
-//     "",
-//     EnumLocal.txtItIsSpam.name.tr,
-//     EnumLocal.txtNudityOrSexualActivity.name.tr,
-//     EnumLocal.txtHateSpeechOrSymbols.name.tr,
-//     EnumLocal.txtViolenceOrDangerousOrganization.name.tr,
-//     EnumLocal.txtFalseInformation.name.tr,
-//     EnumLocal.txtBullyingOrHarassment.name.tr,
-//     EnumLocal.txtScamOrFraud.name.tr,
-//     EnumLocal.txtIntellectualPropertyViolation.name.tr,
-//     EnumLocal.txtSuicideOrSelfInjury.name.tr,
-//     EnumLocal.txtDrugs.name.tr,
-//     EnumLocal.txtEatingDisorders.name.tr,
-//     EnumLocal.txtSomethingElse.name.tr,
-//     EnumLocal.txtChildAbuse.name.tr,
-//     EnumLocal.txtOthers.name.tr,
-//   ];
