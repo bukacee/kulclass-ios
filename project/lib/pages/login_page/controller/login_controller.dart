@@ -102,8 +102,13 @@ class LoginController extends GetxController {
     // Self-Healing Identity Logic
     if (Database.identity.isEmpty) {
        String newId = "ios_fix_${DateTime.now().millisecondsSinceEpoch}";
-       String? token = await FirebaseMessaging.instance.getToken();
-       await Database.init(newId, token ?? "");
+       
+       // ❌ REMOVE THIS LINE (It causes the hang):
+       // String? token = await FirebaseMessaging.instance.getToken();
+       
+       // ✅ USE THIS INSTEAD (Pass empty string to unblock):
+       Utils.showLog("Skipping token fetch to prevent hang...");
+       await Database.init(newId, ""); 
     }
 
     // [DEBUG] Checkpoint 2
