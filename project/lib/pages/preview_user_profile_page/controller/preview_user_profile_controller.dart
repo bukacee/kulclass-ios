@@ -14,6 +14,7 @@ import 'package:auralive/routes/app_routes.dart';
 import 'package:auralive/utils/database.dart';
 import 'package:auralive/utils/enums.dart';
 import 'package:auralive/utils/utils.dart';
+import 'package:auralive/pages/splash_screen_page/api/create_report_api.dart';
 
 class PreviewUserProfileController extends GetxController with GetTickerProviderStateMixin {
   TabController? tabController;
@@ -185,4 +186,22 @@ class PreviewUserProfileController extends GetxController with GetTickerProvider
     }
     Get.toNamed(AppRoutes.previewShortsVideoPage, arguments: {"index": index, "video": mainShorts, "previousPageIsAudioWiseVideoPage": false});
   }
+
+
+Future<void> onReportUser({required String userId, required String reason}) async {
+    bool? success = await CreateReportApi.callApi(
+      loginUserId: Database.loginUserId,
+      reportReason: reason,
+      eventType: 3, // 3 = User Report
+      eventId: userId,
+    );
+
+    if (success == true) {
+      Utils.showToast("User reported.");
+      Get.back(); // Exit page
+    } else {
+      Utils.showToast("Failed to report user.");
+    }
+  }
+}
 }

@@ -9,6 +9,10 @@ import 'package:auralive/routes/app_routes.dart';
 import 'package:auralive/ui/image_picker_bottom_sheet_ui.dart';
 import 'package:auralive/utils/branch_io_services.dart';
 import 'package:auralive/utils/database.dart';
+// ... inside FeedController ...
+import 'package:auralive/pages/splash_screen_page/api/create_report_api.dart'; // Import API
+
+
 
 class FeedController extends GetxController {
   ScrollController scrollController = ScrollController();
@@ -84,5 +88,22 @@ class FeedController extends GetxController {
         }
       },
     );
+  }
+
+ // ✅ ADD THIS FUNCTION
+  Future<void> onReportPost(String postId, String reason) async {
+    bool? success = await CreateReportApi.callApi(
+      loginUserId: Database.loginUserId,
+      reportReason: reason,
+      eventType: 2, // 2 = Post
+      eventId: postId,
+    );
+    if (success == true) {
+      // Remove post from list immediately
+      // Assuming your list is called 'postList' or similar
+      // postList.removeWhere((element) => element.id == postId); 
+      update(); 
+      Utils.showToast("Post reported and hidden.");
+    }
   }
 }

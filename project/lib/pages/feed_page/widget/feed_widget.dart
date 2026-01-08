@@ -475,7 +475,15 @@ class _PostViewState extends State<PostView> {
                     ),
                     GestureDetector(
                       onTap: () {
-                        ReportBottomSheetUi.show(context: context, eventId: widget.id, eventType: 2); // Post Report...
+                       
+                       ReportBottomSheetUi.show(
+  context: context,
+  onReport: (reason) {
+    controller.onReportPost(widget.id, reason);
+  },
+);
+
+
                       },
                       child: Container(
                         height: 30,

@@ -483,7 +483,17 @@ class _PreviewShortsViewState extends State<PreviewShortsView> with SingleTicker
                                 context: context,
                                 reportCallBack: () {
                                   Get.back();
-                                  ReportBottomSheetUi.show(context: context, eventId: controller.mainShorts[widget.index].videoId, eventType: 1);
+                                  
+                                  ReportBottomSheetUi.show(
+  context: context,
+  onReport: (reason) {
+    controller.onReportVideo(
+      controller.mainShorts[widget.index].videoId ?? "", 
+      reason
+    );
+  },
+);
+
                                 },
                                 deleteCallBack: () {
                                   Get.back();
@@ -497,7 +507,17 @@ class _PreviewShortsViewState extends State<PreviewShortsView> with SingleTicker
                                   );
                                 });
                           } else {
-                            ReportBottomSheetUi.show(context: context, eventId: controller.mainShorts[widget.index].videoId, eventType: 1);
+                            
+                            ReportBottomSheetUi.show(
+  context: context,
+  onReport: (reason) {
+    controller.onReportVideo(
+      controller.mainShorts[widget.index].videoId ?? "", 
+      reason
+    );
+  },
+);
+
                           }
                         }
                       },
