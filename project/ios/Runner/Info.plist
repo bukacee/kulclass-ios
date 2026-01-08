@@ -28,9 +28,7 @@
 	<key>CFBundleSignature</key>
 	<string>APPL</string>
 
-	<key>NSUserTrackingUsageDescription</key>
-<string>This identifier is used to ensure the security of your account and prevent fraud.</string>
-
+	
 	<key>CFBundleURLTypes</key>
     <array>
         <dict>
