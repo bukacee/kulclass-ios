@@ -117,7 +117,7 @@ class LoginView extends GetView<LoginController> {
                                 text: "Terms of Service",
                                 style: AppFontStyle.styleW600(AppColor.primary, 12).copyWith(decoration: TextDecoration.underline),
                                 recognizer: TapGestureRecognizer()
-                                  ..onTap = () {
+                                  ..onTap = () async {
                                     final Uri url = Uri.parse("https://kulclass.com/terms");
       if (!await launchUrl(url)) {
         Utils.showToast("Could not launch Terms URL");
@@ -132,7 +132,7 @@ class LoginView extends GetView<LoginController> {
                                 text: "Privacy Policy",
                                 style: AppFontStyle.styleW600(AppColor.primary, 12).copyWith(decoration: TextDecoration.underline),
                                 recognizer: TapGestureRecognizer()
-                                  ..onTap = () {
+                                  ..onTap = () async {
                                     // Open Privacy URL
                                     final Uri url = Uri.parse("https://kulclass.com/terms");
       if (!await launchUrl(url)) {
