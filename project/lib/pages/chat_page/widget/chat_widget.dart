@@ -34,6 +34,7 @@ class ChatAppBarUi extends GetView<ChatController> {
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
+              // --- Back Button ---
               GestureDetector(
                 onTap: () {
                   Get.back();
@@ -49,94 +50,98 @@ class ChatAppBarUi extends GetView<ChatController> {
                 ),
               ),
               2.width,
-              GestureDetector(
-                onTap: () {
-                  if (controller.receiverUserId != "") {
-                    PreviewProfileBottomSheetUi.show(
-                      context: context,
-                      userId: controller.receiverUserId,
-                    );
-                  }
-                },
-                child: Row(
-                  children: [
-                    Container(
-                      height: 46,
-                      width: 46,
-                      clipBehavior: Clip.antiAlias,
-                      decoration: const BoxDecoration(
-                        color: AppColor.colorBorder,
-                        shape: BoxShape.circle,
-                      ),
-                      child: Stack(
-                        children: [
-                          AspectRatio(
-                            aspectRatio: 1,
-                            child: Image.asset(AppAsset.icProfilePlaceHolder),
-                          ),
-                          AspectRatio(
-                            aspectRatio: 1,
-                            child: PreviewNetworkImageUi(image: controller.receiverImage),
-                          ),
-                          Visibility(
-                            visible: controller.isProfileImageBanned,
-                            child: AspectRatio(
+
+              // --- CLICKABLE PROFILE AREA (Image + Name) ---
+              Expanded(
+                child: GestureDetector(
+                  behavior: HitTestBehavior.translucent, // Ensures clicking empty space between text works
+                  onTap: () {
+                    if (controller.receiverUserId != "") {
+                      PreviewProfileBottomSheetUi.show(
+                        context: context,
+                        userId: controller.receiverUserId,
+                      );
+                    }
+                  },
+                  child: Row(
+                    children: [
+                      // 1. Profile Image
+                      Container(
+                        height: 46,
+                        width: 46,
+                        clipBehavior: Clip.antiAlias,
+                        decoration: const BoxDecoration(
+                          color: AppColor.colorBorder,
+                          shape: BoxShape.circle,
+                        ),
+                        child: Stack(
+                          children: [
+                            AspectRatio(
                               aspectRatio: 1,
-                              child: Container(
-                                clipBehavior: Clip.antiAlias,
-                                decoration: BoxDecoration(shape: BoxShape.circle),
-                                child: BlurryContainer(
-                                  blur: 3,
-                                  borderRadius: BorderRadius.circular(50),
-                                  color: AppColor.black.withOpacity(0.3),
-                                  child: Offstage(),
+                              child: Image.asset(AppAsset.icProfilePlaceHolder),
+                            ),
+                            AspectRatio(
+                              aspectRatio: 1,
+                              child: PreviewNetworkImageUi(image: controller.receiverImage),
+                            ),
+                            Visibility(
+                              visible: controller.isProfileImageBanned,
+                              child: AspectRatio(
+                                aspectRatio: 1,
+                                child: Container(
+                                  clipBehavior: Clip.antiAlias,
+                                  decoration: BoxDecoration(shape: BoxShape.circle),
+                                  child: BlurryContainer(
+                                    blur: 3,
+                                    borderRadius: BorderRadius.circular(50),
+                                    color: AppColor.black.withOpacity(0.3),
+                                    child: Offstage(),
+                                  ),
                                 ),
                               ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
-                    ),
-                    10.width,
-                    Stack(
-                      alignment: Alignment.centerLeft,
-                      children: [
-                        SizedBox(
-                          width: Get.width / 2,
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Flexible(
-                                fit: FlexFit.loose,
-                                child: Text(
-                                  controller.receiverName,
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: AppFontStyle.styleW700(AppColor.black, 16.5),
-                                ).paddingOnly(bottom: 16),
-                              ),
-                              Visibility(
-                                visible: controller.receiverIsBlueTik,
-                                child: Padding(
-                                  padding: const EdgeInsets.only(left: 2, bottom: 12),
-                                  child: Image.asset(AppAsset.icBlueTick, width: 20),
+                      10.width,
+
+                      // 2. Name and Username
+                      Expanded(
+                        child: Stack(
+                          alignment: Alignment.centerLeft,
+                          children: [
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Flexible(
+                                  fit: FlexFit.loose,
+                                  child: Text(
+                                    controller.receiverName,
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: AppFontStyle.styleW700(AppColor.black, 16.5),
+                                  ).paddingOnly(bottom: 16),
                                 ),
-                              ),
-                            ],
-                          ),
+                                Visibility(
+                                  visible: controller.receiverIsBlueTik,
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(left: 2, bottom: 12),
+                                    child: Image.asset(AppAsset.icBlueTick, width: 20),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Text(
+                              controller.receiverUserName,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: AppFontStyle.styleW500(AppColor.coloGreyText, 12),
+                            ).paddingOnly(top: 22),
+                          ],
                         ),
-                        SizedBox(
-                          width: Get.width / 2,
-                          child: Text(
-                            controller.receiverUserName,
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            style: AppFontStyle.styleW500(AppColor.coloGreyText, 12),
-                          ).paddingOnly(top: 22),
-                        ),
-                      ],
-                    ),
-                  ],
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ],
