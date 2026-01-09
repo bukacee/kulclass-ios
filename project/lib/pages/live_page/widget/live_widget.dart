@@ -9,7 +9,7 @@ import 'package:auralive/ui/preview_network_image_ui.dart';
 import 'package:auralive/main.dart';
 import 'package:auralive/pages/live_page/controller/live_controller.dart';
 import 'package:auralive/ui/stop_live_streaming_dialog_ui.dart';
-import 'package:auralive/ui/send_gift_on_live_bottom_sheet_ui.dart
+import 'package:auralive/ui/send_gift_on_live_bottom_sheet_ui.dart';
 import 'package:auralive/utils/asset.dart';
 import 'package:auralive/utils/color.dart';
 import 'package:auralive/size_extension.dart';
