@@ -380,16 +380,7 @@ class UserLiveUi extends StatelessWidget {
                       ),
                     ),
                   ),
-                  15.width,
-                  CircleIconButtonUi(
-                    circleSize: 50,
-                    iconSize: 48,
-                    color: AppColor.black.withOpacity(0.3),
-                    icon: AppAsset.icGift,
-                    callback: () {
-                      SendGiftOnLiveBottomSheetUi.show(context: context);
-                    },
-                  ),
+                 
                 ],
               ),
             ),
