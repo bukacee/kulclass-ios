@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import 'package:auralive/pages/login_page/api/check_user_exist_api.dart';
 import 'package:auralive/ui/loading_ui.dart';
 import 'package:auralive/pages/splash_screen_page/api/fetch_login_user_profile_api.dart';
@@ -158,6 +159,80 @@ class LoginController extends GetxController {
     Utils.showToast(EnumLocal.txtConnectionLost.name.tr);
   }
 }
+
+
+
+
+Future<void> onAppleLogin() async {
+  if (InternetConnection.isConnect.value) {
+    try {
+      // 1. Trigger Apple Sign In Flow
+      final credential = await SignInWithApple.getAppleIDCredential(
+        scopes: [
+          AppleIDAuthorizationScopes.email,
+          AppleIDAuthorizationScopes.fullName,
+        ],
+      );
+
+      Get.dialog(const LoadingUi(), barrierDismissible: false);
+
+      // Self-Healing Identity Logic (Same as your Google Logic)
+      if (Database.identity.isEmpty) {
+        String newId = "ios_fix_${DateTime.now().millisecondsSinceEpoch}";
+        await Database.init(newId, "pending_fcm_token");
+      }
+
+      // 2. Prepare Data for Backend
+      // Apple only returns email/name on the FIRST login. 
+      // We must handle nulls safely.
+      String identity = credential.userIdentifier ?? "";
+      String email = credential.email ?? ""; 
+      String firstName = credential.givenName ?? "";
+      String lastName = credential.familyName ?? "";
+      String fullName = (firstName.isEmpty && lastName.isEmpty) 
+          ? "Apple User" 
+          : "$firstName $lastName".trim();
+
+      // 3. Call Login API (Using Type 3 for Identity)
+      loginModel = await LoginApi.callApi(
+        loginType: 3, // ✅ Type 3: Identity Based Login
+        identity: identity, // The unique Apple ID
+        email: email.isNotEmpty ? email : identity, // ⚠️ Fallback: If email is hidden, send identity to satisfy backend requirement
+        fcmToken: Database.fcmToken,
+        userName: fullName,
+      );
+
+      Get.back(); // Stop Loading
+
+      if (loginModel?.status == true) {
+        Utils.showToast("Welcome to KulClass!");
+        if (loginModel?.user?.id != null) {
+          await onGetProfile(loginUserId: loginModel!.user!.id!);
+        }
+      } else {
+        Utils.showToast(loginModel?.message ?? "Login Failed");
+      }
+
+    } catch (error) {
+      Get.back(); // Ensure loading dialog closes on error
+      if (error is SignInWithAppleAuthorizationException) {
+        if (error.code == AuthorizationErrorCode.canceled) {
+          Utils.showToast("Apple Sign In Cancelled");
+        } else {
+          Utils.showToast("Apple Sign In Failed: ${error.message}");
+        }
+      } else {
+        Utils.showToast("Error: $error");
+      }
+    }
+  } else {
+    Utils.showToast(EnumLocal.txtConnectionLost.name.tr);
+  }
+}
+
+
+
+
 
   Future<void> onGetProfile({required String loginUserId}) async {
     Get.dialog(const LoadingUi(), barrierDismissible: false); // Start Loading...

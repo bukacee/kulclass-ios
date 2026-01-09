@@ -14,6 +14,8 @@ import 'package:auralive/utils/font_style.dart';
 import 'package:auralive/utils/utils.dart'; // Ensure Utils is imported for showToast
 import 'package:url_launcher/url_launcher.dart'; 
 
+import 'package:google_sign_in/google_sign_in.dart';
+
 class LoginView extends GetView<LoginController> {
   LoginView({super.key});
 
@@ -251,6 +253,51 @@ class LoginView extends GetView<LoginController> {
                       ),
                     ),
                   ),
+
+                  15.height,
+                  GestureDetector(
+                      onTap: () {
+                        if (isAgreed.value) {
+                          controller.onAppleLogin();
+                        } else {
+                          Utils.showToast("Please agree to the Terms & Guidelines first.");
+                        }
+                      },
+                      child: Container(
+                        height: 56,
+                        width: Get.width,
+                        padding: EdgeInsets.only(left: 6, right: 52),
+                        decoration: BoxDecoration(
+                          color: AppColor.white, 
+                          borderRadius: BorderRadius.circular(30),
+                        ),
+                        child: Row(
+                          children: [
+                            Container(
+                              height: 46,
+                              width: 46,
+                              decoration: BoxDecoration(
+                                color: AppColor.black, // Apple logo usually looks best on black or white
+                                shape: BoxShape.circle,
+                              ),
+                              child: Center(
+                                child: Icon(Icons.apple, color: AppColor.white, size: 28), // Built-in Icon
+                              ),
+                            ),
+                            Expanded(
+                              child: Center(
+                                child: Text(
+                                  "Sign in with Apple", 
+                                  style: AppFontStyle.styleW600(AppColor.black, 16),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+
+
                   10.height,
                 ],
               ),
