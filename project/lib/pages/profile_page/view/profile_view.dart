@@ -426,11 +426,7 @@ class ProfileView extends GetView<ProfileController> {
                             Tab(
                               icon: const ImageIcon(AssetImage(AppAsset.icFeeds), size: 30),
                               text: EnumLocal.txtFeeds.name.tr,
-                            ),
-                            Tab(
-                              icon: const ImageIcon(AssetImage(AppAsset.icCollections), size: 30),
-                              text: EnumLocal.txtCollections.name.tr,
-                            ),
+                            ), 
                           ],
                         ),
                       ),
