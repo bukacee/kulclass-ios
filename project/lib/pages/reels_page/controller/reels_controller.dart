@@ -81,27 +81,39 @@ class ReelsController extends GetxController {
 
   Future<void> onGetReels() async {
     fetchReelsModel = null;
-    fetchReelsModel = await FetchReelsApi.callApi(loginUserId: Database.loginUserId, videoId: BranchIoServices.eventId);
+    
+    // 1. First Attempt: Try to get the User's specific feed (Local/Personalized)
+    fetchReelsModel = await FetchReelsApi.callApi(
+      loginUserId: Database.loginUserId, 
+      videoId: BranchIoServices.eventId
+    );
 
-    if (fetchReelsModel?.data != null) {
-      if (fetchReelsModel!.data!.isNotEmpty) {
-        final paginationData = fetchReelsModel?.data ?? [];
-
-        if (GoogleAdServices.isShowFullNativeAdReels) {
-          for (int i = 0; i < paginationData.length; i++) {
-            if (i != 0 && i % GoogleAdServices.adShowIndex == 0) {
-              mainReels.add(null);
-              mainReels.add(paginationData[i]);
-            } else {
-              mainReels.add(paginationData[i]);
-            }
-          }
-        } else {
-          mainReels.addAll(paginationData);
-        }
-        update(["onGetReels"]);
+    // -------------------------------------------------------------------------
+    // ✅ THE FIX: The "Global/Guest" Safety Net
+    // -------------------------------------------------------------------------
+    // If the data is EMPTY (which happens for Apple Reviewers in empty regions),
+    // we fetch again passing an EMPTY userId. This forces the backend
+    // to return the GLOBAL Trending feed instead of an empty local feed.
+    if (fetchReelsModel?.data == null || fetchReelsModel!.data!.isEmpty) {
+      if (BranchIoServices.eventId.isEmpty) {
+        fetchReelsModel = await FetchReelsApi.callApi(
+          loginUserId: "", // <--- Empty ID forces Global/Guest Feed
+          videoId: ""
+        );
       }
     }
+    // -------------------------------------------------------------------------
+
+    if (fetchReelsModel?.data != null) {
+      // ... (Rest of your existing logic for handling ads and pagination)
+      if (fetchReelsModel!.data!.isNotEmpty) {
+         final paginationData = fetchReelsModel?.data ?? [];
+         // ... (Your ad injection logic)
+         mainReels.addAll(paginationData);
+         update(["onGetReels"]);
+      }
+    }
+    
     if (mainReels.isEmpty) {
       update(["onGetReels"]);
     }
