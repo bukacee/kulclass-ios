@@ -11,7 +11,7 @@
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	
-	<!-- ✅ Use your real bundle ID -->
+	
 	<key>CFBundleIdentifier</key>
 	<string>com.auraapp.live</string>
 
@@ -24,7 +24,7 @@
 	<key>CFBundleShortVersionString</key>
 	<string>$(FLUTTER_BUILD_NAME)</string>
 
-	<!-- ✅ Remove ????, replace with Apple’s default -->
+	
 	<key>CFBundleSignature</key>
 	<string>APPL</string>
 
@@ -89,7 +89,16 @@
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
 
-	<!-- ✅ Branch.io Configuration -->
+	<key>NSAppTransportSecurity</key>
+	<dict>
+	    <key>NSAllowsArbitraryLoads</key>
+	    <true/>
+	</dict>
+
+	<key>UIRequiresFullScreen</key>
+	<true/>
+
+	
 	<key>branch_key</key>
     <dict>
         <key>live</key>
@@ -105,8 +114,9 @@
     <key>DYLD_PRINT_TO_CONSOLE</key>
 	<string>1</string>
 
-	<!-- ✅ Google AdMob -->
+	
 	<key>GADApplicationIdentifier</key>
 	<string>ca-app-pub-8396715300849409~2894826498</string>
+
 </dict>
 </plist>
