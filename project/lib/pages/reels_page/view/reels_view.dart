@@ -63,8 +63,38 @@ class ReelsView extends GetView<ReelsController> {
                                     ),
                                   ),
                                   // ---------------------------------------------------------
-                                  // ✅ REMOVED: The "Upload Reel" Button is gone from here.
+                                  // ✅ The "Upload Reel" Button is here.
                                   // ---------------------------------------------------------
+
+                                  15.height,
+                        GestureDetector(
+                          onTap: () {
+                            VideoPickerBottomSheetUi.show(context: context);
+                          },
+                          child: Container(
+                            height: 45,
+                            width: 120,
+                            alignment: Alignment.center,
+                            decoration: BoxDecoration(
+                              border: Border.all(color: AppColor.primary, width: 1.5),
+                              borderRadius: BorderRadius.circular(50),
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                8.width,
+                                Icon(
+                                  Icons.add_circle_outline_rounded,
+                                  color: AppColor.primary,
+                                  size: 27,
+                                ),
+                                8.width,
+                                Text(EnumLocal.txtUpload.name.tr, style: AppFontStyle.styleW700(AppColor.primary, 17)),
+                              ],
+                            ),
+                          ),
+                        ),
+                                
                                 ],
                               ),
                             ),
