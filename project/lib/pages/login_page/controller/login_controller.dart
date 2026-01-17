@@ -23,26 +23,11 @@ class LoginController extends GetxController {
   FetchLoginUserProfileModel? fetchLoginUserProfileModel;
 
   List<String> randomNames = [
-    "Emily Johnson",
-    "Liam Smith",
-    "Isabella Martinez",
-    "Noah Brown",
-    "Sofia Davis",
-    "Oliver Wilson",
-    "Mia Anderson",
-    "James Thomas",
-    "Ava Robinson",
-    "Benjamin Lee",
-    "Charlotte Miller",
-    "Lucas Garcia",
-    "Amelia White",
-    "Ethan Harris",
-    "Harper Clark",
-    "Alexander Lewis",
-    "Evelyn Walker",
-    "Daniel Hall",
-    "Grace Young",
-    "Michael Allen",
+    "Emily Johnson", "Liam Smith", "Isabella Martinez", "Noah Brown",
+    "Sofia Davis", "Oliver Wilson", "Mia Anderson", "James Thomas",
+    "Ava Robinson", "Benjamin Lee", "Charlotte Miller", "Lucas Garcia",
+    "Amelia White", "Ethan Harris", "Harper Clark", "Alexander Lewis",
+    "Evelyn Walker", "Daniel Hall", "Grace Young", "Michael Allen",
   ];
 
   String onGetRandomName() {
@@ -53,31 +38,18 @@ class LoginController extends GetxController {
 
   Future<void> onQuickLogin() async {
     if (InternetConnection.isConnect.value) {
-      Get.dialog(const LoadingUi(), barrierDismissible: false); // Start Loading...
+      Get.dialog(const LoadingUi(), barrierDismissible: false);
 
-      // ---------------------------------------------------------
-      // 🛡️ SELF-HEALING: Fix Identity & Token before calling API
-      // ---------------------------------------------------------
       if (Database.identity.isEmpty) {
          Utils.showLog("⚠️ Identity missing during Quick Login. Fixing...");
-         
          String newId = "ios_quick_${DateTime.now().millisecondsSinceEpoch}";
-         
-         // Use dummy token to pass Backend validation
-         // (Backend rejects empty tokens)
          await Database.init(newId, "pending_fcm_token"); 
-          
       }
-      // ---------------------------------------------------------
 
-      // Calling Check User API...
+      // ✅ This Logic is CORRECT. We will copy this to Google/Apple.
       final isLogin = await CheckUserExistApi.callApi(identity: Database.identity) ?? false;
-
       Utils.showLog("Quick Login User Is Exist => $isLogin");
 
-      // Calling Login API...
-      // Note: We use Database.identity and Database.fcmToken because 
-      // the Self-Healing block above guarantees they are not empty.
       loginModel = isLogin
           ? await LoginApi.callApi(
               loginType: 3,
@@ -93,151 +65,174 @@ class LoginController extends GetxController {
               userName: onGetRandomName(),
             );
 
-      Get.back(); // Stop Loading...
+      Get.back();
 
       if (loginModel?.status == true && loginModel?.user?.id != null) {
-        await onGetProfile(loginUserId: loginModel!.user!.id!); // Get Profile Api...
+        await onGetProfile(loginUserId: loginModel!.user!.id!);
       } else if (loginModel?.message == "You are blocked by the admin.") {
         Utils.showToast("${loginModel?.message}");
-        Utils.showLog("User Blocked By Admin !!");
       } else {
-        // This handles "Oops! Invalid details!!"
         Utils.showToast(loginModel?.message ?? EnumLocal.txtSomeThingWentWrong.name.tr);
-        Utils.showLog("Login Api Calling Failed !!");
       }
     } else {
       Utils.showToast(EnumLocal.txtConnectionLost.name.tr);
-      Utils.showLog("Internet Connection Lost !!");
     }
   }
 
+  // -----------------------------------------------------------------------
+  // ✅ FIXED GOOGLE LOGIN
+  // -----------------------------------------------------------------------
   Future<void> onGoogleLogin() async {
-  if (InternetConnection.isConnect.value) {
-    Get.dialog(const LoadingUi(), barrierDismissible: false);
-
-  
-    
-    // Self-Healing Identity Logic
-    if (Database.identity.isEmpty) {
-       String newId = "ios_fix_${DateTime.now().millisecondsSinceEpoch}";
-       
-       // ❌ REMOVE THIS LINE (It causes the hang):
-       // String? token = await FirebaseMessaging.instance.getToken();
-       
-       
-       await Database.init(newId, "pending_fcm_token"); 
-    }
-
-   
-    
-    UserCredential? userCredential = await signInWithGoogle();
-
-    if (userCredential?.user?.email != null) {
-      
-      
-      loginModel = await LoginApi.callApi(
-        loginType: 2,
-        email: userCredential?.user?.email ?? "",
-        identity: Database.identity,
-        fcmToken: Database.fcmToken,
-        userName: userCredential?.user?.displayName ?? "",
-      );
-
-      Get.back(); // Stop Loading
-
-      if (loginModel?.status == true) {
-         Utils.showToast("Welcome to KulClass!");
-         await onGetProfile(loginUserId: loginModel!.user!.id!);
-      } else {
-         Utils.showToast("Login Failed");
-      }
-    } else {
-      Get.back();
-      Utils.showToast("Google Sign In Cancelled or Failed");
-    }
-  } else {
-    Utils.showToast(EnumLocal.txtConnectionLost.name.tr);
-  }
-}
-
-
-
-
-Future<void> onAppleLogin() async {
-  if (InternetConnection.isConnect.value) {
-    try {
-      // 1. Trigger Apple Sign In Flow
-      final credential = await SignInWithApple.getAppleIDCredential(
-        scopes: [
-          AppleIDAuthorizationScopes.email,
-          AppleIDAuthorizationScopes.fullName,
-        ],
-      );
-
+    if (InternetConnection.isConnect.value) {
       Get.dialog(const LoadingUi(), barrierDismissible: false);
 
-      // Self-Healing Identity Logic (Same as your Google Logic)
       if (Database.identity.isEmpty) {
-        String newId = "ios_fix_${DateTime.now().millisecondsSinceEpoch}";
-        await Database.init(newId, "pending_fcm_token");
+         String newId = "ios_fix_${DateTime.now().millisecondsSinceEpoch}";
+         await Database.init(newId, "pending_fcm_token"); 
       }
 
-      // 2. Prepare Data for Backend
-      // Apple only returns email/name on the FIRST login. 
-      // We must handle nulls safely.
-      String identity = credential.userIdentifier ?? "";
-      String email = credential.email ?? ""; 
-      String firstName = credential.givenName ?? "";
-      String lastName = credential.familyName ?? "";
-      String fullName = (firstName.isEmpty && lastName.isEmpty) 
-          ? "Apple User" 
-          : "$firstName $lastName".trim();
+      UserCredential? userCredential = await signInWithGoogle();
 
-      // 3. Call Login API (Using Type 3 for Identity)
-      loginModel = await LoginApi.callApi(
-        loginType: 3, // ✅ Type 3: Identity Based Login
-        identity: identity, // The unique Apple ID
-        email: email.isNotEmpty ? email : identity, // ⚠️ Fallback: If email is hidden, send identity to satisfy backend requirement
-        fcmToken: Database.fcmToken,
-        userName: fullName,
-      );
+      if (userCredential?.user?.email != null) {
+        String email = userCredential?.user?.email ?? "";
+        String name = userCredential?.user?.displayName ?? "";
 
-      Get.back(); // Stop Loading
+        // ✅ STEP 1: Check if this email already exists in DB
+        // We pass the email as 'identity' because for Google, Email is the key.
+        final isUserExist = await CheckUserExistApi.callApi(identity: email) ?? false;
+        
+        Utils.showLog("Google User Exists? => $isUserExist");
 
-      if (loginModel?.status == true) {
-        Utils.showToast("Welcome to KulClass!");
-        if (loginModel?.user?.id != null) {
-          await onGetProfile(loginUserId: loginModel!.user!.id!);
-        }
-      } else {
-        Utils.showToast(loginModel?.message ?? "Login Failed");
-      }
-
-    } catch (error) {
-      Get.back(); // Ensure loading dialog closes on error
-      if (error is SignInWithAppleAuthorizationException) {
-        if (error.code == AuthorizationErrorCode.canceled) {
-          Utils.showToast("Apple Sign In Cancelled");
+        // ✅ STEP 2: Call Login API based on existence
+        if (isUserExist) {
+          // EXISTING USER: Do NOT send userName (Prevent overwriting/creating new)
+          loginModel = await LoginApi.callApi(
+            loginType: 2,
+            email: email,
+            identity: Database.identity,
+            fcmToken: Database.fcmToken,
+            // userName: removed!
+          );
         } else {
-          Utils.showToast("Apple Sign In Failed: ${error.message}");
+          // NEW USER: Send userName to register
+          loginModel = await LoginApi.callApi(
+            loginType: 2,
+            email: email,
+            identity: Database.identity,
+            fcmToken: Database.fcmToken,
+            userName: name.isNotEmpty ? name : onGetRandomName(),
+          );
+        }
+
+        Get.back(); 
+
+        if (loginModel?.status == true) {
+           Utils.showToast("Welcome back!");
+           await onGetProfile(loginUserId: loginModel!.user!.id!);
+        } else {
+           Utils.showToast("Login Failed");
         }
       } else {
-        Utils.showToast("Error: $error");
+        Get.back();
+        Utils.showToast("Google Sign In Cancelled or Failed");
       }
+    } else {
+      Utils.showToast(EnumLocal.txtConnectionLost.name.tr);
     }
-  } else {
-    Utils.showToast(EnumLocal.txtConnectionLost.name.tr);
   }
-}
 
+  // -----------------------------------------------------------------------
+  // ✅ FIXED APPLE LOGIN
+  // -----------------------------------------------------------------------
+  Future<void> onAppleLogin() async {
+    if (InternetConnection.isConnect.value) {
+      try {
+        final credential = await SignInWithApple.getAppleIDCredential(
+          scopes: [
+            AppleIDAuthorizationScopes.email,
+            AppleIDAuthorizationScopes.fullName,
+          ],
+        );
 
+        Get.dialog(const LoadingUi(), barrierDismissible: false);
 
+        if (Database.identity.isEmpty) {
+          String newId = "ios_fix_${DateTime.now().millisecondsSinceEpoch}";
+          await Database.init(newId, "pending_fcm_token");
+        }
 
+        String identity = credential.userIdentifier ?? "";
+        String email = credential.email ?? ""; 
+        String firstName = credential.givenName ?? "";
+        String lastName = credential.familyName ?? "";
+        String fullName = (firstName.isEmpty && lastName.isEmpty) 
+            ? "Apple User" 
+            : "$firstName $lastName".trim();
 
+        // Apple only sends email ONCE. On subsequent logins, email is null.
+        // We use the identity (User Identifier) to check existence if email is missing.
+        String checkIdentity = email.isNotEmpty ? email : identity;
+
+        // ✅ STEP 1: Check if User Exists
+        final isUserExist = await CheckUserExistApi.callApi(identity: checkIdentity) ?? false;
+
+        Utils.showLog("Apple User Exists? => $isUserExist");
+
+        // ✅ STEP 2: Call Login API based on existence
+        if (isUserExist) {
+           // EXISTING USER: Login ONLY (No Name)
+           loginModel = await LoginApi.callApi(
+            loginType: 3, 
+            identity: identity, 
+            email: email.isNotEmpty ? email : identity, 
+            fcmToken: Database.fcmToken,
+            // userName: removed!
+          );
+        } else {
+           // NEW USER: Register with Name
+           loginModel = await LoginApi.callApi(
+            loginType: 3, 
+            identity: identity, 
+            email: email.isNotEmpty ? email : identity, 
+            fcmToken: Database.fcmToken,
+            userName: fullName,
+          );
+        }
+
+        Get.back(); 
+
+        if (loginModel?.status == true) {
+          Utils.showToast("Welcome back!");
+          if (loginModel?.user?.id != null) {
+            await onGetProfile(loginUserId: loginModel!.user!.id!);
+          }
+        } else {
+          Utils.showToast(loginModel?.message ?? "Login Failed");
+        }
+
+      } catch (error) {
+        Get.back();
+        if (error is SignInWithAppleAuthorizationException) {
+          if (error.code == AuthorizationErrorCode.canceled) {
+            Utils.showToast("Apple Sign In Cancelled");
+          } else {
+            Utils.showToast("Apple Sign In Failed: ${error.message}");
+          }
+        } else {
+          Utils.showToast("Error: $error");
+        }
+      }
+    } else {
+      Utils.showToast(EnumLocal.txtConnectionLost.name.tr);
+    }
+  }
+
+  // ... (Rest of your profile and helper functions remain the same)
+  
   Future<void> onGetProfile({required String loginUserId}) async {
-    Get.dialog(const LoadingUi(), barrierDismissible: false); // Start Loading...
+    Get.dialog(const LoadingUi(), barrierDismissible: false); 
     fetchLoginUserProfileModel = await FetchLoginUserProfileApi.callApi(loginUserId: loginUserId);
-    Get.back(); // Stop Loading...
+    Get.back(); 
 
     if (fetchLoginUserProfileModel?.user?.id != null && fetchLoginUserProfileModel?.user?.loginType != null) {
       Database.onSetIsNewUser(false);
@@ -256,29 +251,22 @@ Future<void> onAppleLogin() async {
     }
   }
 
-   static Future<UserCredential?> signInWithGoogle() async {
-  try {
-    final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
-    
-    if (googleUser == null) return null;
+  static Future<UserCredential?> signInWithGoogle() async {
+    try {
+      final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+      if (googleUser == null) return null;
 
-    final GoogleSignInAuthentication? googleAuth = await googleUser.authentication;
-    final credential = GoogleAuthProvider.credential(
-        accessToken: googleAuth?.accessToken, 
-        idToken: googleAuth?.idToken
-    );
-    
-    
-    // This line sends the Silent Push. If APNs is broken, it hangs here.
-    final result = await FirebaseAuth.instance.signInWithCredential(credential);
-    
-    return result;
-  } catch (error) {
-    Utils.showToast("Auth Error: $error");
+      final GoogleSignInAuthentication? googleAuth = await googleUser.authentication;
+      final credential = GoogleAuthProvider.credential(
+          accessToken: googleAuth?.accessToken, 
+          idToken: googleAuth?.idToken
+      );
+      
+      final result = await FirebaseAuth.instance.signInWithCredential(credential);
+      return result;
+    } catch (error) {
+      Utils.showToast("Auth Error: $error");
+    }
+    return null;
   }
-  return null;
-}
-
-
-
 }
