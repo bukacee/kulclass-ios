@@ -123,7 +123,8 @@ class LoginController extends GetxController {
         if (loginModel?.status == true) {
            Utils.showToast("Welcome to KulClass!");
            if (loginModel?.user?.id != null) {
-              await onGetProfile(loginUserId: loginModel!.user!.id!);
+              // await onGetProfile(loginUserId: loginModel!.user!.id!);
+             await onGetProfile(loginUserId: loginModel!.user!.id!, socialName: name);
            }
         } else {
            Utils.showToast(loginModel?.message ?? "Login Failed");
@@ -192,7 +193,8 @@ class LoginController extends GetxController {
         if (loginModel?.status == true) {
           Utils.showToast("Welcome to KulClass!");
           if (loginModel?.user?.id != null) {
-            await onGetProfile(loginUserId: loginModel!.user!.id!);
+            // await onGetProfile(loginUserId: loginModel!.user!.id!);
+            await onGetProfile(loginUserId: loginModel!.user!.id!, socialName: name);
           }
         } else {
           Utils.showToast(loginModel?.message ?? "Login Failed");
@@ -227,8 +229,13 @@ class LoginController extends GetxController {
       Database.onSetLoginType(int.parse((fetchLoginUserProfileModel?.user?.loginType ?? 0).toString()));
       Database.fetchLoginUserProfileModel = fetchLoginUserProfileModel;
 
-      if (fetchLoginUserProfileModel?.user?.country == "" || fetchLoginUserProfileModel?.user?.bio == "") {
-        Get.toNamed(AppRoutes.fillProfilePage);
+      //if (fetchLoginUserProfileModel?.user?.country == "" || fetchLoginUserProfileModel?.user?.bio == "") {
+      if (fetchLoginUserProfileModel?.user?.country == "") { 
+      //Get.toNamed(AppRoutes.fillProfilePage);
+        Get.toNamed(
+          AppRoutes.fillProfilePage, 
+          arguments: {'socialName': socialName ?? ""} 
+        );
       } else {
         Get.offAllNamed(AppRoutes.bottomBarPage);
       }
