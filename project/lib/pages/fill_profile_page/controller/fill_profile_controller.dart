@@ -51,34 +51,48 @@ Map<String, String> selectedCountry = {"flag": "🇺🇸", "name": "United State
   }
 
  Future<void> init() async {
-  final profile = Database.fetchLoginUserProfileModel?.user;
+    final profile = Database.fetchLoginUserProfileModel?.user;
 
-  profileImage = profile?.image ?? "";
-  fullNameController = TextEditingController(text: profile?.name ?? "");
-  
-  // 1. Set the existing username
-  userNameController = TextEditingController(text: profile?.userName ?? "");
-  
-  idCodeController = TextEditingController(text: profile?.uniqueId ?? "");
-  bioDetailsController = TextEditingController(text: profile?.bio ?? "");
-  selectedGender = profile?.gender?.toLowerCase() ?? "male";
+    profileImage = profile?.image ?? "";
 
-  // ❌ OLD CODE (This was the bug! It always overwrites):
-  // userNameController.text = await RandomNumberFormatter().formatFinalText(fullNameController.text, randomNumber);
-  
-  // ✅ FIXED CODE: Only generate random username if the existing one is EMPTY
-  if (userNameController.text.isEmpty) {
-     userNameController.text = await RandomNumberFormatter().formatFinalText(fullNameController.text, randomNumber);
+    // ✅ FIX: CHECK ARGUMENTS FOR GOOGLE/APPLE NAME
+    String nameFromArgs = "";
+    if (Get.arguments != null && Get.arguments is Map) {
+       nameFromArgs = Get.arguments['socialName'] ?? "";
+    }
+
+    // Use DB Name if available, otherwise use Social Name, otherwise empty
+    String finalName = (profile?.name != null && profile!.name!.isNotEmpty) 
+        ? profile!.name! 
+        : nameFromArgs;
+
+    fullNameController = TextEditingController(text: finalName);
+
+    // ✅ LOGIC: If username exists in DB, use it. 
+    // If not, try to generate one from the Full Name we just found.
+    if (profile?.userName != null && profile!.userName!.isNotEmpty) {
+       userNameController = TextEditingController(text: profile!.userName!);
+    } else {
+       // Only generate a random username if we actually have a name to base it on
+       if (finalName.isNotEmpty) {
+          userNameController.text = await RandomNumberFormatter().formatFinalText(finalName, randomNumber);
+       } else {
+          userNameController.text = "";
+       }
+    }
+    
+    idCodeController = TextEditingController(text: profile?.uniqueId ?? "");
+    bioDetailsController = TextEditingController(text: profile?.bio ?? "");
+    selectedGender = profile?.gender?.toLowerCase() ?? "male";
+
+    // Trigger validation to check if the generated username is valid
+    onChangeUserName();
+
+    selectedCountry = {
+      "flag": (profile?.countryFlagImage == null || profile?.countryFlagImage == "") ? "🇮🇳" : profile!.countryFlagImage!,
+      "name": (profile?.country == null || profile?.country == "") ? "India" : profile!.country!,
+    };
   }
-
-  onChangeUserName();
-
-  selectedCountry = {
-    "flag": (profile?.countryFlagImage == null || profile?.countryFlagImage == "") ? "🇮🇳" : profile!.countryFlagImage!,
-    "name": (profile?.country == null || profile?.country == "") ? "India" : profile!.country!,
-  };
-}
-
   Future<void> onPickImage(BuildContext context) async {
     await ImagePickerBottomSheetUi.show(
       context: context,
