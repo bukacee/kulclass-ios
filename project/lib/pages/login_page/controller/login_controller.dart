@@ -1,4 +1,5 @@
 import 'dart:math';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -14,13 +15,13 @@ import 'package:auralive/utils/database.dart';
 import 'package:auralive/utils/enums.dart';
 import 'package:auralive/utils/internet_connection.dart';
 import 'package:auralive/utils/utils.dart';
+
 import 'package:firebase_messaging/firebase_messaging.dart';
 
 class LoginController extends GetxController {
   LoginModel? loginModel;
   FetchLoginUserProfileModel? fetchLoginUserProfileModel;
 
-  // ... (Your existing randomNames list and helper function remain here) ...
   List<String> randomNames = [
     "Emily Johnson", "Liam Smith", "Isabella Martinez", "Noah Brown",
     "Sofia Davis", "Oliver Wilson", "Mia Anderson", "James Thomas",
@@ -35,15 +36,14 @@ class LoginController extends GetxController {
     return randomNames[index];
   }
 
-  // ... (Your onQuickLogin remains unchanged) ...
   Future<void> onQuickLogin() async {
     if (InternetConnection.isConnect.value) {
-      Get.dialog(const LoadingUi(), barrierDismissible: false); 
+      Get.dialog(const LoadingUi(), barrierDismissible: false);
 
       if (Database.identity.isEmpty) {
-         Utils.showLog("⚠️ Identity missing during Quick Login. Fixing...");
-         String newId = "ios_quick_${DateTime.now().millisecondsSinceEpoch}";
-         await Database.init(newId, "pending_fcm_token"); 
+        Utils.showLog("⚠️ Identity missing during Quick Login. Fixing...");
+        String newId = "ios_quick_${DateTime.now().millisecondsSinceEpoch}";
+        await Database.init(newId, "pending_fcm_token");
       }
 
       final isLogin = await CheckUserExistApi.callApi(identity: Database.identity) ?? false;
@@ -64,10 +64,10 @@ class LoginController extends GetxController {
               userName: onGetRandomName(),
             );
 
-      Get.back(); 
+      Get.back();
 
       if (loginModel?.status == true && loginModel?.user?.id != null) {
-        await onGetProfile(loginUserId: loginModel!.user!.id!); 
+        await onGetProfile(loginUserId: loginModel!.user!.id!);
       } else if (loginModel?.message == "You are blocked by the admin.") {
         Utils.showToast("${loginModel?.message}");
       } else {
@@ -79,15 +79,15 @@ class LoginController extends GetxController {
   }
 
   // -----------------------------------------------------------------------
-  // ✅ FIXED GOOGLE LOGIN (Try Login First, Register Second)
+  // ✅ GOOGLE LOGIN
   // -----------------------------------------------------------------------
   Future<void> onGoogleLogin() async {
     if (InternetConnection.isConnect.value) {
       Get.dialog(const LoadingUi(), barrierDismissible: false);
 
       if (Database.identity.isEmpty) {
-         String newId = "ios_fix_${DateTime.now().millisecondsSinceEpoch}";
-         await Database.init(newId, "pending_fcm_token"); 
+        String newId = "ios_fix_${DateTime.now().millisecondsSinceEpoch}";
+        await Database.init(newId, "pending_fcm_token");
       }
 
       UserCredential? userCredential = await signInWithGoogle();
@@ -96,20 +96,18 @@ class LoginController extends GetxController {
         String email = userCredential?.user?.email ?? "";
         String name = userCredential?.user?.displayName ?? "";
 
-        // ✅ STEP 1: Attempt Login WITHOUT userName
-        // If the user exists, backend will return them without overwriting data.
+        // Attempt Login WITHOUT userName first
         loginModel = await LoginApi.callApi(
           loginType: 2,
           email: email,
           identity: Database.identity,
           fcmToken: Database.fcmToken,
-          // No userName sent here
         );
 
-        // ✅ STEP 2: If Login Failed (User not found), Attempt Register
+        // If Login Failed (User not found), Attempt Register
         if (loginModel?.status == false) {
-           Utils.showLog("User not found, registering new Google user...");
-           loginModel = await LoginApi.callApi(
+          Utils.showLog("User not found, registering new Google user...");
+          loginModel = await LoginApi.callApi(
             loginType: 2,
             email: email,
             identity: Database.identity,
@@ -118,16 +116,16 @@ class LoginController extends GetxController {
           );
         }
 
-        Get.back(); // Stop Loading
+        Get.back();
 
         if (loginModel?.status == true) {
-           Utils.showToast("Welcome to KulClass!");
-           if (loginModel?.user?.id != null) {
-              // await onGetProfile(loginUserId: loginModel!.user!.id!);
-             await onGetProfile(loginUserId: loginModel!.user!.id!, socialName: name);
-           }
+          Utils.showToast("Welcome to KulClass!");
+          if (loginModel?.user?.id != null) {
+            // ✅ Fix: Passing 'name' correctly here
+            await onGetProfile(loginUserId: loginModel!.user!.id!, socialName: name);
+          }
         } else {
-           Utils.showToast(loginModel?.message ?? "Login Failed");
+          Utils.showToast(loginModel?.message ?? "Login Failed");
         }
       } else {
         Get.back();
@@ -139,7 +137,7 @@ class LoginController extends GetxController {
   }
 
   // -----------------------------------------------------------------------
-  // ✅ FIXED APPLE LOGIN (Try Login First, Register Second)
+  // ✅ APPLE LOGIN
   // -----------------------------------------------------------------------
   Future<void> onAppleLogin() async {
     if (InternetConnection.isConnect.value) {
@@ -159,42 +157,40 @@ class LoginController extends GetxController {
         }
 
         String identity = credential.userIdentifier ?? "";
-        String email = credential.email ?? ""; 
+        String email = credential.email ?? "";
         String firstName = credential.givenName ?? "";
         String lastName = credential.familyName ?? "";
-        String fullName = (firstName.isEmpty && lastName.isEmpty) 
-            ? "Apple User" 
+        String fullName = (firstName.isEmpty && lastName.isEmpty)
+            ? "Apple User"
             : "$firstName $lastName".trim();
 
-        // ✅ STEP 1: Attempt Login WITHOUT userName
-        // We use identity (Apple User ID) as the key.
+        // Attempt Login WITHOUT userName
         loginModel = await LoginApi.callApi(
-          loginType: 3, 
-          identity: identity, 
-          email: email.isNotEmpty ? email : identity, 
+          loginType: 3,
+          identity: identity,
+          email: email.isNotEmpty ? email : identity,
           fcmToken: Database.fcmToken,
-          // No userName sent here
         );
 
-        // ✅ STEP 2: If Login Failed (User not found), Attempt Register
+        // If Login Failed (User not found), Attempt Register
         if (loginModel?.status == false) {
-           Utils.showLog("User not found, registering new Apple user...");
-           loginModel = await LoginApi.callApi(
-            loginType: 3, 
-            identity: identity, 
-            email: email.isNotEmpty ? email : identity, 
+          Utils.showLog("User not found, registering new Apple user...");
+          loginModel = await LoginApi.callApi(
+            loginType: 3,
+            identity: identity,
+            email: email.isNotEmpty ? email : identity,
             fcmToken: Database.fcmToken,
             userName: fullName,
           );
         }
 
-        Get.back(); // Stop Loading
+        Get.back();
 
         if (loginModel?.status == true) {
           Utils.showToast("Welcome to KulClass!");
           if (loginModel?.user?.id != null) {
-            // await onGetProfile(loginUserId: loginModel!.user!.id!);
-            await onGetProfile(loginUserId: loginModel!.user!.id!, socialName: name);
+            // ✅ Fix: Passing 'fullName' (not name) here
+            await onGetProfile(loginUserId: loginModel!.user!.id!, socialName: fullName);
           }
         } else {
           Utils.showToast(loginModel?.message ?? "Login Failed");
@@ -217,11 +213,13 @@ class LoginController extends GetxController {
     }
   }
 
-  // ... (The rest of your existing code for onGetProfile and signInWithGoogle stays here) ...
-  Future<void> onGetProfile({required String loginUserId}) async {
-    Get.dialog(const LoadingUi(), barrierDismissible: false); 
+  // -----------------------------------------------------------------------
+  // ✅ ON GET PROFILE (UPDATED DEFINITION)
+  // -----------------------------------------------------------------------
+  Future<void> onGetProfile({required String loginUserId, String? socialName}) async {
+    Get.dialog(const LoadingUi(), barrierDismissible: false);
     fetchLoginUserProfileModel = await FetchLoginUserProfileApi.callApi(loginUserId: loginUserId);
-    Get.back(); 
+    Get.back();
 
     if (fetchLoginUserProfileModel?.user?.id != null && fetchLoginUserProfileModel?.user?.loginType != null) {
       Database.onSetIsNewUser(false);
@@ -229,12 +227,11 @@ class LoginController extends GetxController {
       Database.onSetLoginType(int.parse((fetchLoginUserProfileModel?.user?.loginType ?? 0).toString()));
       Database.fetchLoginUserProfileModel = fetchLoginUserProfileModel;
 
-      //if (fetchLoginUserProfileModel?.user?.country == "" || fetchLoginUserProfileModel?.user?.bio == "") {
-      if (fetchLoginUserProfileModel?.user?.country == "") { 
-      //Get.toNamed(AppRoutes.fillProfilePage);
+      if (fetchLoginUserProfileModel?.user?.country == "" || fetchLoginUserProfileModel?.user?.bio == "") {
+        // ✅ Fix: 'socialName' is now defined in the arguments
         Get.toNamed(
-          AppRoutes.fillProfilePage, 
-          arguments: {'socialName': socialName ?? ""} 
+          AppRoutes.fillProfilePage,
+          arguments: {'socialName': socialName ?? ""}
         );
       } else {
         Get.offAllNamed(AppRoutes.bottomBarPage);
@@ -252,10 +249,10 @@ class LoginController extends GetxController {
 
       final GoogleSignInAuthentication? googleAuth = await googleUser.authentication;
       final credential = GoogleAuthProvider.credential(
-          accessToken: googleAuth?.accessToken, 
+          accessToken: googleAuth?.accessToken,
           idToken: googleAuth?.idToken
       );
-      
+
       final result = await FirebaseAuth.instance.signInWithCredential(credential);
       return result;
     } catch (error) {
