@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:http_parser/http_parser.dart'; // ⚠️ Make sure to import this!
 import 'package:auralive/pages/upload_reels_page/model/upload_reels_model.dart';
 import 'package:auralive/utils/api.dart';
 import 'package:auralive/utils/utils.dart';
@@ -7,8 +8,8 @@ import 'package:auralive/utils/utils.dart';
 class UploadReelsApi {
   static Future<UploadReelsModel?> callApi({
     required String loginUserId,
-    required String videoImage, // Now receiving Local Path
-    required String videoUrl,   // Now receiving Local Path
+    required String videoImage,
+    required String videoUrl,
     required String videoTime,
     required String hashTag,
     required String caption,
@@ -17,54 +18,62 @@ class UploadReelsApi {
     Utils.showLog("Upload Reels Api Calling (Multipart)...");
 
     try {
-      // 1. Use MultipartRequest instead of simple POST
       final uri = Uri.parse("${Api.uploadReels}?userId=$loginUserId");
       var request = http.MultipartRequest('POST', uri);
 
-      // 2. Add Headers
+      // Headers
       request.headers.addAll({
         "key": Api.secretKey,
-        // ⚠️ Do NOT add "Content-Type": "application/json" here. 
-        // MultipartRequest sets the correct boundary automatically.
       });
 
-      // 3. Add Text Fields
+      // Text Fields
       request.fields['caption'] = caption;
       request.fields['hashTagId'] = hashTag;
       request.fields['videoTime'] = videoTime;
-      
-      // Only send songId if it exists
       if (songId.isNotEmpty) {
         request.fields['songId'] = songId;
       }
 
-      // 4. Add Files (This sends the ACTUAL file, not just the path string)
+      // ⚠️ FIX: Explicitly set Content-Type to avoid Backend rejection
       if (videoUrl.isNotEmpty) {
-        // 'videoUrl' is the field name. If your backend expects 'video', change this string.
-        request.files.add(await http.MultipartFile.fromPath('videoUrl', videoUrl));
+        request.files.add(await http.MultipartFile.fromPath(
+          'videoUrl', 
+          videoUrl,
+          contentType: MediaType('video', 'mp4'), // Forces server to accept it as video
+        ));
       }
 
       if (videoImage.isNotEmpty) {
-        // 'videoImage' is the field name. If your backend expects 'image', change this string.
-        request.files.add(await http.MultipartFile.fromPath('videoImage', videoImage));
+        request.files.add(await http.MultipartFile.fromPath(
+          'videoImage', 
+          videoImage,
+          contentType: MediaType('image', 'jpeg'), // Forces server to accept it as image
+        ));
       }
 
       Utils.showLog("Sending Video Data...");
 
-      // 5. Send & Handle Response
+      // Send Request
       var streamedResponse = await request.send();
       var response = await http.Response.fromStream(streamedResponse);
 
+      // ⚠️ LOGGING: Check this log in your Debug Console if it fails again!
+      Utils.showLog("Upload Status Code: ${response.statusCode}");
+      
       if (response.statusCode == 200) {
         final jsonResult = jsonDecode(response.body);
-        Utils.showLog("Upload Reels Api Response => ${jsonResult}");
+        Utils.showLog("Upload Success: ${jsonResult}");
         return UploadReelsModel.fromJson(jsonResult);
+      } else if (response.statusCode == 413) {
+        // 413 = Payload Too Large
+        Utils.showLog("❌ ERROR: Video file is too large for the server.");
+        return null;
       } else {
-        Utils.showLog("Upload Reels Api Error: ${response.statusCode} - ${response.body}");
+        Utils.showLog("❌ Upload Error: ${response.body}");
         return null;
       }
     } catch (e) {
-      Utils.showLog("Upload Reels Api Exception => $e");
+      Utils.showLog("Upload Exception => $e");
       return null;
     }
   }
