@@ -2,7 +2,7 @@ name: auralive
 description: "Go live and earn."
 publish_to: 'none'
 
-version: 11.0.0+6
+version: 11.0.0+7
 
 environment:
   sdk: '>=2.17.0 <4.0.0'
@@ -15,7 +15,6 @@ dependencies:
   bugsnag_flutter: ^4.1.3
   get: ^4.7.2
   http_parser: ^4.0.2
-  video_thumbnail: ^0.5.3
   visibility_detector: ^0.4.0
   get_storage: ^2.1.1
   fluttertoast: ^8.2.12
