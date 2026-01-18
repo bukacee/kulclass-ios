@@ -1,5 +1,4 @@
 import 'dart:math';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -15,13 +14,13 @@ import 'package:auralive/utils/database.dart';
 import 'package:auralive/utils/enums.dart';
 import 'package:auralive/utils/internet_connection.dart';
 import 'package:auralive/utils/utils.dart';
-
 import 'package:firebase_messaging/firebase_messaging.dart';
 
 class LoginController extends GetxController {
   LoginModel? loginModel;
   FetchLoginUserProfileModel? fetchLoginUserProfileModel;
 
+  // ... (Your existing randomNames list and helper function remain here) ...
   List<String> randomNames = [
     "Emily Johnson", "Liam Smith", "Isabella Martinez", "Noah Brown",
     "Sofia Davis", "Oliver Wilson", "Mia Anderson", "James Thomas",
@@ -36,9 +35,10 @@ class LoginController extends GetxController {
     return randomNames[index];
   }
 
+  // ... (Your onQuickLogin remains unchanged) ...
   Future<void> onQuickLogin() async {
     if (InternetConnection.isConnect.value) {
-      Get.dialog(const LoadingUi(), barrierDismissible: false);
+      Get.dialog(const LoadingUi(), barrierDismissible: false); 
 
       if (Database.identity.isEmpty) {
          Utils.showLog("⚠️ Identity missing during Quick Login. Fixing...");
@@ -46,7 +46,6 @@ class LoginController extends GetxController {
          await Database.init(newId, "pending_fcm_token"); 
       }
 
-      // ✅ This Logic is CORRECT. We will copy this to Google/Apple.
       final isLogin = await CheckUserExistApi.callApi(identity: Database.identity) ?? false;
       Utils.showLog("Quick Login User Is Exist => $isLogin");
 
@@ -65,10 +64,10 @@ class LoginController extends GetxController {
               userName: onGetRandomName(),
             );
 
-      Get.back();
+      Get.back(); 
 
       if (loginModel?.status == true && loginModel?.user?.id != null) {
-        await onGetProfile(loginUserId: loginModel!.user!.id!);
+        await onGetProfile(loginUserId: loginModel!.user!.id!); 
       } else if (loginModel?.message == "You are blocked by the admin.") {
         Utils.showToast("${loginModel?.message}");
       } else {
@@ -80,7 +79,7 @@ class LoginController extends GetxController {
   }
 
   // -----------------------------------------------------------------------
-  // ✅ FIXED GOOGLE LOGIN
+  // ✅ FIXED GOOGLE LOGIN (Try Login First, Register Second)
   // -----------------------------------------------------------------------
   Future<void> onGoogleLogin() async {
     if (InternetConnection.isConnect.value) {
@@ -97,25 +96,20 @@ class LoginController extends GetxController {
         String email = userCredential?.user?.email ?? "";
         String name = userCredential?.user?.displayName ?? "";
 
-        // ✅ STEP 1: Check if this email already exists in DB
-        // We pass the email as 'identity' because for Google, Email is the key.
-        final isUserExist = await CheckUserExistApi.callApi(identity: email) ?? false;
-        
-        Utils.showLog("Google User Exists? => $isUserExist");
+        // ✅ STEP 1: Attempt Login WITHOUT userName
+        // If the user exists, backend will return them without overwriting data.
+        loginModel = await LoginApi.callApi(
+          loginType: 2,
+          email: email,
+          identity: Database.identity,
+          fcmToken: Database.fcmToken,
+          // No userName sent here
+        );
 
-        // ✅ STEP 2: Call Login API based on existence
-        if (isUserExist) {
-          // EXISTING USER: Do NOT send userName (Prevent overwriting/creating new)
-          loginModel = await LoginApi.callApi(
-            loginType: 2,
-            email: email,
-            identity: Database.identity,
-            fcmToken: Database.fcmToken,
-            // userName: removed!
-          );
-        } else {
-          // NEW USER: Send userName to register
-          loginModel = await LoginApi.callApi(
+        // ✅ STEP 2: If Login Failed (User not found), Attempt Register
+        if (loginModel?.status == false) {
+           Utils.showLog("User not found, registering new Google user...");
+           loginModel = await LoginApi.callApi(
             loginType: 2,
             email: email,
             identity: Database.identity,
@@ -124,13 +118,15 @@ class LoginController extends GetxController {
           );
         }
 
-        Get.back(); 
+        Get.back(); // Stop Loading
 
         if (loginModel?.status == true) {
-           Utils.showToast("Welcome back!");
-           await onGetProfile(loginUserId: loginModel!.user!.id!);
+           Utils.showToast("Welcome to KulClass!");
+           if (loginModel?.user?.id != null) {
+              await onGetProfile(loginUserId: loginModel!.user!.id!);
+           }
         } else {
-           Utils.showToast("Login Failed");
+           Utils.showToast(loginModel?.message ?? "Login Failed");
         }
       } else {
         Get.back();
@@ -142,7 +138,7 @@ class LoginController extends GetxController {
   }
 
   // -----------------------------------------------------------------------
-  // ✅ FIXED APPLE LOGIN
+  // ✅ FIXED APPLE LOGIN (Try Login First, Register Second)
   // -----------------------------------------------------------------------
   Future<void> onAppleLogin() async {
     if (InternetConnection.isConnect.value) {
@@ -169,27 +165,19 @@ class LoginController extends GetxController {
             ? "Apple User" 
             : "$firstName $lastName".trim();
 
-        // Apple only sends email ONCE. On subsequent logins, email is null.
-        // We use the identity (User Identifier) to check existence if email is missing.
-        String checkIdentity = email.isNotEmpty ? email : identity;
+        // ✅ STEP 1: Attempt Login WITHOUT userName
+        // We use identity (Apple User ID) as the key.
+        loginModel = await LoginApi.callApi(
+          loginType: 3, 
+          identity: identity, 
+          email: email.isNotEmpty ? email : identity, 
+          fcmToken: Database.fcmToken,
+          // No userName sent here
+        );
 
-        // ✅ STEP 1: Check if User Exists
-        final isUserExist = await CheckUserExistApi.callApi(identity: checkIdentity) ?? false;
-
-        Utils.showLog("Apple User Exists? => $isUserExist");
-
-        // ✅ STEP 2: Call Login API based on existence
-        if (isUserExist) {
-           // EXISTING USER: Login ONLY (No Name)
-           loginModel = await LoginApi.callApi(
-            loginType: 3, 
-            identity: identity, 
-            email: email.isNotEmpty ? email : identity, 
-            fcmToken: Database.fcmToken,
-            // userName: removed!
-          );
-        } else {
-           // NEW USER: Register with Name
+        // ✅ STEP 2: If Login Failed (User not found), Attempt Register
+        if (loginModel?.status == false) {
+           Utils.showLog("User not found, registering new Apple user...");
            loginModel = await LoginApi.callApi(
             loginType: 3, 
             identity: identity, 
@@ -199,10 +187,10 @@ class LoginController extends GetxController {
           );
         }
 
-        Get.back(); 
+        Get.back(); // Stop Loading
 
         if (loginModel?.status == true) {
-          Utils.showToast("Welcome back!");
+          Utils.showToast("Welcome to KulClass!");
           if (loginModel?.user?.id != null) {
             await onGetProfile(loginUserId: loginModel!.user!.id!);
           }
@@ -227,8 +215,7 @@ class LoginController extends GetxController {
     }
   }
 
-  // ... (Rest of your profile and helper functions remain the same)
-  
+  // ... (The rest of your existing code for onGetProfile and signInWithGoogle stays here) ...
   Future<void> onGetProfile({required String loginUserId}) async {
     Get.dialog(const LoadingUi(), barrierDismissible: false); 
     fetchLoginUserProfileModel = await FetchLoginUserProfileApi.callApi(loginUserId: loginUserId);
