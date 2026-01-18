@@ -50,25 +50,34 @@ Map<String, String> selectedCountry = {"flag": "🇺🇸", "name": "United State
     super.onInit();
   }
 
-  Future<void> init() async {
-    final profile = Database.fetchLoginUserProfileModel?.user;
+ Future<void> init() async {
+  final profile = Database.fetchLoginUserProfileModel?.user;
 
-    profileImage = profile?.image ?? "";
-    fullNameController = TextEditingController(text: profile?.name ?? "");
-    userNameController = TextEditingController(text: profile?.userName ?? "");
-    idCodeController = TextEditingController(text: profile?.uniqueId ?? "");
-    bioDetailsController = TextEditingController(text: profile?.bio ?? "");
-    selectedGender = profile?.gender?.toLowerCase() ?? "male";
+  profileImage = profile?.image ?? "";
+  fullNameController = TextEditingController(text: profile?.name ?? "");
+  
+  // 1. Set the existing username
+  userNameController = TextEditingController(text: profile?.userName ?? "");
+  
+  idCodeController = TextEditingController(text: profile?.uniqueId ?? "");
+  bioDetailsController = TextEditingController(text: profile?.bio ?? "");
+  selectedGender = profile?.gender?.toLowerCase() ?? "male";
 
-    userNameController.text = await RandomNumberFormatter().formatFinalText(fullNameController.text, randomNumber);
-    onChangeUserName();
-
-    selectedCountry = {
-      "flag":
-          (profile?.countryFlagImage == null || profile?.countryFlagImage == "") ? "🇮🇳" : profile!.countryFlagImage!,
-      "name": (profile?.country == null || profile?.country == "") ? "India" : profile!.country!,
-    };
+  // ❌ OLD CODE (This was the bug! It always overwrites):
+  // userNameController.text = await RandomNumberFormatter().formatFinalText(fullNameController.text, randomNumber);
+  
+  // ✅ FIXED CODE: Only generate random username if the existing one is EMPTY
+  if (userNameController.text.isEmpty) {
+     userNameController.text = await RandomNumberFormatter().formatFinalText(fullNameController.text, randomNumber);
   }
+
+  onChangeUserName();
+
+  selectedCountry = {
+    "flag": (profile?.countryFlagImage == null || profile?.countryFlagImage == "") ? "🇮🇳" : profile!.countryFlagImage!,
+    "name": (profile?.country == null || profile?.country == "") ? "India" : profile!.country!,
+  };
+}
 
   Future<void> onPickImage(BuildContext context) async {
     await ImagePickerBottomSheetUi.show(
