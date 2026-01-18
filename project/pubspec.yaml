@@ -2,7 +2,7 @@ name: auralive
 description: "Go live and earn."
 publish_to: 'none'
 
-version: 10.0.0+8
+version: 11.0.0+1
 
 environment:
   sdk: '>=2.17.0 <4.0.0'
