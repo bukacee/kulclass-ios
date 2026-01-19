@@ -114,6 +114,8 @@ class CreateReelsController extends GetxController {
 
   // >>>>> >>>>> >>>>> Initialize Method <<<<< <<<<< <<<<<
 
+ bool isCameraError = false; // Add this variable to track errors
+
   @override
   void onInit() {
     Utils.showLog("Argument => ${Get.arguments}");
@@ -122,7 +124,12 @@ class CreateReelsController extends GetxController {
       selectedSound = Get.arguments;
       initAudio(selectedSound?["link"] ?? "");
     }
-    onGetPermission();
+    
+    // Slight delay to ensure GetX is fully ready before asking permission
+    Future.delayed(Duration(milliseconds: 500), () {
+      onGetPermission();
+    });
+    
     super.onInit();
   }
 
@@ -136,17 +143,30 @@ class CreateReelsController extends GetxController {
     super.onClose();
   }
 
-  Future<void> onGetPermission() async {
-    final camera = await Permission.camera.request();
-    final microphone = await Permission.microphone.request();
-    if (camera.isGranted && microphone.isGranted) {
+ Future<void> onGetPermission() async {
+    // Request permissions
+    Map<Permission, PermissionStatus> statuses = await [
+      Permission.camera,
+      Permission.microphone,
+      Permission.photos, // Add photos for gallery access
+    ].request();
+
+    // Check if granted or limited (iOS 14+ photo access)
+    bool cameraGranted = statuses[Permission.camera]!.isGranted;
+    bool micGranted = statuses[Permission.microphone]!.isGranted;
+
+    if (cameraGranted && micGranted) {
       if (isUseEffects) {
         onInitializeEffect();
       } else {
         onInitializeCamera();
       }
     } else {
-      Utils.showToast(EnumLocal.txtPleaseAllowPermission.name.tr);
+      // If denied, show a dialog or toast guiding them to settings
+      Utils.showToast("Camera and Microphone permissions are required.");
+      if (statuses[Permission.camera]!.isPermanentlyDenied) {
+        openAppSettings();
+      }
     }
   }
   // Future<void> onGetPermission() async {
@@ -167,15 +187,45 @@ class CreateReelsController extends GetxController {
 
   // >>>>> >>>>> >>>>> Camera Controller Method <<<<< <<<<< <<<<<
 
-  Future<void> onInitializeCamera() async {
+Future<void> onInitializeCamera() async {
+    isCameraError = false; // Reset error state
     try {
       final cameras = await availableCameras();
-      final camera = cameras.last; // Use the first available camera
-      cameraController = CameraController(camera, ResolutionPreset.medium);
+      
+      if (cameras.isEmpty) {
+        Utils.showLog("No cameras found on device!");
+        isCameraError = true;
+        update(["onInitializeCamera"]);
+        return;
+      }
+
+      // ✅ FIX: Safely find the specific camera (Back first)
+      CameraDescription camera;
+      try {
+        camera = cameras.firstWhere(
+          (c) => c.lensDirection == CameraLensDirection.back,
+          orElse: () => cameras.first,
+        );
+      } catch (e) {
+        camera = cameras.first;
+      }
+
+      cameraController = CameraController(
+        camera, 
+        ResolutionPreset.high, // Use High for Reels, Medium is too low quality
+        enableAudio: true,
+        imageFormatGroup: ImageFormatGroup.jpeg, // Better compatibility
+      );
+
       await cameraController?.initialize();
-      update(["onInitializeCamera"]);
+      
+      update(["onInitializeCamera"]); // ✅ Success Update
+      
     } catch (e) {
       Utils.showLog("Error initializing camera: $e");
+      isCameraError = true; 
+      update(["onInitializeCamera"]); // ✅ ERROR Update (Stops the spinner)
+      Utils.showToast("Failed to start camera: $e");
     }
   }
 
