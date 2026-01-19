@@ -59,6 +59,8 @@
 	<key>NSSpeechRecognitionUsageDescription</key>
 	<string>Allow AuraLive to use speech recognition for voice features.</string>
 	<key>PHPhotoLibraryPreventAutomaticLimitedAccessAlert</key>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+    <string>Allow AuraLive to save recorded videos to your gallery.</string>
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
