@@ -61,8 +61,8 @@ class WithOutEffectUi extends StatelessWidget {
                   ),
                 );
               }
-              // 2. Error: Show Retry Button
-              else if (controller.isError) {
+              // 2. Error: Show Retry Button (✅ FIXED VARIABLE NAME)
+              else if (controller.isCameraError) {
                 return Center(
                   child: Padding(
                     padding: const EdgeInsets.all(20.0),
