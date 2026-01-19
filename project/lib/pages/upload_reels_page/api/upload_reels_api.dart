@@ -1,6 +1,7 @@
 import 'dart:convert';
+import 'dart:io'; // ✅ Added for File check
 import 'package:http/http.dart' as http;
-import 'package:http_parser/http_parser.dart'; // ⚠️ Make sure to import this!
+import 'package:http_parser/http_parser.dart'; // ✅ Required for MediaType
 import 'package:auralive/pages/upload_reels_page/model/upload_reels_model.dart';
 import 'package:auralive/utils/api.dart';
 import 'package:auralive/utils/utils.dart';
@@ -15,18 +16,27 @@ class UploadReelsApi {
     required String caption,
     required String songId,
   }) async {
-    Utils.showLog("Upload Reels Api Calling (Multipart)...");
+    Utils.showLog("🚀 Upload Reels Api Started...");
+    Utils.showLog("   📍 Video Path: $videoUrl");
+    Utils.showLog("   📍 Thumb Path: $videoImage");
+
+    // 1. Validate File Existence
+    final videoFile = File(videoUrl);
+    if (!await videoFile.exists()) {
+      Utils.showLog("❌ ERROR: Video file does not exist at path: $videoUrl");
+      return null;
+    }
 
     try {
       final uri = Uri.parse("${Api.uploadReels}?userId=$loginUserId");
       var request = http.MultipartRequest('POST', uri);
 
-      // Headers
+      // 2. Add Headers
       request.headers.addAll({
         "key": Api.secretKey,
       });
 
-      // Text Fields
+      // 3. Add Text Fields
       request.fields['caption'] = caption;
       request.fields['hashTagId'] = hashTag;
       request.fields['videoTime'] = videoTime;
@@ -34,46 +44,47 @@ class UploadReelsApi {
         request.fields['songId'] = songId;
       }
 
-      // ⚠️ FIX: Explicitly set Content-Type to avoid Backend rejection
-      if (videoUrl.isNotEmpty) {
-        request.files.add(await http.MultipartFile.fromPath(
-          'videoUrl', 
-          videoUrl,
-          contentType: MediaType('video', 'mp4'), // Forces server to accept it as video
-        ));
-      }
+      // 4. Add Video File (Crucial Step)
+      // We explicitly set the content type to 'video/mp4' to ensure server acceptance
+      var videoStream = await http.MultipartFile.fromPath(
+        'videoUrl', // Field name expected by backend
+        videoUrl,
+        contentType: MediaType('video', 'mp4'), 
+      );
+      request.files.add(videoStream);
+      Utils.showLog("   ✅ Video File Attached (${videoStream.length} bytes)");
 
+      // 5. Add Thumbnail File
       if (videoImage.isNotEmpty) {
-        request.files.add(await http.MultipartFile.fromPath(
-          'videoImage', 
+        var imageStream = await http.MultipartFile.fromPath(
+          'videoImage', // Field name expected by backend
           videoImage,
-          contentType: MediaType('image', 'jpeg'), // Forces server to accept it as image
-        ));
+          contentType: MediaType('image', 'jpeg'),
+        );
+        request.files.add(imageStream);
+        Utils.showLog("   ✅ Image File Attached");
       }
 
-      Utils.showLog("Sending Video Data...");
-
-      // Send Request
+      // 6. Send Request
+      Utils.showLog("⏳ Sending Request to Server...");
       var streamedResponse = await request.send();
       var response = await http.Response.fromStream(streamedResponse);
 
-      // ⚠️ LOGGING: Check this log in your Debug Console if it fails again!
-      Utils.showLog("Upload Status Code: ${response.statusCode}");
+      Utils.showLog("📡 Status Code: ${response.statusCode}");
       
       if (response.statusCode == 200) {
         final jsonResult = jsonDecode(response.body);
-        Utils.showLog("Upload Success: ${jsonResult}");
+        Utils.showLog("✅ Upload Success: ${jsonResult}");
         return UploadReelsModel.fromJson(jsonResult);
       } else if (response.statusCode == 413) {
-        // 413 = Payload Too Large
-        Utils.showLog("❌ ERROR: Video file is too large for the server.");
+        Utils.showLog("❌ ERROR: File too large (413). Check Nginx Config.");
         return null;
       } else {
-        Utils.showLog("❌ Upload Error: ${response.body}");
+        Utils.showLog("❌ Upload Failed: ${response.body}");
         return null;
       }
     } catch (e) {
-      Utils.showLog("Upload Exception => $e");
+      Utils.showLog("❌ Upload Exception => $e");
       return null;
     }
   }
