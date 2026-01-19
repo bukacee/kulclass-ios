@@ -1,12 +1,11 @@
 import 'dart:async';
-import 'dart:io'; // Required for File check
+import 'dart:io'; // ✅ Added for File check
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:video_thumbnail/video_thumbnail.dart'; // ✅ Add this import
-import 'package:path_provider/path_provider.dart';     // ✅ Add this import
+import 'package:get_thumbnail_video/get_thumbnail_video.dart'; // ✅ Added this import
 import 'package:auralive/custom/custom_image_picker.dart';
 import 'package:auralive/pages/preview_hash_tag_page/api/create_hash_tag_api.dart';
 import 'package:auralive/pages/preview_hash_tag_page/api/fetch_hash_tag_api.dart';
@@ -29,6 +28,7 @@ class UploadReelsController extends GetxController {
   UploadReelsModel? uploadReelsModel;
   String? videoThumbnailUrl;
 
+// Parameter
   int videoTime = 0;
   String videoPath = "";
   String videoThumbnail = "";
@@ -69,7 +69,7 @@ class UploadReelsController extends GetxController {
   Future<void> init() async {
     final arguments = Get.arguments;
 
-    Utils.showLog("Selected Video Arguments => $arguments");
+    Utils.showLog("Selected Video => $arguments");
 
     videoPath = arguments["video"] ?? "";
     videoThumbnail = arguments["image"] ?? "";
@@ -77,27 +77,31 @@ class UploadReelsController extends GetxController {
     songId = arguments["songId"] ?? "";
 
     // -----------------------------------------------------------
-    // ✅ FIX: Force Generate Thumbnail if missing
+    // ✅ FIX: Check if thumbnail exists, if not generate it using 'get_thumbnail_video'
     // -----------------------------------------------------------
     if (videoPath.isNotEmpty) {
       bool isThumbValid = false;
+      
+      // Check if the current thumbnail path is valid
       if (videoThumbnail.isNotEmpty) {
          isThumbValid = await File(videoThumbnail).exists();
       }
 
+      // If invalid or empty, generate a new one
       if (!isThumbValid) {
-        Utils.showLog("⚠️ Thumbnail missing for H.264 video. Generating new one...");
-        final String? generatedThumb = await VideoThumbnail.thumbnailFile(
-          video: videoPath,
-          thumbnailPath: (await getTemporaryDirectory()).path,
-          imageFormat: ImageFormat.JPEG,
-          maxHeight: 500, 
-          quality: 75,
-        );
-        
-        if (generatedThumb != null) {
-          videoThumbnail = generatedThumb;
-          Utils.showLog("✅ New Thumbnail Generated: $videoThumbnail");
+        Utils.showLog("⚠️ Thumbnail missing or invalid. Generating with get_thumbnail_video...");
+        try {
+          // This generates a thumbnail and returns an XFile (or similar object depending on version)
+          final result = await GetThumbnailVideo.getVideoThumbnail(videoPath);
+          
+          if (result != null && result.path.isNotEmpty) {
+            videoThumbnail = result.path;
+            Utils.showLog("✅ New Thumbnail Generated: $videoThumbnail");
+          } else {
+            Utils.showLog("❌ Failed to generate thumbnail");
+          }
+        } catch (e) {
+          Utils.showLog("❌ Error generating thumbnail: $e");
         }
       }
     }
@@ -109,14 +113,15 @@ class UploadReelsController extends GetxController {
   }
 
   Future<void> onConvertVideoThumbnail() async {
+    // >>> Changed: No longer uploading. Using local path.
     videoThumbnailUrl = videoThumbnail;
-    update(["onChangeThumbnail"]); // Update UI to show the image
+    
+    // Ensure the UI updates when we set the new URL
+    update(["onChangeThumbnail"]); 
 
     if (isAiCaptionSwitchOn) onFetchAiCaption();
   }
 
-  // ... (Rest of your controller remains exactly the same below) ...
-  
   void onChangeAiSwitch({bool? value}) async {
     isAiCaptionSwitchOn = value ?? !isAiCaptionSwitchOn;
     update(["onChangeAiSwitch"]);
@@ -134,9 +139,12 @@ class UploadReelsController extends GetxController {
       isLoadingAiCaption = true;
       update(["onGenerateAiCaption"]);
 
+      // Note: If FetchAiCaptionApi requires a remote URL, this might fail 
+      // since we are now passing a local path.
       fetchAiCaptionModel = await FetchAiCaptionApi.callApi(contentUrl: videoThumbnailUrl ?? "");
 
       captionController.clear();
+
       captionController.text = ((fetchAiCaptionModel?.caption ?? "") + (fetchAiCaptionModel?.hashtags?.join(" ") ?? ""));
 
       isLoadingAiCaption = false;
@@ -145,8 +153,9 @@ class UploadReelsController extends GetxController {
   }
 
   void onCancelVideoContent() {
+    // >>> Changed: Removed DeleteContentApi call since we didn't upload anything.
     if (isVideoUploadSuccess == false && videoThumbnailUrl?.trim().isNotEmpty == true) {
-      // No action needed locally
+      // No action needed as file is local
     }
   }
 
@@ -159,6 +168,7 @@ class UploadReelsController extends GetxController {
     if (fetchHashTagModel?.data != null) {
       hastTagCollection.clear();
       hastTagCollection.addAll(fetchHashTagModel?.data ?? []);
+      Utils.showLog("Hast Tag Collection Length => ${hastTagCollection.length}");
     }
     isLoadingHashTag = false;
     update(["onGetHashTag"]);
@@ -177,6 +187,7 @@ class UploadReelsController extends GetxController {
 
   void onChangeHashtag() async {
     String text = captionController.text;
+
     List<String> words = text.split(' ');
     for (int i = 0; i < words.length; i++) {
       if (words[i].length > 1 && words[i].indexOf('#') == words[i].lastIndexOf('#')) {
@@ -197,7 +208,11 @@ class UploadReelsController extends GetxController {
 
     final caption = parts.where((element) => !element.startsWith('#')).join(' ');
     userInputHashtag = parts.where((element) => element.startsWith('#')).toList();
+
     final lastWord = parts.last;
+
+    Utils.showLog("Caption => ${caption}");
+    Utils.showLog("Last Word => ${lastWord}");
 
     if (lastWord.startsWith("#")) {
       final searchHashtag = lastWord.substring(1);
@@ -220,17 +235,23 @@ class UploadReelsController extends GetxController {
       context: context,
       onClickCamera: () async {
         final imagePath = await CustomImagePicker.pickImage(ImageSource.camera);
+
         if (imagePath != null) {
           videoThumbnail = imagePath;
           update(["onChangeThumbnail"]);
+
+          onCancelVideoContent();
           onConvertVideoThumbnail();
         }
       },
       onClickGallery: () async {
         final imagePath = await CustomImagePicker.pickImage(ImageSource.gallery);
+
         if (imagePath != null) {
           videoThumbnail = imagePath;
           update(["onChangeThumbnail"]);
+
+          onCancelVideoContent();
           onConvertVideoThumbnail();
         }
       },
@@ -240,20 +261,30 @@ class UploadReelsController extends GetxController {
   Future<void> onUploadReels() async {
     Utils.showLog("Reels Uploading...");
     if (InternetConnection.isConnect.value) {
-      Get.dialog(PopScope(canPop: false, child: const LoadingUi()), barrierDismissible: false);
+      Get.dialog(PopScope(canPop: false, child: const LoadingUi()), barrierDismissible: false); // Start Loading...
 
       List<String> hashTagIds = [];
+
       for (int index = 0; index < userInputHashtag.length; index++) {
         final hashTag = userInputHashtag[index];
+
+        Utils.showLog("----------${hashTag}");
+
         if (hashTag != "" && hashTag.startsWith("#")) {
           final searchHashtag = userInputHashtag[index].substring(1);
           createHashTagModel = null;
+
           final List<HashTagData> selectedHashTag = hastTagCollection.where((element) => (element.hashTag?.toLowerCase() ?? "") == searchHashtag.toLowerCase()).toList();
+
+          Utils.showLog("**** ${selectedHashTag}");
 
           if (selectedHashTag.isNotEmpty) {
             hashTagIds.add(selectedHashTag[0].id ?? "");
+            Utils.showLog("Already Available HashTag => ${selectedHashTag[0].hashTag} ");
           } else {
+            Utils.showLog("New Create HashTag => ${userInputHashtag[index].substring(1)} ");
             createHashTagModel = await CreateHashTagApi.callApi(hashTag: userInputHashtag[index].substring(1));
+
             if (createHashTagModel?.data?.id != null) {
               hashTagIds.add(createHashTagModel?.data?.id ?? "");
             }
@@ -261,12 +292,16 @@ class UploadReelsController extends GetxController {
         }
       }
 
-      // 🛑 The check that was failing is here
+      Utils.showLog("Hast Tag Id => $hashTagIds");
+
+      // >>>>>> Changed: UploadFileApi removed. Using local videoPath directly. <<<<<<
+      
+      // ✅ Updated Condition: Check if videoThumbnailUrl is valid (it should be now)
       if (videoThumbnailUrl != null && videoThumbnailUrl!.isNotEmpty && videoPath.isNotEmpty) {
         uploadReelsModel = await UploadReelsApi.callApi(
           loginUserId: Database.loginUserId,
           videoImage: videoThumbnailUrl ?? "",
-          videoUrl: videoPath,
+          videoUrl: videoPath, // Passing local path
           videoTime: videoTime.toString(),
           hashTag: hashTagIds.map((e) => "$e").join(',').toString(),
           caption: captionController.text.trim(),
@@ -286,9 +321,10 @@ class UploadReelsController extends GetxController {
       } else {
         Utils.showToast(EnumLocal.txtSomeThingWentWrong.name.tr);
       }
-      Get.back();
+      Get.back(); // Stop Loading...
     } else {
       Utils.showToast(EnumLocal.txtConnectionLost.name.tr);
+      Utils.showLog("Internet Connection Lost !!");
     }
   }
 }
