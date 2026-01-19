@@ -57,10 +57,11 @@
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Allow AuraLive to access your photo library for uploading profile pictures or media.</string>
 	<key>NSSpeechRecognitionUsageDescription</key>
-	<string>Allow AuraLive to use speech recognition for voice features.</string>
-	<key>PHPhotoLibraryPreventAutomaticLimitedAccessAlert</key>
+	<string>Allow AuraLive to use speech recognition for voice features.</string>	
 	<key>NSPhotoLibraryAddUsageDescription</key>
     <string>Allow AuraLive to save recorded videos to your gallery.</string>
+
+	<key>PHPhotoLibraryPreventAutomaticLimitedAccessAlert</key>
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
