@@ -5,7 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:get_thumbnail_video/get_thumbnail_video.dart'; // ✅ Added this import
+import 'package:get_thumbnail_video/video_thumbnail.dart';
 import 'package:auralive/custom/custom_image_picker.dart';
 import 'package:auralive/pages/preview_hash_tag_page/api/create_hash_tag_api.dart';
 import 'package:auralive/pages/preview_hash_tag_page/api/fetch_hash_tag_api.dart';
