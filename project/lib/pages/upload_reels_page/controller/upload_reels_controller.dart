@@ -4,10 +4,10 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:image_picker/image_picker.dart';
-// ✅ FIXED IMPORT: This is the correct import for 'get_thumbnail_video'
-import 'package:get_thumbnail_video/video_thumbnail.dart';
-import 'package:path_provider/path_provider.dart';
+import 'package:image_picker/image_picker.dart'; // Provides XFile
+// ✅ IMPORT
+import 'package:get_thumbnail_video/video_thumbnail.dart'; 
+import 'package:path_provider/path_provider.dart';     
 
 import 'package:auralive/custom/custom_image_picker.dart';
 import 'package:auralive/pages/preview_hash_tag_page/api/create_hash_tag_api.dart';
@@ -90,17 +90,18 @@ class UploadReelsController extends GetxController {
       if (!isThumbValid) {
         Utils.showLog("⚠️ Thumbnail missing. Generating with VideoThumbnail...");
         try {
-          // ✅ Correct Method: VideoThumbnail.thumbnailFile (from get_thumbnail_video package)
-          final String? fileName = await VideoThumbnail.thumbnailFile(
+          // ✅ FIX 1: Removed 'imageFormat' (defaults to JPEG)
+          // ✅ FIX 2: Handle 'XFile' return type instead of String
+          final thumbFile = await VideoThumbnail.thumbnailFile(
             video: videoPath,
             thumbnailPath: (await getTemporaryDirectory()).path,
-            imageFormat: ImageFormat.JPEG,
             maxHeight: 500,
             quality: 75,
           );
 
-          if (fileName != null && fileName.isNotEmpty) {
-            videoThumbnail = fileName;
+          // Extract path safely
+          if (thumbFile != null && thumbFile.path.isNotEmpty) {
+            videoThumbnail = thumbFile.path;
             Utils.showLog("✅ New Thumbnail Generated: $videoThumbnail");
           } else {
             Utils.showLog("❌ Failed to generate thumbnail");
