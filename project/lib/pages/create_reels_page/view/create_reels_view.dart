@@ -500,6 +500,7 @@ class WithOutEffectUi extends StatelessWidget {
           GetBuilder<CreateReelsController>(
               id: "onInitializeCamera",
               builder: (controller) {
+                // 1. Check if Camera is Ready
                 if (controller.cameraController != null && (controller.cameraController?.value.isInitialized ?? false)) {
                   final mediaSize = MediaQuery.of(context).size;
                   final scale = 1 / (controller.cameraController!.value.aspectRatio * mediaSize.aspectRatio);
@@ -511,10 +512,33 @@ class WithOutEffectUi extends StatelessWidget {
                       child: CameraPreview(controller.cameraController!),
                     ),
                   );
-                } else {
+                } 
+                // 2. Check if Error Occurred (Stop Spinner)
+                else if (controller.isCameraError) {
+                  return Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Icon(Icons.error_outline, color: Colors.white, size: 40),
+                        const SizedBox(height: 10),
+                        const Text("Camera Failed to Initialize", style: TextStyle(color: Colors.white)),
+                        const SizedBox(height: 10),
+                        ElevatedButton(
+                          onPressed: () => controller.onInitializeCamera(),
+                          child: const Text("Retry"),
+                        )
+                      ],
+                    ),
+                  );
+                }
+                // 3. Still Loading
+                else {
                   return const LoadingUi();
                 }
               }),
+
+
+          
           Positioned(
             top: 0,
             child: Container(
