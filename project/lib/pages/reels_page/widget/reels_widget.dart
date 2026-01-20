@@ -1,5 +1,5 @@
 import 'dart:io';
-
+import 'package:auralive/custom/custom_fetch_user_coin.dart';
 import 'package:blurrycontainer/blurrycontainer.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:chewie/chewie.dart';
@@ -314,11 +314,20 @@ class _PreviewReelsViewState extends State<PreviewReelsView> with SingleTickerPr
   void onClickCart() {
     isReelsPage.value = false;
     onStopVideo();
-final storage = GetStorage();
-     final userEmail = storage.read('user_email') ?? '';
 
-    final userCoin = storage.read('user_coin') ?? '';
+    String userEmail = "";
+    if (Database.fetchLoginUserProfileModel?.user?.email != null) {
+      userEmail = Database.fetchLoginUserProfileModel!.user!.email!;
+    } else {
+      final storage = GetStorage();
+      userEmail = storage.read('user_email') ?? '';
+    }
 
+    // 2. ✅ GET COIN FROM CUSTOM CLASS (The Fix)
+    // We use the static reactive variable. It defaults to 0 if not set.
+    final int userCoin = CustomFetchUserCoin.coin.value;
+
+    
     // --- 2. Get Reel Poster's Details ---
     final shopUserId = controller.mainReels[widget.index].userId ?? '';
     final shopName = controller.mainReels[widget.index].name ?? '';
