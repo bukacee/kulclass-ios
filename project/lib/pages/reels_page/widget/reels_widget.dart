@@ -315,18 +315,38 @@ class _PreviewReelsViewState extends State<PreviewReelsView> with SingleTickerPr
     isReelsPage.value = false;
     onStopVideo();
 
-    final storage = GetStorage();
-    final userEmail = storage.read('user_email') ?? '';
-    
-    // Get Reel Owner details
+    // --- 1. Get Logged-in User's Email (More Robust Way) ---
+    String userEmail = "";
+
+    // Try fetching from the loaded Global Profile Model first (Most reliable)
+    if (Database.fetchLoginUserProfileModel?.user?.email != null &&
+        Database.fetchLoginUserProfileModel!.user!.email!.isNotEmpty) {
+      userEmail = Database.fetchLoginUserProfileModel!.user!.email!;
+    } 
+    // Fallback: Try fetching from Local Storage
+    else {
+      final storage = GetStorage();
+      userEmail = storage.read('user_email') ?? storage.read('email') ?? "";
+    }
+
+    // --- 2. Get Reel Poster's Details ---
     final shopUserId = controller.mainReels[widget.index].userId ?? '';
-    final shopName = controller.mainReels[widget.index].name ?? ''; 
+    final shopName = controller.mainReels[widget.index].name ?? '';
 
-    // Construct URL
-    final webUrl = "https://kulclass.com/shop/buy.php?userEmail=$userEmail&shopUserId=$shopUserId&shopName=$shopName";
+    // --- 3. Debug Logs (Check your Console!) ---
+    Utils.showLog("--- SHOP DEBUG ---");
+    Utils.showLog("Logged In User Email: $userEmail");
+    Utils.showLog("Shop Owner ID: $shopUserId");
+
+    // --- 4. Construct URL ---
+    // If email is still empty, we pass "no_email" so the PHP script doesn't break
+    final emailParam = userEmail.isEmpty ? "no_email" : userEmail;
     
-    Utils.showLog("Opening Shop URL: $webUrl");
+    final webUrl = "https://kulclass.com/shop/buy.php?userEmail=$userEmail&shopUserId=$shopUserId&shopName=$shopName";
 
+    Utils.showLog("Opening URL: $webUrl");
+
+    // --- 5. Open WebView ---
     _showFullScreenWebView(context, webUrl);
   }
 
@@ -565,24 +585,24 @@ class _PreviewReelsViewState extends State<PreviewReelsView> with SingleTickerPr
                 child: Column(
                   children: [
                     const Spacer(),
-                    GestureDetector(
-                      onTap: () {
-                        Utils.showLog("Video User Id => ${controller.mainReels[widget.index].userId} => ${Database.loginUserId}");
-                        if (controller.mainReels[widget.index].userId != Database.loginUserId) {
-                          isReelsPage.value = false;
-                          SendGiftOnVideoBottomSheetUi.show(
-                            context: context,
-                            videoId: controller.mainReels[widget.index].id ?? "",
-                          );
-                        } else {
-                          Utils.showToast(EnumLocal.txtYouCantSendGiftOwnVideo.name.tr);
-                        }
-                      },
-                      child: SizedBox(
-                        width: 65,
-                        child: Lottie.asset(AppAsset.lottieGift),
-                      ),
-                    ),
+                    // GestureDetector(
+                     // onTap: () {
+                      //  Utils.showLog("Video User Id => ${controller.mainReels[widget.index].userId} => ${Database.loginUserId}");
+                      //  if (controller.mainReels[widget.index].userId != Database.loginUserId) {
+                      //    isReelsPage.value = false;
+                       //   SendGiftOnVideoBottomSheetUi.show(
+                       //     context: context,
+                        //    videoId: controller.mainReels[widget.index].id ?? "",
+                       //   );
+                       // } else {
+                       //   Utils.showToast(EnumLocal.txtYouCantSendGiftOwnVideo.name.tr);
+                      //  }
+                    //  },
+                    //  child: SizedBox(
+                    //    width: 65,
+                   //     child: Lottie.asset(AppAsset.lottieGift),
+                   //   ),
+                  //  ),
 
                     // ------------------------------------
                     // ✅ CART ICON ADDED HERE
