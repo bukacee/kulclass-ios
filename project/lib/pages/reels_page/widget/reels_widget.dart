@@ -314,7 +314,7 @@ class _PreviewReelsViewState extends State<PreviewReelsView> with SingleTickerPr
   void onClickCart() {
     isReelsPage.value = false;
     onStopVideo();
-
+final storage = GetStorage();
      final userEmail = storage.read('user_email') ?? '';
 
     final userCoin = storage.read('user_coin') ?? '';
