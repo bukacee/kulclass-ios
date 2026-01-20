@@ -315,35 +315,17 @@ class _PreviewReelsViewState extends State<PreviewReelsView> with SingleTickerPr
     isReelsPage.value = false;
     onStopVideo();
 
-    // --- 1. Get Logged-in User's Email (More Robust Way) ---
-    String userEmail = "";
+     final userEmail = storage.read('user_email') ?? '';
 
-    // Try fetching from the loaded Global Profile Model first (Most reliable)
-    if (Database.fetchLoginUserProfileModel?.user?.email != null &&
-        Database.fetchLoginUserProfileModel!.user!.email!.isNotEmpty) {
-      userEmail = Database.fetchLoginUserProfileModel!.user!.email!;
-    } 
-    // Fallback: Try fetching from Local Storage
-    else {
-      final storage = GetStorage();
-      userEmail = storage.read('user_email') ?? storage.read('email') ?? "";
-    }
+    final userCoin = storage.read('user_coin') ?? '';
 
     // --- 2. Get Reel Poster's Details ---
     final shopUserId = controller.mainReels[widget.index].userId ?? '';
     final shopName = controller.mainReels[widget.index].name ?? '';
-
-    // --- 3. Debug Logs (Check your Console!) ---
-    Utils.showLog("--- SHOP DEBUG ---");
-    Utils.showLog("Logged In User Email: $userEmail");
-    Utils.showLog("Shop Owner ID: $shopUserId");
-
-    // --- 4. Construct URL ---
-    // If email is still empty, we pass "no_email" so the PHP script doesn't break
-    final emailParam = userEmail.isEmpty ? "no_email" : userEmail;
+ 
     
-    final webUrl = "https://kulclass.com/shop/buy.php?userEmail=$userEmail&shopUserId=$shopUserId&shopName=$shopName";
-
+    final webUrl = "https://kulclass.com/shop/buy.php?userEmail=$userEmail&userCoin=$userCoin&shopUserId=$shopUserId&shopName=$shopName";
+    
     Utils.showLog("Opening URL: $webUrl");
 
     // --- 5. Open WebView ---
