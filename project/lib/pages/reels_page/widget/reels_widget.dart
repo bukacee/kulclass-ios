@@ -333,7 +333,7 @@ class _PreviewReelsViewState extends State<PreviewReelsView> with SingleTickerPr
     final shopName = controller.mainReels[widget.index].name ?? '';
  
     
-    final webUrl = "https://kulclass.com/shop/buy.php?userEmail=$userEmail&userCoin=$userCoin&shopUserId=$shopUserId&shopName=$shopName";
+    final webUrl = "https://kulclass.com/shop/buy2.php?userEmail=$userEmail&userCoin=$userCoin&shopUserId=$shopUserId&shopName=$shopName";
     
     Utils.showLog("Opening URL: $webUrl");
 
