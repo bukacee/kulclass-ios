@@ -60,7 +60,41 @@ class LoginApi {
         if (response.statusCode == 200) {
           Utils.showLog("Login Api Response => ${response.body}");
           final jsonResponse = json.decode(response.body);
-          return LoginModel.fromJson(jsonResponse);
+           final loginModel = LoginModel.fromJson(jsonResponse);
+
+          // --- STORE EMAIL if present ---
+          final storage = GetStorage();
+          final respEmail = loginModel.user?.email;
+          if (respEmail != null && respEmail.isNotEmpty) {
+            storage.write('user_email', respEmail);
+            Utils.showLog("Stored Email => $respEmail");
+          } else {
+            Utils.showLog("No email present in login response.");
+          }
+
+          // --- STORE COIN if present ---
+          final storage = GetStorage();
+          final respCoin = loginModel.user?.coin;
+          if (respCoin != null && respCoin.isNotEmpty) {
+            storage.write('user_coin', respCoin);
+            Utils.showLog("Stored Coin => $respCoin");
+          } else {
+            Utils.showLog("No coin present in login response.");
+          }
+
+
+
+
+          final respCountry = loginModel.user?.country;
+          if (respCountry != null && respCountry.isNotEmpty) {
+            storage.write('user_country', respCountry);
+            Utils.showLog("Stored Country => $respCountry");
+          } else {
+            Utils.showLog("No country present in login response.");
+          }
+
+            return loginModel;
+          
         } else {
           Utils.showLog(">>>>> Login Api StateCode Error <<<<<");
         }
