@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart'; // <- add this
 import 'package:http/http.dart' as http;
 import 'package:auralive/pages/login_page/model/login_model.dart';
 import 'package:auralive/utils/api.dart';
