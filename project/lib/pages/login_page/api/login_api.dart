@@ -74,15 +74,16 @@ class LoginApi {
           }
 
           // --- STORE COIN if present ---
-          final storage = GetStorage();
+                  // 2. Get coin value (It is an 'int?', not a String)
           final respCoin = loginModel.user?.coin;
-          if (respCoin != null && respCoin.isNotEmpty) {
+
+          // 3. FIX: Only check for null. Do NOT check .isNotEmpty on numbers.
+          if (respCoin != null) {
             storage.write('user_coin', respCoin);
             Utils.showLog("Stored Coin => $respCoin");
           } else {
             Utils.showLog("No coin present in login response.");
           }
-
 
 
 
