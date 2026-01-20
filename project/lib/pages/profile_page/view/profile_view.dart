@@ -3,8 +3,11 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:blurrycontainer/blurrycontainer.dart';
+import 'package:flutter/foundation.dart'; // Required for kIsWeb
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:webview_flutter/webview_flutter.dart'; // Required for WebView
+import 'package:url_launcher/url_launcher.dart'; // Required for Fallback
 import 'package:auralive/custom/custom_fetch_user_coin.dart';
 import 'package:auralive/custom/custom_format_number.dart';
 import 'package:auralive/pages/bottom_bar_page/controller/bottom_bar_controller.dart';
@@ -41,6 +44,27 @@ class ProfileView extends GetView<ProfileController> {
           shadowColor: AppColor.black.withOpacity(0.4),
           surfaceTintColor: AppColor.transparent,
           flexibleSpace: const Center(child: ProfileAppBarUi()),
+          // -----------------------------------------------------
+          // ✅ 1. CART ICON ADDED HERE (Visible on iOS & Android)
+          // -----------------------------------------------------
+          actions: [
+            GestureDetector(
+              onTap: () => _onClickShop(context),
+              child: Container(
+                margin: const EdgeInsets.only(right: 15),
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: AppColor.primary.withOpacity(0.1),
+                ),
+                child: const Icon(
+                  Icons.shopping_cart,
+                  color: AppColor.black,
+                  size: 24,
+                ),
+              ),
+            ),
+          ],
         ),
         body: RefreshIndicator(
           notificationPredicate: (notification) {
@@ -60,12 +84,13 @@ class ProfileView extends GetView<ProfileController> {
                             ? ProfileShimmerUi()
                             : Container(
                                 color: AppColor.white,
-                                padding: EdgeInsets.symmetric(horizontal: 15),
+                                padding: const EdgeInsets.symmetric(horizontal: 15),
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   children: [
                                     15.height,
+                                    // ... [HEADER ROW CODE REMAINED SAME] ...
                                     Row(
                                       children: [
                                         Container(
@@ -91,28 +116,28 @@ class ProfileView extends GetView<ProfileController> {
                                                     height: 100,
                                                     width: 100,
                                                     clipBehavior: Clip.antiAlias,
-                                                    decoration: BoxDecoration(shape: BoxShape.circle),
+                                                    decoration: const BoxDecoration(shape: BoxShape.circle),
                                                     child: Image.asset(AppAsset.icProfilePlaceHolder, fit: BoxFit.cover),
                                                   ),
                                                   Container(
                                                     height: 100,
                                                     width: 100,
                                                     clipBehavior: Clip.antiAlias,
-                                                    decoration: BoxDecoration(shape: BoxShape.circle),
+                                                    decoration: const BoxDecoration(shape: BoxShape.circle),
                                                     child: PreviewNetworkImageUi(image: controller.fetchProfileModel?.userProfileData?.user?.image),
                                                   ),
                                                   Visibility(
                                                     visible: controller.fetchProfileModel?.userProfileData?.user?.isProfileImageBanned ?? false,
                                                     child: Container(
                                                       clipBehavior: Clip.antiAlias,
-                                                      decoration: BoxDecoration(shape: BoxShape.circle),
+                                                      decoration: const BoxDecoration(shape: BoxShape.circle),
                                                       child: BlurryContainer(
                                                         height: 100,
                                                         width: 100,
                                                         blur: 3,
                                                         borderRadius: BorderRadius.circular(50),
                                                         color: AppColor.black.withOpacity(0.3),
-                                                        child: Offstage(),
+                                                        child: const Offstage(),
                                                       ),
                                                     ),
                                                   ),
@@ -179,7 +204,25 @@ class ProfileView extends GetView<ProfileController> {
                                                       color: AppColor.secondary,
                                                       borderRadius: BorderRadius.circular(20),
                                                     ),
-                                                    
+                                                    child: Row(
+                                                      mainAxisAlignment: MainAxisAlignment.center,
+                                                      children: [
+                                                        Image.asset(
+                                                          ((controller.fetchProfileModel?.userProfileData?.user?.gender?.toLowerCase() ?? "male") == "male")
+                                                              ? AppAsset.icMale
+                                                              : AppAsset.icFemale,
+                                                          width: 14,
+                                                          color: AppColor.white,
+                                                        ),
+                                                        5.width,
+                                                        Text(
+                                                          ((controller.fetchProfileModel?.userProfileData?.user?.gender?.toLowerCase() ?? "male") == "male")
+                                                              ? EnumLocal.txtMale.name.tr
+                                                              : EnumLocal.txtFemale.name.tr,
+                                                          style: AppFontStyle.styleW600(AppColor.white, 12),
+                                                        ),
+                                                      ],
+                                                    ),
                                                   ),
                                                 ],
                                               ),
@@ -199,6 +242,8 @@ class ProfileView extends GetView<ProfileController> {
                                         ),
                                       ),
                                     ),
+                                    
+                                    // ... [STATS ROW CODE REMAINED SAME] ...
                                     Container(
                                       height: 75,
                                       width: Get.width,
@@ -222,13 +267,7 @@ class ProfileView extends GetView<ProfileController> {
                                               ],
                                             ),
                                           ),
-                                          VerticalDivider(
-                                            indent: 20,
-                                            endIndent: 20,
-                                            width: 0,
-                                            thickness: 2,
-                                            color: AppColor.coloGreyText.withOpacity(0.2),
-                                          ),
+                                          VerticalDivider(indent: 20, endIndent: 20, width: 0, thickness: 2, color: AppColor.coloGreyText.withOpacity(0.2)),
                                           Expanded(
                                             child: GestureDetector(
                                               onTap: controller.onClickFollowing,
@@ -252,13 +291,7 @@ class ProfileView extends GetView<ProfileController> {
                                               ),
                                             ),
                                           ),
-                                          VerticalDivider(
-                                            indent: 20,
-                                            endIndent: 20,
-                                            width: 0,
-                                            thickness: 2,
-                                            color: AppColor.coloGreyText.withOpacity(0.2),
-                                          ),
+                                          VerticalDivider(indent: 20, endIndent: 20, width: 0, thickness: 2, color: AppColor.coloGreyText.withOpacity(0.2)),
                                           Expanded(
                                             child: GestureDetector(
                                               onTap: controller.onClickFollowers,
@@ -286,106 +319,100 @@ class ProfileView extends GetView<ProfileController> {
                                       ),
                                     ),
 
-
-
-
-
-
+                                    // -----------------------------------------------------------------
+                                    // ✅ 2. WALLET CONTAINER (Hidden on iOS)
+                                    // -----------------------------------------------------------------
                                     if (!Platform.isIOS) ...[
-
-                                    5.height,
-                                    Container(
-                                      height: 102,
-                                      width: Get.width,
-                                      clipBehavior: Clip.antiAlias,
-                                      decoration: BoxDecoration(
-                                        gradient: AppColor.primaryLinearGradient,
-                                        borderRadius: BorderRadius.circular(20),
-                                      ),
-                                      child: Stack(
-                                        children: [
-                                          SizedBox(
-                                            height: 102,
-                                            width: Get.width,
-                                            child: Image.asset(
-                                              AppAsset.icWithdrawBg,
-                                              fit: BoxFit.cover,
-                                              opacity: AlwaysStoppedAnimation(0.6),
-                                            ),
-                                          ),
-                                          Padding(
-                                            padding: EdgeInsets.symmetric(horizontal: 25),
-                                            child: SizedBox(
+                                      5.height,
+                                      Container(
+                                        height: 102,
+                                        width: Get.width,
+                                        clipBehavior: Clip.antiAlias,
+                                        decoration: BoxDecoration(
+                                          gradient: AppColor.primaryLinearGradient,
+                                          borderRadius: BorderRadius.circular(20),
+                                        ),
+                                        child: Stack(
+                                          children: [
+                                            SizedBox(
                                               height: 102,
                                               width: Get.width,
-                                              child: Row(
-                                                mainAxisAlignment: MainAxisAlignment.start,
-                                                children: [
-                                                  Column(
-                                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                                    mainAxisAlignment: MainAxisAlignment.center,
-                                                    children: [
-                                                      Text(
-                                                        EnumLocal.txtAvailableCoin.name.tr,
-                                                        style: AppFontStyle.styleW600(AppColor.white, 18),
-                                                      ),
-                                                      5.height,
-                                                      Row(
-                                                        children: [
-                                                          Obx(
-                                                                () => Text(
-                                                                  controller.coinOwnerCurrency.value == 0.0
-                                                                      ? 'USD ${CustomFormatNumber.convert(CustomFetchUserCoin.coin.value)}'
-                                                                      : "${controller.ownerCurrencyCode.value} ${CustomFormatNumber.convert(controller.coinOwnerCurrency.value.toInt())}",
-                                                                  style: AppFontStyle.styleW700(AppColor.white, 35),
-                                                                ),
-
-                                                          ),
-                                                          15.width,
-                                                          GestureDetector(
-                                                            onTap: () => Get.toNamed(
-                                                              AppRoutes.myWalletPage,
-                                                              arguments: {
-                                                                'currencyCode': controller.ownerCurrencyCode.value,
-                                                              },
-                                                            ),
-                                                            child: Container(
-                                                              height: 32,
-                                                              padding: EdgeInsets.symmetric(horizontal: 15),
-                                                              decoration: BoxDecoration(
-                                                                color: AppColor.white,
-                                                                borderRadius: BorderRadius.circular(8),
-                                                              ),
-                                                              child: Row(
-                                                                mainAxisAlignment: MainAxisAlignment.center,
-                                                                children: [
-                                                                  Text(
-                                                                    EnumLocal.txtMyWallet.name.tr,
-                                                                    style: AppFontStyle.styleW700(AppColor.colorDarkOrange, 13),
-                                                                  ),
-                                                                  10.width,
-                                                                  Image.asset(
-                                                                    AppAsset.icDoubleArrowRightWithoutRadius,
-                                                                    width: 14,
-                                                                  ),
-                                                                ],
-                                                              ),
-                                                            ),
-                                                          ),
-                                                        ],
-                                                      ),
-                                                    ],
-                                                  ),
-
-
-                                                ],
+                                              child: Image.asset(
+                                                AppAsset.icWithdrawBg,
+                                                fit: BoxFit.cover,
+                                                opacity: const AlwaysStoppedAnimation(0.6),
                                               ),
                                             ),
-                                          ),
-                                        ],
+                                            Padding(
+                                              padding: const EdgeInsets.symmetric(horizontal: 25),
+                                              child: SizedBox(
+                                                height: 102,
+                                                width: Get.width,
+                                                child: Row(
+                                                  mainAxisAlignment: MainAxisAlignment.start,
+                                                  children: [
+                                                    Column(
+                                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                                      mainAxisAlignment: MainAxisAlignment.center,
+                                                      children: [
+                                                        Text(
+                                                          EnumLocal.txtAvailableCoin.name.tr,
+                                                          style: AppFontStyle.styleW600(AppColor.white, 18),
+                                                        ),
+                                                        5.height,
+                                                        Row(
+                                                          children: [
+                                                            Obx(
+                                                              () => Text(
+                                                                controller.coinOwnerCurrency.value == 0.0
+                                                                    ? 'USD ${CustomFormatNumber.convert(CustomFetchUserCoin.coin.value)}'
+                                                                    : "${controller.ownerCurrencyCode.value} ${CustomFormatNumber.convert(controller.coinOwnerCurrency.value.toInt())}",
+                                                                style: AppFontStyle.styleW700(AppColor.white, 35),
+                                                              ),
+                                                            ),
+                                                            15.width,
+                                                            GestureDetector(
+                                                              onTap: () => Get.toNamed(
+                                                                AppRoutes.myWalletPage,
+                                                                arguments: {
+                                                                  'currencyCode': controller.ownerCurrencyCode.value,
+                                                                },
+                                                              ),
+                                                              child: Container(
+                                                                height: 32,
+                                                                padding: const EdgeInsets.symmetric(horizontal: 15),
+                                                                decoration: BoxDecoration(
+                                                                  color: AppColor.white,
+                                                                  borderRadius: BorderRadius.circular(8),
+                                                                ),
+                                                                child: Row(
+                                                                  mainAxisAlignment: MainAxisAlignment.center,
+                                                                  children: [
+                                                                    Text(
+                                                                      EnumLocal.txtMyWallet.name.tr,
+                                                                      style: AppFontStyle.styleW700(AppColor.colorDarkOrange, 13),
+                                                                    ),
+                                                                    10.width,
+                                                                    Image.asset(
+                                                                      AppAsset.icDoubleArrowRightWithoutRadius,
+                                                                      width: 14,
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
                                       ),
-                                    ),
-                                  ],
+                                    ],
                                   ],
                                 ),
                               ),
@@ -426,7 +453,11 @@ class ProfileView extends GetView<ProfileController> {
                             Tab(
                               icon: const ImageIcon(AssetImage(AppAsset.icFeeds), size: 30),
                               text: EnumLocal.txtFeeds.name.tr,
-                            ), 
+                            ),
+                            Tab(
+                              icon: const ImageIcon(AssetImage(AppAsset.icCollections), size: 30),
+                              text: EnumLocal.txtCollections.name.tr,
+                            ),
                           ],
                         ),
                       ),
@@ -449,5 +480,76 @@ class ProfileView extends GetView<ProfileController> {
       ),
     );
   }
-}
 
+  // --------------------------------------------------------
+  // ✅ 3. ADDED HELPER METHODS FOR WEBVIEW & URL LAUNCHER
+  // --------------------------------------------------------
+
+  void _onClickShop(BuildContext context) {
+    // 1. Get the Logged-in User ID
+    final userId = Database.loginUserId;
+    
+    // 2. Construct the URL
+    final url = "https://kulclass.com/shop/index.php?userId=$userId";
+    
+    // 3. Open WebView
+    _showFullScreenWebView(context, url);
+  }
+
+  void _showFullScreenWebView(BuildContext context, String url) {
+    if (kIsWeb || !(Platform.isAndroid || Platform.isIOS)) {
+      _openUrlInBrowser(url);
+      return;
+    }
+
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        fullscreenDialog: true,
+        builder: (_) {
+          bool isLoading = true;
+          final webController = WebViewController()
+            ..setJavaScriptMode(JavaScriptMode.unrestricted)
+            ..setNavigationDelegate(
+              NavigationDelegate(
+                onPageFinished: (_) {
+                  isLoading = false;
+                },
+              ),
+            )
+            ..loadRequest(Uri.parse(url));
+
+          return StatefulBuilder(
+            builder: (context, setState) {
+              return Scaffold(
+                appBar: AppBar(
+                  backgroundColor: Colors.white,
+                  title: const Text("My Shop", style: TextStyle(color: Colors.black)),
+                  leading: IconButton(
+                    icon: const Icon(Icons.close, color: Colors.black),
+                    onPressed: () => Navigator.pop(context),
+                  ),
+                ),
+                body: Stack(
+                  children: [
+                    WebViewWidget(controller: webController),
+                    if (isLoading)
+                      const Center(child: CircularProgressIndicator()),
+                  ],
+                ),
+              );
+            },
+          );
+        },
+      ),
+    );
+  }
+
+  void _openUrlInBrowser(String url) async {
+    final uri = Uri.parse(url);
+    if (await canLaunchUrl(uri)) {
+      await launchUrl(uri, mode: LaunchMode.externalApplication);
+    } else {
+      Get.snackbar("Error", "Could not open the URL");
+    }
+  }
+}
