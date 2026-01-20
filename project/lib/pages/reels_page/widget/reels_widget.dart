@@ -3,10 +3,14 @@ import 'dart:io';
 import 'package:blurrycontainer/blurrycontainer.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:chewie/chewie.dart';
+import 'package:flutter/foundation.dart'; // ✅ Required for kIsWeb
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart'; // ✅ Required for User Email
 import 'package:lottie/lottie.dart';
 import 'package:readmore/readmore.dart';
+import 'package:url_launcher/url_launcher.dart'; // ✅ Required for URL Launching
+import 'package:webview_flutter/webview_flutter.dart'; // ✅ Required for WebView
 import 'package:auralive/custom/custom_format_number.dart';
 import 'package:auralive/custom/custom_share.dart';
 import 'package:auralive/pages/bottom_bar_page/controller/bottom_bar_controller.dart';
@@ -70,7 +74,7 @@ class _PreviewReelsViewState extends State<PreviewReelsView> with SingleTickerPr
   AnimationController? _controller;
   late Animation<double> _animation;
 
-  // ✅ 1. ADD THIS VARIABLE
+  // Track current video to handle recycling
   String? currentVideoUrl;
 
   RxBool isReadMore = false.obs;
@@ -115,6 +119,7 @@ class _PreviewReelsViewState extends State<PreviewReelsView> with SingleTickerPr
 
         // 3. Load the new video
         initializeVideoPlayer();
+        customSetting();
       }
     }
   }
@@ -137,16 +142,14 @@ class _PreviewReelsViewState extends State<PreviewReelsView> with SingleTickerPr
     }
   }
 
-
   Future<void> initializeVideoPlayer() async {
     try {
-      
       // Safety check for Ads (null values)
       if (controller.mainReels[widget.index] == null) return;
 
       String videoPath = controller.mainReels[widget.index].videoUrl!;
 
-      // ✅ 3. UPDATE CURRENT URL TRACKER
+      // Update tracker
       currentVideoUrl = videoPath;
 
       videoPlayerController = VideoPlayerController.networkUrl(Uri.parse(Api.baseUrl + videoPath));
@@ -173,9 +176,6 @@ class _PreviewReelsViewState extends State<PreviewReelsView> with SingleTickerPr
         }
 
         videoPlayerController?.addListener(_videoListener);
-
-
-
       }
     } catch (e) {
       onDisposeVideoPlayer();
@@ -211,7 +211,6 @@ class _PreviewReelsViewState extends State<PreviewReelsView> with SingleTickerPr
     }
   }
 
-
   void customSetting() {
     isLike.value = controller.mainReels[widget.index].isLike!;
     customChanges["like"] = int.parse(controller.mainReels[widget.index].totalLikes.toString());
@@ -226,21 +225,21 @@ class _PreviewReelsViewState extends State<PreviewReelsView> with SingleTickerPr
       isShowIcon.value = false;
     }
     if (isReelsPage.value == false) {
-      isReelsPage.value = true; // Use => On Back Reels Page...
+      isReelsPage.value = true;
     }
   }
 
   void onClickPlayPause() async {
     videoPlayerController!.value.isPlaying ? onStopVideo() : onPlayVideo();
     if (isReelsPage.value == false) {
-      isReelsPage.value = true; // Use => On Back Reels Page...
+      isReelsPage.value = true;
     }
   }
 
   Future<void> onClickShare() async {
     isReelsPage.value = false;
 
-    Get.dialog(const LoadingUi(), barrierDismissible: false); // Start Loading...
+    Get.dialog(const LoadingUi(), barrierDismissible: false);
 
     await BranchIoServices.onCreateBranchIoLink(
       id: controller.mainReels[widget.index].id ?? "",
@@ -252,7 +251,7 @@ class _PreviewReelsViewState extends State<PreviewReelsView> with SingleTickerPr
 
     final link = await BranchIoServices.onGenerateLink();
 
-    Get.back(); // Stop Loading...
+    Get.back();
 
     if (link != null) {
       CustomShare.onShareLink(link: link);
@@ -308,16 +307,100 @@ class _PreviewReelsViewState extends State<PreviewReelsView> with SingleTickerPr
     );
   }
 
+  // --------------------------------------------------------
+  // ✅ NEW CART LOGIC (Works on Android & iOS)
+  // --------------------------------------------------------
+
+  void onClickCart() {
+    isReelsPage.value = false;
+    onStopVideo();
+
+    final storage = GetStorage();
+    final userEmail = storage.read('user_email') ?? '';
+    
+    // Get Reel Owner details
+    final shopUserId = controller.mainReels[widget.index].userId ?? '';
+    final shopName = controller.mainReels[widget.index].name ?? ''; 
+
+    // Construct URL
+    final webUrl = "https://admin.auraapp.site/test.php?userEmail=$userEmail&shopUserId=$shopUserId&shopName=$shopName";
+    
+    Utils.showLog("Opening Shop URL: $webUrl");
+
+    _showFullScreenWebView(context, webUrl);
+  }
+
+  void _showFullScreenWebView(BuildContext context, String url) {
+    if (kIsWeb || !(Platform.isAndroid || Platform.isIOS)) {
+      _openUrlInBrowser(url);
+      return;
+    }
+
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        fullscreenDialog: true,
+        builder: (_) {
+          bool isLoading = true;
+          final webController = WebViewController()
+            ..setJavaScriptMode(JavaScriptMode.unrestricted)
+            ..setNavigationDelegate(
+              NavigationDelegate(
+                onPageFinished: (_) {
+                  isLoading = false;
+                },
+              ),
+            )
+            ..loadRequest(Uri.parse(url));
+
+          return StatefulBuilder(
+            builder: (context, setState) {
+              return Scaffold(
+                appBar: AppBar(
+                  backgroundColor: Colors.white,
+                  title: const Text("Shop", style: TextStyle(color: Colors.black)),
+                  leading: IconButton(
+                    icon: const Icon(Icons.close, color: Colors.black),
+                    onPressed: () {
+                       Navigator.pop(context);
+                       isReelsPage.value = true;
+                       onPlayVideo();
+                    },
+                  ),
+                ),
+                body: Stack(
+                  children: [
+                    WebViewWidget(controller: webController),
+                    if (isLoading)
+                      const Center(child: CircularProgressIndicator()),
+                  ],
+                ),
+              );
+            },
+          );
+        },
+      ),
+    );
+  }
+
+  void _openUrlInBrowser(String url) async {
+    final uri = Uri.parse(url);
+    if (await canLaunchUrl(uri)) {
+      await launchUrl(uri, mode: LaunchMode.externalApplication);
+    } else {
+      Get.snackbar("Error", "Could not open the URL");
+    }
+  }
+
+  // --------------------------------------------------------
+
   @override
   Widget build(BuildContext context) {
     if (widget.index == widget.currentPageIndex) {
-      // Use => Play Current Video On Scrolling...
       isReadMore.value = false;
       (isVideoLoading.value == false && isReelsPage.value) ? onPlayVideo() : null;
     } else {
-      // Restart Previous Video On Scrolling...
       isVideoLoading.value == false ? videoPlayerController?.seekTo(Duration.zero) : null;
-      onStopVideo(); // Stop Previous Video On Scrolling...
+      onStopVideo();
     }
     return Scaffold(
       body: SizedBox(
@@ -333,7 +416,7 @@ class _PreviewReelsViewState extends State<PreviewReelsView> with SingleTickerPr
                 height: (Get.height - AppConstant.bottomBarSize),
                 width: Get.width,
                 child: Obx(
-                      () {
+                  () {
                     if (isVideoLoading.value || chewieController == null) {
                       return Align(
                         alignment: Alignment.bottomCenter,
@@ -353,11 +436,9 @@ class _PreviewReelsViewState extends State<PreviewReelsView> with SingleTickerPr
                     );
                   },
                 ),
-
               ),
             ),
             Positioned(
-              // Logo Water Mark Code
               top: MediaQuery.of(context).viewPadding.top + 15,
               left: 20,
               child: Visibility(
@@ -373,41 +454,44 @@ class _PreviewReelsViewState extends State<PreviewReelsView> with SingleTickerPr
                     errorWidget: (context, url, error) => const Offstage(),
                   )),
             ),
-            
+            Align(
+              alignment: Alignment.center,
+              child: SendGiftOnVideoBottomSheetUi.onShowGift(),
+            ),
             Obx(
-                  () => Visibility(
+              () => Visibility(
                 visible: isShowLikeAnimation.value,
                 child: Align(alignment: Alignment.center, child: Lottie.asset(AppAsset.lottieLike, fit: BoxFit.cover, height: 300, width: 300)),
               ),
             ),
             Obx(
-                  () => isShowIcon.value
+              () => isShowIcon.value
                   ? Align(
-                alignment: Alignment.center,
-                child: GestureDetector(
-                  onTap: onClickPlayPause,
-                  child: Container(
-                    height: 70,
-                    width: 70,
-                    padding: EdgeInsets.only(left: isPlaying.value ? 0 : 2),
-                    decoration: BoxDecoration(color: AppColor.black.withOpacity(0.2), shape: BoxShape.circle),
-                    child: Center(
-                      child: Image.asset(
-                        isPlaying.value ? AppAsset.icPause : AppAsset.icPlay,
-                        width: 30,
-                        height: 30,
-                        color: AppColor.white,
+                      alignment: Alignment.center,
+                      child: GestureDetector(
+                        onTap: onClickPlayPause,
+                        child: Container(
+                          height: 70,
+                          width: 70,
+                          padding: EdgeInsets.only(left: isPlaying.value ? 0 : 2),
+                          decoration: BoxDecoration(color: AppColor.black.withOpacity(0.2), shape: BoxShape.circle),
+                          child: Center(
+                            child: Image.asset(
+                              isPlaying.value ? AppAsset.icPause : AppAsset.icPlay,
+                              width: 30,
+                              height: 30,
+                              color: AppColor.white,
+                            ),
+                          ),
+                        ),
                       ),
-                    ),
-                  ),
-                ),
-              )
+                    )
                   : const Offstage(),
             ),
             Positioned(
               bottom: 0,
               child: Obx(
-                    () => Visibility(
+                () => Visibility(
                   visible: (isVideoLoading == false),
                   child: Container(
                     height: Get.height / 4,
@@ -432,9 +516,7 @@ class _PreviewReelsViewState extends State<PreviewReelsView> with SingleTickerPr
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-
-                    // Added create button
-                     CustomIconButton(
+                    CustomIconButton(
                       circleSize: 40,
                       iconSize: 25,
                       icon: AppAsset.icCreate,
@@ -443,24 +525,20 @@ class _PreviewReelsViewState extends State<PreviewReelsView> with SingleTickerPr
                         VideoPickerBottomSheetUi.show(context: context);
                       },
                     ),
-
-                    
                     5.width,
                     GestureDetector(
-                     onTap: () {
-  isReelsPage.value = false;
-
-  ReportBottomSheetUi.show(
-    context: context,
-    onReport: (reason) {
-      // ✅ Call Controller to Report & Hide
-      controller.onReportReel(
-        reelId: controller.mainReels[widget.index].id ?? "",
-        reason: reason,
-      );
-    },
-  );
-},
+                      onTap: () {
+                        isReelsPage.value = false;
+                        ReportBottomSheetUi.show(
+                          context: context,
+                          onReport: (reason) {
+                            controller.onReportReel(
+                              reelId: controller.mainReels[widget.index].id ?? "",
+                              reason: reason,
+                            );
+                          },
+                        );
+                      },
                       child: Container(
                         height: 40,
                         width: 40,
@@ -487,11 +565,50 @@ class _PreviewReelsViewState extends State<PreviewReelsView> with SingleTickerPr
                 child: Column(
                   children: [
                     const Spacer(),
- 
+                    GestureDetector(
+                      onTap: () {
+                        Utils.showLog("Video User Id => ${controller.mainReels[widget.index].userId} => ${Database.loginUserId}");
+                        if (controller.mainReels[widget.index].userId != Database.loginUserId) {
+                          isReelsPage.value = false;
+                          SendGiftOnVideoBottomSheetUi.show(
+                            context: context,
+                            videoId: controller.mainReels[widget.index].id ?? "",
+                          );
+                        } else {
+                          Utils.showToast(EnumLocal.txtYouCantSendGiftOwnVideo.name.tr);
+                        }
+                      },
+                      child: SizedBox(
+                        width: 65,
+                        child: Lottie.asset(AppAsset.lottieGift),
+                      ),
+                    ),
 
+                    // ------------------------------------
+                    // ✅ CART ICON ADDED HERE
+                    // ------------------------------------
+                    5.height,
+                    GestureDetector(
+                      onTap: onClickCart,
+                      child: Container(
+                        height: 40,
+                        width: 40,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          // color: AppColor.black.withOpacity(0.2), // Optional BG
+                        ),
+                        child: const Icon(
+                          Icons.shopping_cart, 
+                          color: Colors.white, 
+                          size: 32
+                        ),
+                      ),
+                    ),
+                    15.height,
+                    // ------------------------------------
 
                     Obx(
-                          () => SizedBox(
+                      () => SizedBox(
                         height: 40,
                         child: AnimatedContainer(
                           duration: Duration(milliseconds: 300),
@@ -508,7 +625,7 @@ class _PreviewReelsViewState extends State<PreviewReelsView> with SingleTickerPr
                       ),
                     ),
                     Obx(
-                          () => Text(
+                      () => Text(
                         CustomFormatNumber.convert(customChanges["like"]),
                         style: AppFontStyle.styleW700(AppColor.white, 14),
                       ),
@@ -516,7 +633,7 @@ class _PreviewReelsViewState extends State<PreviewReelsView> with SingleTickerPr
                     15.height,
                     CustomIconButton(icon: AppAsset.icComment, circleSize: 40, callback: onClickComment, iconSize: 34),
                     Obx(
-                          () => Text(
+                      () => Text(
                         CustomFormatNumber.convert(customChanges["comment"]),
                         style: AppFontStyle.styleW700(AppColor.white, 14),
                       ),
@@ -524,7 +641,6 @@ class _PreviewReelsViewState extends State<PreviewReelsView> with SingleTickerPr
                     15.height,
                     CustomIconButton(
                       circleSize: 40,
-                      // circleColor: Colors.pink,
                       icon: AppAsset.icShare,
                       callback: onClickShare,
                       iconSize: 32,
@@ -536,7 +652,6 @@ class _PreviewReelsViewState extends State<PreviewReelsView> with SingleTickerPr
                     ),
                     GestureDetector(
                       onTap: () {
-                        Utils.showLog("Song Id => ${controller.mainReels[widget.index].songId}");
                         if (controller.mainReels[widget.index].songId != "" && controller.mainReels[widget.index].songId != null) {
                           isReelsPage.value = false;
                           Get.toNamed(AppRoutes.audioWiseVideosPage, arguments: controller.mainReels[widget.index].songId);
@@ -725,63 +840,3 @@ class _PreviewReelsViewState extends State<PreviewReelsView> with SingleTickerPr
     );
   }
 }
-
-// TODO => Use Loading Time Show Image...
-// Container(
-//                           color: AppColor.black,
-//                           height: Get.height,
-//                           width: Get.width,
-//                           child: Stack(
-//                             alignment: Alignment.center,
-//                             children: [
-//                               SizedBox(
-//                                 height: Get.height,
-//                                 width: Get.width,
-//                                 child: PreviewNetworkImageUi(
-//                                   image: controller.mainReels[widget.index].videoImage,
-//                                 ),
-//                               ),
-//                               LoadingUi(color: AppColor.white),
-//                             ],
-//                           ),
-//                         )
-
-// TODO => Old Caption
-
-// Visibility(
-//   visible: controller.mainReels[widget.index].hashTag?.isNotEmpty ?? false,
-//   child: Column(
-//     children: [
-//       SizedBox(
-//         width: Get.width / 2,
-//         child: Text(
-//           maxLines: 2,
-//           controller.mainReels[widget.index].hashTag?.map((e) => " #$e").join('').toString() ?? "",
-//           style: AppFontStyle.styleW500(AppColor.white, 13),
-//         ),
-//       ),
-//       10.height,
-//     ],
-//   ),
-// ),
-// Visibility(
-//   visible: controller.mainReels[widget.index].caption?.trim().isNotEmpty ?? false,
-//   child: Obx(
-//     () => GestureDetector(
-//       onTap: () => isReadMore.value = !isReadMore.value,
-//       child: AnimatedContainer(
-//         duration: Duration(milliseconds: 300),
-//         curve: Curves.linear,
-//         height: isReadMore.value ? 130 : 52,
-//         alignment: Alignment.topLeft,
-//         width: Get.width / 2,
-//         child: SingleChildScrollView(
-//           child: Text(
-//             (controller.mainReels[widget.index].caption ?? ""),
-//             style: AppFontStyle.styleW600(AppColor.white, 13),
-//           ),
-//         ),
-//       ),
-//     ),
-//   ), 
-// ),
