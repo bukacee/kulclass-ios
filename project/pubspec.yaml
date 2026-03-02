@@ -72,7 +72,7 @@ dependencies:
   qr_flutter: ^4.1.0
   mobile_scanner: ^7.0.1
   #  mobile_scanner: ^6.0.10
-  date_picker_plus: ^4.2.0
+  date_picker_plus: ^6.0.0
   http: ^1.4.0
   flutter_svga:
   #  svgaplayer_flutter: ^2.2.0
